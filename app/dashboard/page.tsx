@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import BottomNav from '@/components/BottomNav'
+import { getEffectiveMultiplier, PLAYER_STATUS_THRESHOLDS } from '@/config/business-rules'
 
 const programme = [
   { time: '20h30', label: 'Blind Test années 2000', icon: '🎵' },
@@ -10,18 +11,30 @@ const programme = [
   { time: '22h30', label: 'Grand classement final', icon: '🏆' },
 ]
 
-const produitsVedette = [
-  { icon: '🍺', label: 'Pinte artisanale', prix: '6€', coins: '+40 coins' },
-  { icon: '🥂', label: 'Pitcher pour 2', prix: '14€', coins: '+100 coins' },
-  { icon: '🍕', label: 'Planche charcuterie', prix: '12€', coins: '+80 coins' },
-  { icon: '🍹', label: 'Cocktail du soir', prix: '9€', coins: '+60 coins' },
-]
+// Multiplicateur actif (plan Standard, pas de boost ce soir — TODO: venir de l'API bar)
+const PLAN_ACTIF = 'STANDARD' as const
+const BOOST_ACTIF = false
+const mult = getEffectiveMultiplier(PLAN_ACTIF, BOOST_ACTIF)
 
+// Produits vedette — coins calculés dynamiquement via multiplier
+// Prix en centimes pour éviter les flottants, TODO: venir API bar
+const produitsBase = [
+  { icon: '🍺', label: 'Pinte artisanale', prix: '6€', prixVal: 6 },
+  { icon: '🥂', label: 'Pitcher pour 2',   prix: '14€', prixVal: 14 },
+  { icon: '🍕', label: 'Planche charcuterie', prix: '12€', prixVal: 12 },
+  { icon: '🍹', label: 'Cocktail du soir', prix: '9€', prixVal: 9 },
+]
+const produitsVedette = produitsBase.map(p => ({
+  ...p,
+  coins: `+${Math.round(p.prixVal * mult)} coins`
+}))
+
+// Paliers — TODO: venir du dashboard gérant via BDD (COINS_PALIERS_DEMO placeholder)
 const paliersCoins = [
-  { conso: '5€', coins: 20, label: 'Soft / café' },
-  { conso: '10€', coins: 50, label: 'Bière / verre' },
-  { conso: '20€', coins: 120, label: 'Cocktail + apéro' },
-  { conso: '50€', coins: 350, label: 'Table complète' },
+  { conso: '5€',  coins: '— TODO', label: 'Soft / café'      },
+  { conso: '10€', coins: '— TODO', label: 'Bière / verre'    },
+  { conso: '20€', coins: '— TODO', label: 'Cocktail + apéro' },
+  { conso: '50€', coins: '— TODO', label: 'Table complète'   },
 ]
 
 const glassCard = { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(245,158,11,0.15)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }
@@ -30,6 +43,8 @@ const glassCardSubtle = { background: 'rgba(255,255,255,0.04)', border: '1px sol
 export default function Dashboard() {
   const router = useRouter()
   const [user, setUser] = useState({ name: 'Alexandre M.', initials: 'AM', coins: 1247, status: 'VIP' })
+  // Statut calculé dynamiquement via business-rules
+  const computedStatus = user.coins >= PLAYER_STATUS_THRESHOLDS.LEGEND ? 'LEGEND' : user.coins >= PLAYER_STATUS_THRESHOLDS.VIP ? 'VIP' : 'REGULAR'
 
   useEffect(() => {
     const stored = localStorage.getItem('barcoins_user')
@@ -60,7 +75,7 @@ export default function Dashboard() {
             <div className="text-[#F5E6D3]/40 text-xs mt-0.5">coins ce soir</div>
           </div>
           <div className="text-right">
-            <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{ background: 'rgba(245,158,11,0.2)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.5)' }}>⭐ {user.status}</div>
+            <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{ background: 'rgba(245,158,11,0.2)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.5)' }}>⭐ {computedStatus}</div>
             {gapTo1st > 0 ? (
               <div className="text-[#F5E6D3]/50 text-xs">encore <span className="text-[#F5E6D3] font-bold">{gapTo1st}</span> coins pour 🥇</div>
             ) : (
@@ -112,6 +127,15 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
+
+        {/* Badge boost actif */}
+        {BOOST_ACTIF && (
+          <div className="rounded-xl px-4 py-2 flex items-center gap-2 pulse-gold"
+            style={{ background: 'rgba(245,158,11,0.2)', border: '1.5px solid #F59E0B' }}>
+            <span className="text-lg">⚡</span>
+            <span className="font-black text-sm" style={{ color: '#F59E0B' }}>BOOST ×2 ACTIF — Multiplicateur ×{mult}</span>
+          </div>
+        )}
 
         {/* Offre du moment */}
         <div className="rounded-2xl p-4 overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #D97706, #FF6B35)', boxShadow: '0 4px 24px rgba(245,158,11,0.35)' }}>
