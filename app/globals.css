@@ -3,17 +3,39 @@
 * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
 :root {
-  --color-bg-primary: #1a0a00;
-  --color-bg-secondary: #2d1200;
-  --color-accent: #F59E0B;
-  --color-accent-hot: #FF6B35;
-  --color-loyalty: #10B981;
-  --color-text-primary: #F5E6D3;
-  --color-text-secondary: #A07850;
+  /* Palette principale */
+  --navy:        #0D1B2E;
+  --navy-card:   #1A2942;
+  --navy-card-2: #162035;
+  --violet:      #2D1248;
+  --gold-warm:   #C9922A;
+  --gold-light:  #F2C96B;
+  --cream:       #F5F0E8;
+  --amber:       #E8860A;
+  --live-green:  #22C55E;
+  --danger-red:  #EF4444;
+  --bronze:      #CD7F32;
+  --silver:      #C0C0C0;
+  /* Tokens design */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --shadow-gold: 0 4px 20px rgba(232, 134, 10, 0.4);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --glow-gold:   0 0 20px rgba(201, 146, 42, 0.3);
+  /* Rétro-compatibilité */
+  --color-bg-primary:     #0F1923;
+  --color-bg-secondary:   #0D1B2E;
+  --color-accent:         #C9922A;
+  --color-accent-hot:     #E8860A;
+  --color-loyalty:        #22C55E;
+  --color-text-primary:   #F5F0E8;
+  --color-text-secondary: rgba(245,240,232,0.5);
 }
 
 body {
-  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: linear-gradient(180deg, #0F1923 0%, #0D1B2E 50%, #1A1035 100%);
   min-height: 100dvh;
   color: var(--color-text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -23,8 +45,8 @@ body {
 
 /* === GLASSMORPHISM CARD === */
 .glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(245, 158, 11, 0.15);
+  background: #1A2942;
+  border: 1px solid rgba(201, 146, 42, 0.15);
   border-radius: 16px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -32,8 +54,8 @@ body {
 
 /* === BOUTON GRADIENT PRINCIPAL === */
 .btn-primary {
-  background: linear-gradient(135deg, #F59E0B 0%, #FF6B35 100%);
-  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, #C9922A 0%, #E8860A 50%, #F2C96B 100%);
+  box-shadow: 0 4px 20px rgba(232, 134, 10, 0.4);
   border-radius: 14px;
   font-weight: 800;
   color: #1a0a00;
@@ -46,19 +68,19 @@ body {
 
 /* === GLOW AMBER sur grands chiffres === */
 .glow-amber {
-  text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+  text-shadow: 0 0 12px rgba(201, 146, 42, 0.5);
 }
 
 /* === TITRE BARCOINS === */
 .barcoins-title {
   font-weight: 900;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  text-shadow: 0 0 20px rgba(201, 146, 42, 0.6);
 }
 
 /* === LABELS DE SECTION === */
 .section-label {
   letter-spacing: 0.15em;
-  color: #F59E0B;
+  color: #C9922A;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -73,8 +95,8 @@ body {
 
 /* === PULSE GOLD (kept for compat) === */
 @keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
-  70% { box-shadow: 0 0 0 10px rgba(245,158,11,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,146,42,0.5); }
+  70%       { box-shadow: 0 0 0 10px rgba(201,146,42,0); }
 }
 .pulse-gold { animation: pulse-gold 2s infinite; }
 
@@ -84,7 +106,7 @@ body {
   100% { background-position: 200% center; }
 }
 .shimmer {
-  background: linear-gradient(90deg, #F59E0B 25%, #FFD700 50%, #F59E0B 75%);
+  background: linear-gradient(90deg, #C9922A 25%, #F2C96B 50%, #C9922A 75%);
   background-size: 200% auto;
   animation: shimmer 2s linear infinite;
 }
@@ -105,8 +127,8 @@ body {
 
 /* === COUNTER GLOW (chiffres animés) === */
 @keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 12px rgba(245,158,11,0.5); }
-  50% { text-shadow: 0 0 28px rgba(245,158,11,0.9), 0 0 48px rgba(255,107,53,0.4); }
+  0%, 100% { box-shadow: 0 8px 24px rgba(232, 134, 10, 0.3); }
+  50%       { box-shadow: 0 8px 40px rgba(232, 134, 10, 0.6); }
 }
 .glow-pulse { animation: glow-pulse 2.5s ease-in-out infinite; }
 
@@ -132,7 +154,7 @@ body {
 }
 .wave-bar {
   display: inline-block; width: 4px; height: 24px;
-  border-radius: 2px; background: #F59E0B;
+  border-radius: 2px; background: #C9922A;
   margin: 0 2px; transform-origin: bottom;
   animation: audio-wave 0.8s ease-in-out infinite;
 }
@@ -157,13 +179,13 @@ body {
 
 /* === CARD SOIRÉE EN COURS === */
 .soiree-card {
-  border: 1.5px solid #F59E0B;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  border: 1.5px solid rgba(201, 146, 42, 0.4);
+  box-shadow: 0 8px 32px rgba(201, 146, 42, 0.15), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 /* === PODIUM 1ER === */
 .podium-first {
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 0 6px rgba(201, 146, 42, 0.2), 0 0 30px rgba(201, 146, 42, 0.3);
 }
 
 /* === BLIND TEST CIRCLE === */
@@ -171,3 +193,35 @@ body {
   box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
   animation: pulse-gold 2s infinite;
 }
+
+/* === LUEURS D'AMBIANCE === */
+.bg-glow-gold {
+  position: fixed; width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(201,146,42,0.08) 0%, transparent 70%);
+  top: -100px; right: -100px; pointer-events: none; z-index: 0;
+}
+.bg-glow-violet {
+  position: fixed; width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(45,18,72,0.4) 0%, transparent 70%);
+  bottom: 100px; left: -150px; pointer-events: none; z-index: 0;
+}
+
+/* === NAVY CARD UTILITAIRES === */
+.navy-card   { background: #1A2942; border: 1px solid rgba(201,146,42,0.15); border-radius: 16px; }
+.navy-card-2 { background: #162035; border: 1px solid rgba(201,146,42,0.10); border-radius: 16px; }
+
+/* === PODIUM RISE ANIMATION === */
+@keyframes podium-rise {
+  from { transform: translateY(60px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.podium-rise-1 { animation: podium-rise 0.5s ease-out 0ms   both; }
+.podium-rise-2 { animation: podium-rise 0.5s ease-out 150ms both; }
+.podium-rise-3 { animation: podium-rise 0.5s ease-out 300ms both; }
+
+/* === STAGGER SLIDE-UP === */
+.slide-up-1 { animation: slide-up 0.3s ease-out 0ms   both; }
+.slide-up-2 { animation: slide-up 0.3s ease-out 80ms  both; }
+.slide-up-3 { animation: slide-up 0.3s ease-out 160ms both; }
+.slide-up-4 { animation: slide-up 0.3s ease-out 240ms both; }
+.slide-up-5 { animation: slide-up 0.3s ease-out 320ms both; }
