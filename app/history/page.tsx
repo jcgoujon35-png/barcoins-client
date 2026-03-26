@@ -20,8 +20,8 @@ export default function History() {
   const filtered = transactions.filter(t => filter === 'all' || (filter === 'plus' ? t.plus : !t.plus))
 
   return (
-    <div className="min-h-dvh pb-20" style={{background:'#f4f5f7'}}>
-      <div className="px-4 pt-12 pb-4" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh pb-20" style={{background:'linear-gradient(180deg,#1a0a00,#2d1200)'}}>
+      <div className="px-4 pt-12 pb-4" style={{background:'#1a0a00'}}>
         <h1 className="text-[#F5E6D3] text-xl font-black">Historique</h1>
         <div className="text-2xl font-black mt-1" style={{color:'#F59E0B'}}>4 820 coins ⚡</div>
       </div>
@@ -31,18 +31,18 @@ export default function History() {
           {(['all','plus','minus'] as Filter[]).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className="px-4 py-1.5 rounded-full text-sm font-bold transition-all"
-              style={filter === f ? {background:'#F59E0B',color:'#1a1a2e'} : {background:'#fff',color:'#6b7280'}}>
+              style={filter === f ? {background:'#F59E0B',color:'#1a0a00'} : {background:'rgba(255,255,255,0.07)',color:'#A07850'}}>
               {f === 'all' ? 'Tout' : f === 'plus' ? '+ Gains' : '- Dépenses'}
             </button>
           ))}
         </div>
 
-        <div className="rounded-2xl bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl shadow-sm overflow-hidden">
           {filtered.map((t, i) => (
             <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-gray-50 last:border-0">
               <span className="text-lg">{t.icon}</span>
               <div className="flex-1">
-                <div className="text-sm font-medium" style={{color:'#1a1a2e'}}>{t.label}</div>
+                <div className="text-sm font-medium" style={{color:'#1a0a00'}}>{t.label}</div>
                 <div className="text-xs text-[#A07850]">{t.time}</div>
               </div>
               <span className="font-bold text-sm" style={{color: t.plus ? '#22c55e' : '#ef4444'}}>{t.coins}</span>

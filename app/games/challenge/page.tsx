@@ -54,7 +54,7 @@ export default function Challenge() {
   }
 
   if (step === 'type') return (
-    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
+    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a0a00,#2d1200)'}}>
       <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-6">← Retour</button>
       <div className="text-4xl mb-3">⚔️</div>
       <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Créer un défi privé</h1>
@@ -83,7 +83,7 @@ export default function Challenge() {
           <button key={cat} onClick={() => setCategory(cat)}
             className="px-3 py-2 rounded-xl text-sm font-medium transition-all"
             style={{background: category === cat ? '#F59E0B' : 'rgba(255,255,255,0.1)',
-              color: category === cat ? '#1a1a2e' : '#fff'}}>
+              color: category === cat ? '#1a0a00' : '#F5E6D3'}}>
             {cat}
           </button>
         ))}
@@ -91,14 +91,14 @@ export default function Challenge() {
 
       <button onClick={() => category && setStep('players')}
         className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95 mt-auto mb-6"
-        style={{background: category ? '#F59E0B' : 'rgba(255,255,255,0.1)', color: category ? '#1a1a2e' : 'rgba(255,255,255,0.3)'}}>
+        style={{background: category ? '#F59E0B' : 'rgba(255,255,255,0.1)', color: category ? '#1a0a00' : 'rgba(245,230,211,0.3)'}}>
         Choisir les joueurs →
       </button>
     </div>
   )
 
   if (step === 'players') return (
-    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
+    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a0a00,#2d1200)'}}>
       <button onClick={() => setStep('type')} className="text-[#F5E6D3]/40 text-sm mb-4">← Retour</button>
       <h2 className="text-[#F5E6D3] text-xl font-black mb-1">Qui défies-tu ?</h2>
       <p className="text-[#F5E6D3]/50 text-sm mb-6">Joueurs présents au bar ce soir</p>
@@ -112,7 +112,7 @@ export default function Challenge() {
               opacity: p.status === 'busy' ? 0.4 : 1}}>
             <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0"
               style={{background: selected.includes(p.id) ? '#F59E0B' : 'rgba(255,255,255,0.15)',
-                color: selected.includes(p.id) ? '#1a1a2e' : '#fff'}}>
+                color: selected.includes(p.id) ? '#1a0a00' : '#F5E6D3'}}>
               {p.initials}
             </div>
             <div className="flex-1 text-left">
@@ -137,14 +137,14 @@ export default function Challenge() {
       <button onClick={() => selected.length > 0 && setStep('config')}
         className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95 mb-6"
         style={{background: selected.length > 0 ? '#F59E0B' : 'rgba(255,255,255,0.1)',
-          color: selected.length > 0 ? '#1a1a2e' : 'rgba(255,255,255,0.3)'}}>
+          color: selected.length > 0 ? '#1a0a00' : 'rgba(245,230,211,0.3)'}}>
         {selected.length > 0 ? `Configurer le défi (${selected.length + 1} joueurs) →` : 'Sélectionne au moins 1 joueur'}
       </button>
     </div>
   )
 
   if (step === 'config') return (
-    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
+    <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a0a00,#2d1200)'}}>
       <button onClick={() => setStep('players')} className="text-[#F5E6D3]/40 text-sm mb-4">← Retour</button>
       <h2 className="text-[#F5E6D3] text-xl font-black mb-1">Paramètres du défi</h2>
       <p className="text-[#F5E6D3]/50 text-sm mb-6">{gameType === 'blindtest' ? '🎵' : '❓'} {category} · {selected.length + 1} joueurs</p>
@@ -192,7 +192,7 @@ export default function Challenge() {
 
       <button onClick={startWaiting}
         className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95 mb-6"
-        style={{background:'#F59E0B', color:'#1a1a2e'}}>
+        style={{background:'#F59E0B', color:'#1a0a00'}}>
         ⚔️ Lancer le défi !
       </button>
     </div>
@@ -200,7 +200,7 @@ export default function Challenge() {
 
   if (step === 'waiting') return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-4"
-      style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
+      style={{background:'linear-gradient(160deg,#1a0a00,#2d1200)'}}>
       <div className="text-5xl mb-6">⚔️</div>
       <h2 className="text-[#F5E6D3] text-2xl font-black mb-2">Défi envoyé !</h2>
       <p className="text-[#F5E6D3]/50 text-sm mb-8 text-center">En attente que tes adversaires rejoignent...</p>
@@ -208,7 +208,7 @@ export default function Challenge() {
       <div className="w-full max-w-sm flex flex-col gap-3 mb-8">
         {/* Toi */}
         <div className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
-          <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{background:'#F59E0B',color:'#1a1a2e'}}>AM</div>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{background:'#F59E0B',color:'#1a0a00'}}>AM</div>
           <span className="text-[#F5E6D3] font-medium flex-1">Alexandre M. (toi)</span>
           <span className="text-green-400 text-xs font-bold">✓ Prêt</span>
         </div>
@@ -240,7 +240,7 @@ export default function Challenge() {
   // step === 'ready'
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-6"
-      style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
+      style={{background:'linear-gradient(160deg,#1a0a00,#2d1200)'}}>
       <div className="text-6xl mb-4 slide-up">⚔️</div>
       <h2 className="text-[#F5E6D3] text-3xl font-black mb-2">Tout le monde est prêt !</h2>
       <p className="text-[#F5E6D3]/60 mb-2">{gameType === 'blindtest' ? '🎵 Blind Test' : '❓ Quiz'} · {category}</p>
@@ -257,7 +257,7 @@ export default function Challenge() {
 
       <button onClick={() => router.push(gameType === 'blindtest' ? '/games/blindtest' : '/games/quiz')}
         className="w-full py-4 rounded-2xl font-bold text-xl transition-transform active:scale-95 pulse-gold mb-4"
-        style={{background:'#F59E0B', color:'#1a1a2e'}}>
+        style={{background:'#F59E0B', color:'#1a0a00'}}>
         🚀 Commencer le défi !
       </button>
       <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/40 text-sm">Annuler</button>

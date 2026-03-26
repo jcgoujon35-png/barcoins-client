@@ -47,7 +47,7 @@ export default function Quiz() {
   }
 
   if (step === 'bet') return (
-    <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a0a00'}}>
       <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-8">← Retour</button>
       <div className="text-4xl mb-4">❓</div>
       <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Quiz Culture Bar</h1>
@@ -61,7 +61,7 @@ export default function Quiz() {
         </div>
         <div className="text-center text-[#F5E6D3]/40 text-xs mt-3">Solde : {coins} coins</div>
       </div>
-      <button onClick={startGame} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a1a2e'}}>
+      <button onClick={startGame} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a0a00'}}>
         Commencer le quiz ⚡
       </button>
     </div>
@@ -71,7 +71,7 @@ export default function Quiz() {
     const q = questions[qIndex]
     const pct = (timer / 15) * 100
     return (
-      <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a1a2e'}}>
+      <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a0a00'}}>
         <div className="flex justify-between items-center mb-4">
           <span className="text-[#F5E6D3]/60 text-sm">Question {qIndex + 1} / {questions.length}</span>
           <span className="font-bold text-lg" style={{color: timer <= 5 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
@@ -103,7 +103,7 @@ export default function Quiz() {
 
   const earned = score * 60 + (score >= 4 ? bet * 2 : Math.round(bet * score / questions.length))
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a0a00'}}>
       {showConf && (
         <div className="fixed inset-0 pointer-events-none flex items-start justify-center pt-20">
           {['#F59E0B','#22c55e','#ef4444','#FCD34D','#fff'].map((c,i) => (
@@ -119,7 +119,7 @@ export default function Quiz() {
       <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
       <button onClick={() => { setStep('bet'); setQIndex(0); setScore(0); setSelected(null); setShowConf(false) }}
         className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
-        style={{background:'#F59E0B',color:'#1a1a2e'}}>Rejouer</button>
+        style={{background:'#F59E0B',color:'#1a0a00'}}>Rejouer</button>
       <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/50 text-sm">← Retour aux jeux</button>
     </div>
   )

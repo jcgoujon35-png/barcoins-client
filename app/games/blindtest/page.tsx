@@ -45,7 +45,7 @@ export default function BlindTest() {
   }
 
   if (step === 'bet') return (
-    <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a0a00'}}>
       <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-6">← Retour</button>
       <div className="text-4xl mb-3">🎵</div>
       <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Blind Test</h1>
@@ -65,14 +65,14 @@ export default function BlindTest() {
       </div>
       <button onClick={() => { setStep('listen'); setTimer(30); setSelected(null) }}
         className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95"
-        style={{background:'#F59E0B',color:'#1a1a2e'}}>
+        style={{background:'#F59E0B',color:'#1a0a00'}}>
         Je suis prêt — Go ! 🎵
       </button>
     </div>
   )
 
   if (step === 'listen') return (
-    <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a0a00'}}>
       <div className="flex justify-between items-center mb-6">
         <span className="text-[#F5E6D3]/50 text-sm">Manche {tIndex + 1} / {tracks.length}</span>
         <span className="font-bold text-lg" style={{color: timer <= 10 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
@@ -117,7 +117,7 @@ export default function BlindTest() {
   )
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a1a2e'}}>
+    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a0a00'}}>
       <div className="text-5xl mb-4">{won ? '🎉' : '😔'}</div>
       <h2 className="text-[#F5E6D3] text-2xl font-black mb-2">{won ? 'Bonne réponse !' : 'Raté...'}</h2>
       <p className="text-[#F5E6D3]/60 mb-1">C'était <strong className="text-[#F5E6D3]">{track.title}</strong></p>
@@ -130,11 +130,11 @@ export default function BlindTest() {
       {tIndex + 1 < tracks.length ? (
         <button onClick={() => { setTIndex(t => t + 1); setStep('bet'); setSelected(null) }}
           className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
-          style={{background:'#F59E0B',color:'#1a1a2e'}}>Manche suivante →</button>
+          style={{background:'#F59E0B',color:'#1a0a00'}}>Manche suivante →</button>
       ) : (
         <button onClick={() => { setTIndex(0); setStep('bet'); setSelected(null) }}
           className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
-          style={{background:'#F59E0B',color:'#1a1a2e'}}>Rejouer ⚡</button>
+          style={{background:'#F59E0B',color:'#1a0a00'}}>Rejouer ⚡</button>
       )}
       <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/50 text-sm">← Retour aux jeux</button>
     </div>

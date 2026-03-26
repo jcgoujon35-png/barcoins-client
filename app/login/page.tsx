@@ -32,9 +32,9 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'linear-gradient(160deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%)'}}>
+    <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'linear-gradient(160deg, #1a0a00 0%, #2d1200 60%, #1a0a00 100%)'}}>
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl text-sm font-bold" style={{background:'#F59E0B',color:'#1a1a2e'}}>{toast}</div>
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl text-sm font-bold" style={{background:'#F59E0B',color:'#1a0a00'}}>{toast}</div>
       )}
       <div className="w-full max-w-sm slide-up">
         <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-6">← Retour</button>
@@ -50,7 +50,7 @@ export default function Login() {
               className="w-full px-4 py-3 rounded-xl text-[#F5E6D3] text-lg mb-4 outline-none"
               style={{background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.2)'}}
             />
-            <button onClick={sendCode} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a1a2e'}}>
+            <button onClick={sendCode} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a0a00'}}>
               Recevoir mon code SMS
             </button>
             <p className="text-[#F5E6D3]/30 text-xs text-center mt-4">Déjà inscrit ? Tu seras reconnu automatiquement.</p>
@@ -64,7 +64,7 @@ export default function Login() {
               className="w-full px-4 py-3 rounded-xl text-[#F5E6D3] text-2xl text-center tracking-[1rem] mb-4 outline-none"
               style={{background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.2)'}}
             />
-            <button onClick={verify} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a1a2e'}}>
+            <button onClick={verify} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a0a00'}}>
               Accéder à BarCoins ⚡
             </button>
             <button onClick={() => setStep('phone')} className="w-full text-center text-[#F5E6D3]/40 text-sm mt-3">Changer de numéro</button>
