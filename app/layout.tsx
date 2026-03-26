@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'BarCoins' },
 }
 export const viewport: Viewport = {
-  width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#F59E0B',
+  width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#C9922A',
 }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
