@@ -48,18 +48,18 @@ export default function Quiz() {
 
   if (step === 'bet') return (
     <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a1a2e'}}>
-      <button onClick={() => router.back()} className="text-white/40 text-sm mb-8">← Retour</button>
+      <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-8">← Retour</button>
       <div className="text-4xl mb-4">❓</div>
-      <h1 className="text-white text-2xl font-black mb-1">Quiz Culture Bar</h1>
-      <p className="text-white/50 text-sm mb-8">Mise optionnelle avant de commencer</p>
+      <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Quiz Culture Bar</h1>
+      <p className="text-[#F5E6D3]/50 text-sm mb-8">Mise optionnelle avant de commencer</p>
       <div className="bg-white/10 rounded-2xl p-6 mb-6">
-        <div className="text-white/60 text-sm mb-4 text-center">Ta mise</div>
+        <div className="text-[#F5E6D3]/60 text-sm mb-4 text-center">Ta mise</div>
         <div className="flex items-center justify-center gap-4">
           <button onClick={() => setBet(b => Math.max(0, b - 50))} className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>-</button>
           <span className="text-4xl font-black" style={{color:'#F59E0B'}}>{bet}</span>
           <button onClick={() => setBet(b => Math.min(coins, b + 50))} className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>+</button>
         </div>
-        <div className="text-center text-white/40 text-xs mt-3">Solde : {coins} coins</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs mt-3">Solde : {coins} coins</div>
       </div>
       <button onClick={startGame} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a1a2e'}}>
         Commencer le quiz ⚡
@@ -73,13 +73,13 @@ export default function Quiz() {
     return (
       <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a1a2e'}}>
         <div className="flex justify-between items-center mb-4">
-          <span className="text-white/60 text-sm">Question {qIndex + 1} / {questions.length}</span>
+          <span className="text-[#F5E6D3]/60 text-sm">Question {qIndex + 1} / {questions.length}</span>
           <span className="font-bold text-lg" style={{color: timer <= 5 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
         </div>
         <div className="w-full h-2 rounded-full mb-6" style={{background:'rgba(255,255,255,0.1)'}}>
           <div className="h-2 rounded-full transition-all" style={{width:`${pct}%`, background: timer <= 5 ? '#ef4444' : '#F59E0B'}}></div>
         </div>
-        <div className="text-white text-xl font-bold mb-8 leading-snug">{q.q}</div>
+        <div className="text-[#F5E6D3] text-xl font-bold mb-8 leading-snug">{q.q}</div>
         <div className="grid grid-cols-2 gap-3 flex-1">
           {q.answers.map((a, i) => {
             let bg = 'rgba(255,255,255,0.1)'
@@ -112,15 +112,15 @@ export default function Quiz() {
         </div>
       )}
       <div className="text-6xl mb-6">{score >= 4 ? '🎉' : score >= 2 ? '👍' : '😅'}</div>
-      <h2 className="text-white text-3xl font-black mb-2">{score >= 4 ? 'Bravo !' : 'Pas mal !'}</h2>
-      <p className="text-white/60 mb-6">{score} / {questions.length} bonnes réponses</p>
+      <h2 className="text-[#F5E6D3] text-3xl font-black mb-2">{score >= 4 ? 'Bravo !' : 'Pas mal !'}</h2>
+      <p className="text-[#F5E6D3]/60 mb-6">{score} / {questions.length} bonnes réponses</p>
       <div className="text-5xl font-black mb-2" style={{color:'#F59E0B'}}>+{earned}</div>
-      <p className="text-white/50 text-sm mb-2">coins gagnés</p>
-      <p className="text-white/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-2">coins gagnés</p>
+      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
       <button onClick={() => { setStep('bet'); setQIndex(0); setScore(0); setSelected(null); setShowConf(false) }}
         className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
         style={{background:'#F59E0B',color:'#1a1a2e'}}>Rejouer</button>
-      <button onClick={() => router.push('/games')} className="text-white/50 text-sm">← Retour aux jeux</button>
+      <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/50 text-sm">← Retour aux jeux</button>
     </div>
   )
 }

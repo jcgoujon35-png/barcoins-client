@@ -38,7 +38,7 @@ export default function Leaderboard() {
   return (
     <div className="min-h-dvh pb-20" style={{background:'linear-gradient(180deg, #1a1a2e 0%, #0f3460 100%)'}}>
       <div className="px-4 pt-12 pb-2">
-        <h1 className="text-white text-xl font-black">Classement — Ce Soir</h1>
+        <h1 className="text-[#F5E6D3] text-xl font-black">Classement — Ce Soir</h1>
         <div className="flex items-center gap-2 mt-1">
           <span className="w-2 h-2 rounded-full bg-red-400 pulse-gold"></span>
           <span className="text-red-400 text-xs">Live — se met à jour en temps réel</span>
@@ -89,7 +89,7 @@ export default function Leaderboard() {
         {rest.map((p) => (
           <div key={p.rank} className="flex items-center gap-3 px-4 py-3 border-b"
             style={{borderColor:'rgba(255,255,255,0.05)', background: p.isMe ? 'rgba(245,158,11,0.15)' : 'transparent'}}>
-            <span className="text-gray-400 w-5 text-sm font-bold">{p.rank}</span>
+            <span className="text-[#A07850] w-5 text-sm font-bold">{p.rank}</span>
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
               style={{background: p.isMe ? '#F59E0B' : 'rgba(255,255,255,0.15)', color: p.isMe ? '#1a1a2e' : '#fff'}}>
               {p.initials}

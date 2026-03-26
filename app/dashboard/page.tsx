@@ -51,16 +51,16 @@ export default function Dashboard() {
           </button>
         </div>
         {/* Salutation personnalisée */}
-        <div className="text-white/60 text-sm mb-2">Bonsoir, <span className="text-white font-bold">{firstName}</span> 👋</div>
+        <div className="text-[#F5E6D3]/60 text-sm mb-2">Bonsoir, <span className="text-[#F5E6D3] font-bold">{firstName}</span> 👋</div>
         <div className="flex items-end justify-between">
           <div>
             <div className="text-3xl font-black" style={{color:'#F59E0B'}}>⚡ {user.coins.toLocaleString()}</div>
-            <div className="text-white/40 text-xs mt-0.5">coins ce soir</div>
+            <div className="text-[#F5E6D3]/40 text-xs mt-0.5">coins ce soir</div>
           </div>
           <div className="text-right">
             <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{background:'rgba(245,158,11,0.2)',color:'#F59E0B',border:'1px solid rgba(245,158,11,0.4)'}}>⭐ {user.status}</div>
             {gapTo1st > 0 ? (
-              <div className="text-white/50 text-xs">encore <span className="text-white font-bold">{gapTo1st}</span> coins pour 🥇</div>
+              <div className="text-[#F5E6D3]/50 text-xs">encore <span className="text-[#F5E6D3] font-bold">{gapTo1st}</span> coins pour 🥇</div>
             ) : (
               <div className="text-xs font-bold" style={{color:'#22c55e'}}>🥇 Tu mènes la soirée !</div>
             )}
@@ -75,8 +75,8 @@ export default function Dashboard() {
             <span className="w-2 h-2 rounded-full bg-green-400 pulse-gold"></span>
             <span className="text-green-400 text-xs font-bold">SOIRÉE EN COURS</span>
           </div>
-          <div className="text-white font-bold text-lg">Le Bar des Amis</div>
-          <div className="text-white/50 text-sm mb-3">Vendredi 20 mars 2026 — 21h30 · 24 joueurs</div>
+          <div className="text-[#F5E6D3] font-bold text-lg">Le Bar des Amis</div>
+          <div className="text-[#F5E6D3]/50 text-sm mb-3">Vendredi 20 mars 2026 — 21h30 · 24 joueurs</div>
           <button onClick={() => router.push('/leaderboard')} className="text-sm font-bold" style={{color:'#F59E0B'}}>
             Voir le classement en direct →
           </button>
@@ -85,13 +85,13 @@ export default function Dashboard() {
         {/* Position */}
         <div className="rounded-2xl p-4 bg-white flex items-center justify-between shadow-sm">
           <div>
-            <div className="text-gray-500 text-xs uppercase tracking-wider mb-1">Ta position ce soir</div>
+            <div className="text-[#A07850] text-xs uppercase tracking-wider mb-1">Ta position ce soir</div>
             <div className="text-3xl font-black" style={{color:'#1a1a2e'}}>🏆 3<span className="text-lg">ème</span></div>
-            <div className="text-gray-400 text-xs">sur 24 joueurs</div>
+            <div className="text-[#A07850] text-xs">sur 24 joueurs</div>
           </div>
           <div className="text-right">
             <div className="text-2xl font-black" style={{color:'#F59E0B'}}>+320</div>
-            <div className="text-gray-400 text-xs">coins ce soir</div>
+            <div className="text-[#A07850] text-xs">coins ce soir</div>
             {gapTo1st > 0 && (
               <div className="text-xs mt-1 font-medium" style={{color:'#ef4444'}}>🎯 {gapTo1st} coins pour 1<sup>er</sup></div>
             )}
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
         {/* Programme ce soir */}
         <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">📅 Programme ce soir</div>
+          <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider mb-3">📅 Programme ce soir</div>
           {programme.map((p, i) => (
             <div key={i} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
               <div className="text-xs font-bold w-10 flex-shrink-0" style={{color:'#F59E0B'}}>{p.time}</div>
@@ -113,20 +113,20 @@ export default function Dashboard() {
         {/* Offre du moment */}
         <div className="rounded-2xl p-4 shadow-sm overflow-hidden relative" style={{background:'linear-gradient(135deg,#D97706,#F59E0B)'}}>
           <div className="text-xs font-black uppercase tracking-wider text-amber-900 mb-1">🔥 Offre du moment</div>
-          <div className="text-white font-black text-lg leading-tight">Pitcher = +200 coins</div>
-          <div className="text-white/80 text-sm">Ce soir seulement — jusqu'à 23h</div>
+          <div className="text-[#F5E6D3] font-black text-lg leading-tight">Pitcher = +200 coins</div>
+          <div className="text-[#F5E6D3]/80 text-sm">Ce soir seulement — jusqu'à 23h</div>
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl opacity-20">🍺</div>
         </div>
 
         {/* Produits vedette */}
         <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">🍽️ Carte ce soir</div>
+          <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider mb-3">🍽️ Carte ce soir</div>
           <div className="grid grid-cols-2 gap-2">
             {produitsVedette.map((p, i) => (
               <div key={i} className="rounded-xl p-3" style={{background:'#f9fafb', border:'1px solid #f3f4f6'}}>
                 <div className="text-2xl mb-1">{p.icon}</div>
                 <div className="text-xs font-bold" style={{color:'#1a1a2e'}}>{p.label}</div>
-                <div className="text-xs text-gray-400">{p.prix}</div>
+                <div className="text-xs text-[#A07850]">{p.prix}</div>
                 <div className="text-xs font-bold mt-1" style={{color:'#F59E0B'}}>{p.coins}</div>
               </div>
             ))}
@@ -135,19 +135,19 @@ export default function Dashboard() {
 
         {/* Paliers coins */}
         <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">⚡ Paliers — Coins par consommation</div>
+          <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider mb-3">⚡ Paliers — Coins par consommation</div>
           <div className="flex flex-col gap-2">
             {paliersCoins.map((p, i) => (
               <div key={i} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black" style={{background:'rgba(245,158,11,0.1)',color:'#D97706'}}>{p.conso}</div>
-                  <span className="text-sm text-gray-500">{p.label}</span>
+                  <span className="text-sm text-[#A07850]">{p.label}</span>
                 </div>
                 <span className="font-black text-sm" style={{color:'#F59E0B'}}>+{p.coins} coins</span>
               </div>
             ))}
           </div>
-          <div className="text-gray-400 text-xs mt-2 text-center">Le gérant saisit ta conso · Les coins arrivent instantanément</div>
+          <div className="text-[#A07850] text-xs mt-2 text-center">Le gérant saisit ta conso · Les coins arrivent instantanément</div>
         </div>
 
         {/* Défi Privé CTA */}
@@ -156,35 +156,35 @@ export default function Dashboard() {
           style={{background:'linear-gradient(135deg,#1a1a2e,#0f3460)', border:'1.5px solid rgba(245,158,11,0.5)'}}>
           <span className="text-3xl">⚔️</span>
           <div className="flex-1">
-            <div className="text-white font-bold text-sm">Créer un défi privé</div>
-            <div className="text-white/50 text-xs">Challenge ta table entre potes</div>
+            <div className="text-[#F5E6D3] font-bold text-sm">Créer un défi privé</div>
+            <div className="text-[#F5E6D3]/50 text-xs">Challenge ta table entre potes</div>
           </div>
           <div className="text-xs font-bold px-3 py-1.5 rounded-xl" style={{background:'#F59E0B',color:'#1a1a2e'}}>Go</div>
         </button>
 
         {/* Jeux */}
-        <div className="text-gray-500 text-xs font-bold uppercase tracking-wider px-1">Jeux lancés par le bar</div>
+        <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider px-1">Jeux lancés par le bar</div>
         <div className="grid grid-cols-2 gap-3">
           <button onClick={() => router.push('/games/blindtest')}
             className="rounded-2xl p-4 text-left transition-transform active:scale-95 shadow-sm"
             style={{background:'linear-gradient(135deg,#1a1a2e,#0f3460)'}}>
             <div className="text-2xl mb-2">🎵</div>
-            <div className="text-white font-bold text-sm">Blind Test</div>
-            <div className="text-white/50 text-xs">Mise avant écoute</div>
+            <div className="text-[#F5E6D3] font-bold text-sm">Blind Test</div>
+            <div className="text-[#F5E6D3]/50 text-xs">Mise avant écoute</div>
             <div className="mt-2 text-xs font-bold" style={{color:'#F59E0B'}}>jusqu'à ×5</div>
           </button>
           <button onClick={() => router.push('/games/quiz')}
             className="rounded-2xl p-4 text-left transition-transform active:scale-95 bg-white shadow-sm">
             <div className="text-2xl mb-2">❓</div>
             <div className="font-bold text-sm" style={{color:'#1a1a2e'}}>Quiz Bar</div>
-            <div className="text-gray-400 text-xs">500 questions</div>
+            <div className="text-[#A07850] text-xs">500 questions</div>
             <div className="mt-2 text-xs font-bold" style={{color:'#F59E0B'}}>+20 à +100 coins</div>
           </button>
         </div>
 
         {/* Dernières transactions */}
         <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">Dernières transactions</div>
+          <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider mb-3">Dernières transactions</div>
           {[
             { label: 'Quiz Blind Test', coins: '+150', time: 'il y a 12 min' },
             { label: 'Consommation 16€', coins: '+80', time: 'il y a 34 min' },
@@ -193,7 +193,7 @@ export default function Dashboard() {
             <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
               <div>
                 <div className="text-sm font-medium" style={{color:'#1a1a2e'}}>{t.label}</div>
-                <div className="text-xs text-gray-400">{t.time}</div>
+                <div className="text-xs text-[#A07850]">{t.time}</div>
               </div>
               <span className="font-bold text-sm" style={{color:'#22c55e'}}>{t.coins}</span>
             </div>
@@ -207,7 +207,7 @@ export default function Dashboard() {
         <div className="rounded-2xl p-4 shadow-sm" style={{background:'linear-gradient(135deg,#1a1a2e,#0f3460)'}}>
           <div className="flex items-center gap-2 mb-3">
             <span>🔮</span>
-            <span className="text-white font-black text-sm">Bientôt sur BarCoins</span>
+            <span className="text-[#F5E6D3] font-black text-sm">Bientôt sur BarCoins</span>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {[
@@ -220,8 +220,8 @@ export default function Dashboard() {
               <div key={i} className="flex-shrink-0 rounded-xl p-3 w-28 text-center"
                 style={{background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.08)'}}>
                 <div className="text-xl mb-1">{f.icon}</div>
-                <div className="text-white text-xs font-bold leading-tight">{f.label}</div>
-                <div className="text-white/40 text-xs mt-0.5">{f.desc}</div>
+                <div className="text-[#F5E6D3] text-xs font-bold leading-tight">{f.label}</div>
+                <div className="text-[#F5E6D3]/40 text-xs mt-0.5">{f.desc}</div>
               </div>
             ))}
           </div>

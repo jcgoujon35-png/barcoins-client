@@ -46,10 +46,10 @@ export default function BlindTest() {
 
   if (step === 'bet') return (
     <div className="min-h-dvh flex flex-col px-6 pt-12" style={{background:'#1a1a2e'}}>
-      <button onClick={() => router.back()} className="text-white/40 text-sm mb-6">← Retour</button>
+      <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-6">← Retour</button>
       <div className="text-4xl mb-3">🎵</div>
-      <h1 className="text-white text-2xl font-black mb-1">Blind Test</h1>
-      <p className="text-white/50 text-sm mb-2">MISE TON PARI AVANT D'ÉCOUTER</p>
+      <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Blind Test</h1>
+      <p className="text-[#F5E6D3]/50 text-sm mb-2">MISE TON PARI AVANT D'ÉCOUTER</p>
       <div className="text-xs font-bold mb-8 px-3 py-1 rounded-full inline-block" style={{background:'rgba(245,158,11,0.2)',color:'#F59E0B'}}>Catégorie : Hits toutes époques</div>
       <div className="bg-white/10 rounded-2xl p-6 mb-4">
         <div className="flex items-center justify-center gap-4 mb-3">
@@ -57,7 +57,7 @@ export default function BlindTest() {
           <span className="text-4xl font-black" style={{color:'#F59E0B'}}>{bet}</span>
           <button onClick={() => setBet(b => Math.min(500, b + 50))} className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>+</button>
         </div>
-        <div className="text-center text-white/40 text-xs">Solde : {coins} coins · Mise max : 500</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs">Solde : {coins} coins · Mise max : 500</div>
       </div>
       <div className="flex gap-3 text-xs text-center mb-8">
         <div className="flex-1 rounded-xl p-3" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>✅ Bonne réponse<br/><strong>mise × 3</strong></div>
@@ -74,7 +74,7 @@ export default function BlindTest() {
   if (step === 'listen') return (
     <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a1a2e'}}>
       <div className="flex justify-between items-center mb-6">
-        <span className="text-white/50 text-sm">Manche {tIndex + 1} / {tracks.length}</span>
+        <span className="text-[#F5E6D3]/50 text-sm">Manche {tIndex + 1} / {tracks.length}</span>
         <span className="font-bold text-lg" style={{color: timer <= 10 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
       </div>
       <div className="w-full h-2 rounded-full mb-8" style={{background:'rgba(255,255,255,0.1)'}}>
@@ -89,12 +89,12 @@ export default function BlindTest() {
         <div className="flex items-end gap-1 mb-6 h-10">
           {Array.from({length:7}).map((_,i) => <div key={i} className="wave-bar"></div>)}
         </div>
-        <p className="text-white/60 text-sm mb-2">Extrait en cours d'écoute...</p>
-        {blocked && <p className="text-white/30 text-xs">Réponses disponibles dans {Math.max(0, 8 - (30 - timer))}s</p>}
+        <p className="text-[#F5E6D3]/60 text-sm mb-2">Extrait en cours d'écoute...</p>
+        {blocked && <p className="text-[#F5E6D3]/30 text-xs">Réponses disponibles dans {Math.max(0, 8 - (30 - timer))}s</p>}
       </div>
 
       <div className="mb-8">
-        <p className="text-white/60 text-sm text-center mb-4">Qui chante cette chanson ?</p>
+        <p className="text-[#F5E6D3]/60 text-sm text-center mb-4">Qui chante cette chanson ?</p>
         <div className="grid grid-cols-2 gap-3">
           {track.answers.map((a, i) => {
             let bg = blocked ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.1)'
@@ -119,14 +119,14 @@ export default function BlindTest() {
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a1a2e'}}>
       <div className="text-5xl mb-4">{won ? '🎉' : '😔'}</div>
-      <h2 className="text-white text-2xl font-black mb-2">{won ? 'Bonne réponse !' : 'Raté...'}</h2>
-      <p className="text-white/60 mb-1">C'était <strong className="text-white">{track.title}</strong></p>
-      <p className="text-white/60 text-sm mb-6">{track.artist} — {track.year}</p>
+      <h2 className="text-[#F5E6D3] text-2xl font-black mb-2">{won ? 'Bonne réponse !' : 'Raté...'}</h2>
+      <p className="text-[#F5E6D3]/60 mb-1">C'était <strong className="text-[#F5E6D3]">{track.title}</strong></p>
+      <p className="text-[#F5E6D3]/60 text-sm mb-6">{track.artist} — {track.year}</p>
       <div className="text-5xl font-black mb-2" style={{color: won ? '#F59E0B' : '#ef4444'}}>
         {won ? `+${bet * 3}` : `-${bet}`}
       </div>
-      <p className="text-white/50 text-sm mb-1">coins {won ? 'gagnés' : 'perdus'}</p>
-      <p className="text-white/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-1">coins {won ? 'gagnés' : 'perdus'}</p>
+      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
       {tIndex + 1 < tracks.length ? (
         <button onClick={() => { setTIndex(t => t + 1); setStep('bet'); setSelected(null) }}
           className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
@@ -136,7 +136,7 @@ export default function BlindTest() {
           className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
           style={{background:'#F59E0B',color:'#1a1a2e'}}>Rejouer ⚡</button>
       )}
-      <button onClick={() => router.push('/games')} className="text-white/50 text-sm">← Retour aux jeux</button>
+      <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/50 text-sm">← Retour aux jeux</button>
     </div>
   )
 }

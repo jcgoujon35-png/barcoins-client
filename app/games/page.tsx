@@ -15,8 +15,8 @@ export default function Games() {
   return (
     <div className="min-h-dvh pb-20" style={{background:'#f4f5f7'}}>
       <div className="px-4 pt-12 pb-4" style={{background:'linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)'}}>
-        <h1 className="text-white text-xl font-black">Jeux disponibles</h1>
-        <p className="text-white/50 text-sm">Soirée en cours — Le Bar des Amis</p>
+        <h1 className="text-[#F5E6D3] text-xl font-black">Jeux disponibles</h1>
+        <p className="text-[#F5E6D3]/50 text-sm">Soirée en cours — Le Bar des Amis</p>
       </div>
 
       <div className="px-4 pt-4 flex flex-col gap-3">
@@ -29,8 +29,8 @@ export default function Games() {
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">⚔️</span>
             <div>
-              <div className="text-white font-black text-base">Défi Privé — Entre potes</div>
-              <div className="text-white/50 text-xs">Challenge ta table, pas besoin que le bar lance un jeu</div>
+              <div className="text-[#F5E6D3] font-black text-base">Défi Privé — Entre potes</div>
+              <div className="text-[#F5E6D3]/50 text-xs">Challenge ta table, pas besoin que le bar lance un jeu</div>
             </div>
             <div className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold flex-shrink-0" style={{background:'#F59E0B',color:'#1a1a2e'}}>Lancer</div>
           </div>
@@ -42,7 +42,7 @@ export default function Games() {
           </div>
         </button>
 
-        <div className="text-gray-500 text-xs font-bold uppercase tracking-wider px-1 mt-1">Jeux lancés par le bar</div>
+        <div className="text-[#A07850] text-xs font-bold uppercase tracking-wider px-1 mt-1">Jeux lancés par le bar</div>
 
         {games.map(g => (
           <div key={g.id}
@@ -52,13 +52,13 @@ export default function Games() {
             <div className="text-3xl flex-shrink-0">{g.icon}</div>
             <div className="flex-1">
               <div className="font-bold text-sm" style={{color:'#1a1a2e'}}>{g.title}</div>
-              <div className="text-gray-400 text-xs">{g.desc}</div>
+              <div className="text-[#A07850] text-xs">{g.desc}</div>
               <div className="text-xs font-bold mt-1" style={{color: g.active ? '#F59E0B' : '#9ca3af'}}>{g.gain}</div>
             </div>
             {g.active ? (
               <div className="px-3 py-1.5 rounded-xl text-xs font-bold" style={{background:'#F59E0B',color:'#1a1a2e'}}>Jouer</div>
             ) : (
-              <div className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-200 text-gray-400">{g.soon || 'Bientôt'}</div>
+              <div className="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#F59E0B]/20 text-[#A07850]">{g.soon || 'Bientôt'}</div>
             )}
           </div>
         ))}

@@ -22,7 +22,7 @@ export default function History() {
   return (
     <div className="min-h-dvh pb-20" style={{background:'#f4f5f7'}}>
       <div className="px-4 pt-12 pb-4" style={{background:'#1a1a2e'}}>
-        <h1 className="text-white text-xl font-black">Historique</h1>
+        <h1 className="text-[#F5E6D3] text-xl font-black">Historique</h1>
         <div className="text-2xl font-black mt-1" style={{color:'#F59E0B'}}>4 820 coins ⚡</div>
       </div>
 
@@ -43,7 +43,7 @@ export default function History() {
               <span className="text-lg">{t.icon}</span>
               <div className="flex-1">
                 <div className="text-sm font-medium" style={{color:'#1a1a2e'}}>{t.label}</div>
-                <div className="text-xs text-gray-400">{t.time}</div>
+                <div className="text-xs text-[#A07850]">{t.time}</div>
               </div>
               <span className="font-bold text-sm" style={{color: t.plus ? '#22c55e' : '#ef4444'}}>{t.coins}</span>
             </div>

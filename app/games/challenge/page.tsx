@@ -55,12 +55,12 @@ export default function Challenge() {
 
   if (step === 'type') return (
     <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
-      <button onClick={() => router.back()} className="text-white/40 text-sm mb-6">← Retour</button>
+      <button onClick={() => router.back()} className="text-[#F5E6D3]/40 text-sm mb-6">← Retour</button>
       <div className="text-4xl mb-3">⚔️</div>
-      <h1 className="text-white text-2xl font-black mb-1">Créer un défi privé</h1>
-      <p className="text-white/50 text-sm mb-8">Challenge ta table — sans attendre le bar</p>
+      <h1 className="text-[#F5E6D3] text-2xl font-black mb-1">Créer un défi privé</h1>
+      <p className="text-[#F5E6D3]/50 text-sm mb-8">Challenge ta table — sans attendre le bar</p>
 
-      <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-3">Choisir le jeu</div>
+      <div className="text-[#F5E6D3]/60 text-xs font-bold uppercase tracking-wider mb-3">Choisir le jeu</div>
       <div className="flex flex-col gap-3 mb-6">
         {(['blindtest', 'quiz'] as GameType[]).map(type => (
           <button key={type} onClick={() => { setGameType(type); setCategory('') }}
@@ -69,15 +69,15 @@ export default function Challenge() {
               border: gameType === type ? '2px solid #F59E0B' : '2px solid transparent'}}>
             <span className="text-3xl">{type === 'blindtest' ? '🎵' : '❓'}</span>
             <div className="text-left">
-              <div className="text-white font-bold">{type === 'blindtest' ? 'Blind Test' : 'Quiz Bar'}</div>
-              <div className="text-white/50 text-xs">{type === 'blindtest' ? 'Mise avant d\'écouter — Qui reconnaît le plus ?' : 'Questions culture & boissons'}</div>
+              <div className="text-[#F5E6D3] font-bold">{type === 'blindtest' ? 'Blind Test' : 'Quiz Bar'}</div>
+              <div className="text-[#F5E6D3]/50 text-xs">{type === 'blindtest' ? 'Mise avant d\'écouter — Qui reconnaît le plus ?' : 'Questions culture & boissons'}</div>
             </div>
             {gameType === type && <span className="ml-auto text-lg">✅</span>}
           </button>
         ))}
       </div>
 
-      <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-3">Catégorie</div>
+      <div className="text-[#F5E6D3]/60 text-xs font-bold uppercase tracking-wider mb-3">Catégorie</div>
       <div className="flex flex-wrap gap-2 mb-8">
         {categories[gameType].map(cat => (
           <button key={cat} onClick={() => setCategory(cat)}
@@ -99,9 +99,9 @@ export default function Challenge() {
 
   if (step === 'players') return (
     <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
-      <button onClick={() => setStep('type')} className="text-white/40 text-sm mb-4">← Retour</button>
-      <h2 className="text-white text-xl font-black mb-1">Qui défies-tu ?</h2>
-      <p className="text-white/50 text-sm mb-6">Joueurs présents au bar ce soir</p>
+      <button onClick={() => setStep('type')} className="text-[#F5E6D3]/40 text-sm mb-4">← Retour</button>
+      <h2 className="text-[#F5E6D3] text-xl font-black mb-1">Qui défies-tu ?</h2>
+      <p className="text-[#F5E6D3]/50 text-sm mb-6">Joueurs présents au bar ce soir</p>
 
       <div className="flex flex-col gap-2 mb-6">
         {nearbyPlayers.map(p => (
@@ -116,7 +116,7 @@ export default function Challenge() {
               {p.initials}
             </div>
             <div className="flex-1 text-left">
-              <div className="text-white font-medium text-sm">{p.name}</div>
+              <div className="text-[#F5E6D3] font-medium text-sm">{p.name}</div>
               <div className="text-xs" style={{color: p.status === 'online' ? '#22c55e' : '#9ca3af'}}>
                 {p.status === 'online' ? '● Disponible' : '● En jeu'}
               </div>
@@ -128,7 +128,7 @@ export default function Challenge() {
 
       {selected.length > 0 && (
         <div className="rounded-2xl p-3 mb-4" style={{background:'rgba(245,158,11,0.1)', border:'1px solid rgba(245,158,11,0.3)'}}>
-          <div className="text-white/60 text-xs text-center">
+          <div className="text-[#F5E6D3]/60 text-xs text-center">
             {selected.length + 1} joueurs · Accès : <strong style={{color:'#F59E0B'}}>{accessPerPerson} coins/pers.</strong> (total {ACCESS_FEE} coins partagé)
           </div>
         </div>
@@ -145,26 +145,26 @@ export default function Challenge() {
 
   if (step === 'config') return (
     <div className="min-h-dvh flex flex-col px-4 pt-12" style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
-      <button onClick={() => setStep('players')} className="text-white/40 text-sm mb-4">← Retour</button>
-      <h2 className="text-white text-xl font-black mb-1">Paramètres du défi</h2>
-      <p className="text-white/50 text-sm mb-6">{gameType === 'blindtest' ? '🎵' : '❓'} {category} · {selected.length + 1} joueurs</p>
+      <button onClick={() => setStep('players')} className="text-[#F5E6D3]/40 text-sm mb-4">← Retour</button>
+      <h2 className="text-[#F5E6D3] text-xl font-black mb-1">Paramètres du défi</h2>
+      <p className="text-[#F5E6D3]/50 text-sm mb-6">{gameType === 'blindtest' ? '🎵' : '❓'} {category} · {selected.length + 1} joueurs</p>
 
       {/* Récap frais d'accès */}
       <div className="rounded-2xl p-4 mb-6" style={{background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)'}}>
-        <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-3">Frais d'accès (partagés)</div>
+        <div className="text-[#F5E6D3]/60 text-xs font-bold uppercase tracking-wider mb-3">Frais d'accès (partagés)</div>
         <div className="flex justify-between items-center">
-          <div className="text-white/70 text-sm">Total accès défi</div>
+          <div className="text-[#F5E6D3]/70 text-sm">Total accès défi</div>
           <div className="font-bold" style={{color:'#F59E0B'}}>{ACCESS_FEE} coins</div>
         </div>
         <div className="flex justify-between items-center mt-1">
-          <div className="text-white/70 text-sm">Ta part ({selected.length + 1} joueurs)</div>
-          <div className="font-bold text-white">{accessPerPerson} coins</div>
+          <div className="text-[#F5E6D3]/70 text-sm">Ta part ({selected.length + 1} joueurs)</div>
+          <div className="font-bold text-[#F5E6D3]">{accessPerPerson} coins</div>
         </div>
-        <div className="text-white/30 text-xs mt-2">Ces coins alimentent le jackpot du défi 🏆</div>
+        <div className="text-[#F5E6D3]/30 text-xs mt-2">Ces coins alimentent le jackpot du défi 🏆</div>
       </div>
 
       {/* Mise supplémentaire */}
-      <div className="text-white/60 text-xs font-bold uppercase tracking-wider mb-3">Ta mise supplémentaire (optionnel)</div>
+      <div className="text-[#F5E6D3]/60 text-xs font-bold uppercase tracking-wider mb-3">Ta mise supplémentaire (optionnel)</div>
       <div className="rounded-2xl p-6 mb-6" style={{background:'rgba(255,255,255,0.05)'}}>
         <div className="flex items-center justify-center gap-4 mb-3">
           <button onClick={() => setBet(b => Math.max(0, b - 25))}
@@ -175,18 +175,18 @@ export default function Challenge() {
             className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold"
             style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>+</button>
         </div>
-        <div className="text-center text-white/40 text-xs">Mise supplémentaire · Le gagnant empoche tout</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs">Mise supplémentaire · Le gagnant empoche tout</div>
       </div>
 
       {/* Total */}
       <div className="rounded-2xl p-4 mb-6" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
         <div className="flex justify-between items-center mb-1">
-          <span className="text-white/70 text-sm">Coût total pour toi</span>
+          <span className="text-[#F5E6D3]/70 text-sm">Coût total pour toi</span>
           <span className="text-2xl font-black" style={{color:'#F59E0B'}}>{totalCost} coins</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-white/50 text-xs">Ton solde après</span>
-          <span className="text-white/60 text-sm">{myCoins - totalCost} coins</span>
+          <span className="text-[#F5E6D3]/50 text-xs">Ton solde après</span>
+          <span className="text-[#F5E6D3]/60 text-sm">{myCoins - totalCost} coins</span>
         </div>
       </div>
 
@@ -202,14 +202,14 @@ export default function Challenge() {
     <div className="min-h-dvh flex flex-col items-center justify-center px-4"
       style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
       <div className="text-5xl mb-6">⚔️</div>
-      <h2 className="text-white text-2xl font-black mb-2">Défi envoyé !</h2>
-      <p className="text-white/50 text-sm mb-8 text-center">En attente que tes adversaires rejoignent...</p>
+      <h2 className="text-[#F5E6D3] text-2xl font-black mb-2">Défi envoyé !</h2>
+      <p className="text-[#F5E6D3]/50 text-sm mb-8 text-center">En attente que tes adversaires rejoignent...</p>
 
       <div className="w-full max-w-sm flex flex-col gap-3 mb-8">
         {/* Toi */}
         <div className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
           <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style={{background:'#F59E0B',color:'#1a1a2e'}}>AM</div>
-          <span className="text-white font-medium flex-1">Alexandre M. (toi)</span>
+          <span className="text-[#F5E6D3] font-medium flex-1">Alexandre M. (toi)</span>
           <span className="text-green-400 text-xs font-bold">✓ Prêt</span>
         </div>
         {/* Adversaires */}
@@ -223,17 +223,17 @@ export default function Challenge() {
                 style={{background: joined ? '#22c55e' : 'rgba(255,255,255,0.15)', color: joined ? '#fff' : '#fff'}}>
                 {p?.initials}
               </div>
-              <span className="text-white font-medium flex-1">{p?.name}</span>
+              <span className="text-[#F5E6D3] font-medium flex-1">{p?.name}</span>
               {joined ? (
                 <span className="text-green-400 text-xs font-bold">✓ Rejoint</span>
               ) : (
-                <span className="text-white/30 text-xs">En attente...</span>
+                <span className="text-[#F5E6D3]/30 text-xs">En attente...</span>
               )}
             </div>
           )
         })}
       </div>
-      <p className="text-white/30 text-xs">Notification envoyée sur leur téléphone</p>
+      <p className="text-[#F5E6D3]/30 text-xs">Notification envoyée sur leur téléphone</p>
     </div>
   )
 
@@ -242,17 +242,17 @@ export default function Challenge() {
     <div className="min-h-dvh flex flex-col items-center justify-center px-6"
       style={{background:'linear-gradient(160deg,#1a1a2e,#0f3460)'}}>
       <div className="text-6xl mb-4 slide-up">⚔️</div>
-      <h2 className="text-white text-3xl font-black mb-2">Tout le monde est prêt !</h2>
-      <p className="text-white/60 mb-2">{gameType === 'blindtest' ? '🎵 Blind Test' : '❓ Quiz'} · {category}</p>
-      <p className="text-white/50 text-sm mb-8">{selected.length + 1} joueurs · Mise totale : {(bet * (selected.length + 1)) + ACCESS_FEE} coins</p>
+      <h2 className="text-[#F5E6D3] text-3xl font-black mb-2">Tout le monde est prêt !</h2>
+      <p className="text-[#F5E6D3]/60 mb-2">{gameType === 'blindtest' ? '🎵 Blind Test' : '❓ Quiz'} · {category}</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-8">{selected.length + 1} joueurs · Mise totale : {(bet * (selected.length + 1)) + ACCESS_FEE} coins</p>
 
       <div className="w-full max-w-sm rounded-2xl p-4 mb-8" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
-        <div className="text-center text-white/60 text-sm mb-2">Jackpot du défi</div>
+        <div className="text-center text-[#F5E6D3]/60 text-sm mb-2">Jackpot du défi</div>
         <div className="text-center text-5xl font-black" style={{color:'#F59E0B'}}>
           {(bet * (selected.length + 1)) + ACCESS_FEE}
           <span className="text-xl ml-1">coins</span>
         </div>
-        <div className="text-center text-white/40 text-xs mt-1">Le gagnant emporte tout 🏆</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs mt-1">Le gagnant emporte tout 🏆</div>
       </div>
 
       <button onClick={() => router.push(gameType === 'blindtest' ? '/games/blindtest' : '/games/quiz')}
@@ -260,7 +260,7 @@ export default function Challenge() {
         style={{background:'#F59E0B', color:'#1a1a2e'}}>
         🚀 Commencer le défi !
       </button>
-      <button onClick={() => router.push('/games')} className="text-white/40 text-sm">Annuler</button>
+      <button onClick={() => router.push('/games')} className="text-[#F5E6D3]/40 text-sm">Annuler</button>
     </div>
   )
 }
