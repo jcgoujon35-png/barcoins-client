@@ -18,7 +18,7 @@ export default function Games() {
     <div className="min-h-dvh pb-20" style={{ background: 'linear-gradient(180deg, #1a0a00 0%, #2d1200 60%, #1a0a00 100%)' }}>
       {/* Header */}
       <div className="px-4 pt-12 pb-4" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%)' }}>
-        <h1 className="text-[#F5E6D3] text-xl font-black">Jeux disponibles</h1>
+        <h1 className="text-xl font-black" style={{ color: '#F5E6D3', textShadow: '0 0 16px rgba(245,158,11,0.3)' }}>Jeux disponibles</h1>
         <div className="flex items-center gap-2 mt-1">
           <span className="w-2 h-2 rounded-full bg-green-400 live-dot inline-block"></span>
           <p className="text-[#F5E6D3]/50 text-sm">Soirée en cours — Le Bar des Amis</p>

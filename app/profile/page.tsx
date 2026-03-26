@@ -36,17 +36,17 @@ export default function Profile() {
   return (
     <div className="min-h-dvh pb-20" style={{ background: 'linear-gradient(180deg, #1a0a00 0%, #2d1200 60%, #1a0a00 100%)' }}>
       {/* Hero */}
-      <div className="px-4 pt-12 pb-6 text-center" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%)' }}>
+      <div className="px-4 pt-12 pb-6 text-center slide-up" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%)' }}>
         <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-3"
           style={{ background: 'linear-gradient(135deg, #F59E0B, #FF6B35)', color: '#1a0a00', boxShadow: '0 0 24px rgba(245,158,11,0.4)' }}>AM</div>
-        <div className="text-[#F5E6D3] text-xl font-bold">Alexandre M.</div>
+        <div className="text-xl font-black" style={{ color: '#F5E6D3', textShadow: '0 0 16px rgba(245,158,11,0.25)' }}>Alexandre M.</div>
         <div className="inline-block px-3 py-1 rounded-full text-xs font-bold mt-1 mb-4"
           style={{ background: 'rgba(245,158,11,0.2)', color: '#F59E0B', border: '1px solid rgba(245,158,11,0.5)' }}>⭐ VIP</div>
         {/* Deux types de coins */}
         <div className="flex gap-3 justify-center">
           <div className="flex-1 rounded-2xl px-3 py-2"
             style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.35)' }}>
-            <div className="text-2xl font-black glow-amber" style={{ color: '#F59E0B' }}>{coinsPlay.toLocaleString()}</div>
+            <div className="text-2xl font-black" style={{ color: '#F59E0B', textShadow: '0 0 20px rgba(245,158,11,0.7), 0 0 40px rgba(245,158,11,0.3)' }}>{coinsPlay.toLocaleString()}</div>
             <div className="text-[#F5E6D3]/50 text-xs">⚡ Coins Play</div>
           </div>
           <div className="flex-1 rounded-2xl px-3 py-2"

@@ -46,7 +46,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="px-4 pt-10 pb-5" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%)' }}>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xl font-black glow-amber" style={{ color: '#F59E0B' }}>Bar⚡Coins</span>
+          <span className="text-xl barcoins-title" style={{ color: '#F59E0B' }}>Bar⚡Coins</span>
           <button onClick={() => router.push('/profile')}
             className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
             style={{ background: 'linear-gradient(135deg, #F59E0B, #FF6B35)', color: '#1a0a00' }}>
@@ -56,7 +56,7 @@ export default function Dashboard() {
         <div className="text-[#F5E6D3]/60 text-sm mb-2">Bonsoir, <span className="text-[#F5E6D3] font-bold">{firstName}</span> 👋</div>
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-4xl font-black glow-amber" style={{ color: '#F59E0B' }}>⚡ {user.coins.toLocaleString()}</div>
+            <div className="text-4xl font-black glow-pulse" style={{ color: '#F59E0B' }}>⚡ {user.coins.toLocaleString()}</div>
             <div className="text-[#F5E6D3]/40 text-xs mt-0.5">coins ce soir</div>
           </div>
           <div className="text-right">
@@ -72,7 +72,7 @@ export default function Dashboard() {
 
       <div className="px-4 pt-2 flex flex-col gap-4">
         {/* Soirée active */}
-        <div className="rounded-2xl p-4" style={{ ...glassCard, border: '1.5px solid #F59E0B', boxShadow: '0 0 20px rgba(245,158,11,0.15)' }}>
+        <div className="rounded-2xl p-4 slide-up" style={{ ...glassCard, border: '1.5px solid #F59E0B', boxShadow: '0 0 20px rgba(245,158,11,0.15)' }}>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-green-400 live-dot inline-block"></span>
             <span className="text-green-400 text-xs font-bold tracking-wider">SOIRÉE EN COURS</span>
@@ -85,14 +85,14 @@ export default function Dashboard() {
         </div>
 
         {/* Position */}
-        <div className="rounded-2xl p-4 flex items-center justify-between" style={glassCard}>
+        <div className="rounded-2xl p-4 flex items-center justify-between slide-up" style={glassCard}>
           <div>
             <div className="text-[#A07850] text-xs uppercase tracking-wider mb-1">Ta position ce soir</div>
-            <div className="text-3xl font-black" style={{ color: '#F5E6D3' }}>🏆 3<span className="text-lg">ème</span></div>
+            <div className="text-3xl font-black" style={{ color: '#F5E6D3', textShadow: '0 0 10px rgba(245,158,11,0.3)' }}>🏆 3<span className="text-lg">ème</span></div>
             <div className="text-[#A07850] text-xs">sur 24 joueurs</div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-black glow-amber" style={{ color: '#F59E0B' }}>+320</div>
+            <div className="text-2xl font-black glow-amber" style={{ color: '#F59E0B', textShadow: '0 0 12px rgba(245,158,11,0.6)' }}>+320</div>
             <div className="text-[#A07850] text-xs">coins ce soir</div>
             {gapTo1st > 0 && (
               <div className="text-xs mt-1 font-medium" style={{ color: '#FF6B35' }}>🎯 {gapTo1st} coins pour 1<sup>er</sup></div>

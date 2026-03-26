@@ -94,7 +94,36 @@ body {
   from { transform: translateY(16px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
-.slide-up { animation: slide-up 0.25s ease-out; }
+.slide-up { animation: slide-up 0.3s ease-out both; }
+
+/* === FADE IN === */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in { animation: fade-in 0.4s ease-out both; }
+
+/* === COUNTER GLOW (chiffres animés) === */
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 12px rgba(245,158,11,0.5); }
+  50% { text-shadow: 0 0 28px rgba(245,158,11,0.9), 0 0 48px rgba(255,107,53,0.4); }
+}
+.glow-pulse { animation: glow-pulse 2.5s ease-in-out infinite; }
+
+/* === TIMER URGENT === */
+@keyframes timer-urgent {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+.timer-urgent { animation: timer-urgent 0.6s ease-in-out infinite; }
+
+/* === SCORE BOUNCE (résultat win) === */
+@keyframes score-win {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.score-win { animation: score-win 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
 /* === AUDIO WAVE (blind test) === */
 @keyframes audio-wave {

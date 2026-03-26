@@ -75,7 +75,7 @@ export default function BlindTest() {
     <div className="min-h-dvh flex flex-col px-4 pt-10" style={{background:'#1a0a00'}}>
       <div className="flex justify-between items-center mb-6">
         <span className="text-[#F5E6D3]/50 text-sm">Manche {tIndex + 1} / {tracks.length}</span>
-        <span className="font-bold text-lg" style={{color: timer <= 10 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
+        <span className={`font-black text-lg ${timer <= 10 ? 'timer-urgent' : ''}`} style={{color: timer <= 10 ? '#ef4444' : '#F59E0B'}}>⏱ {timer}s</span>
       </div>
       <div className="w-full h-2 rounded-full mb-8" style={{background:'rgba(255,255,255,0.1)'}}>
         <div className="h-2 rounded-full transition-all" style={{width:`${(timer/30)*100}%`, background:'#F59E0B'}}></div>
@@ -83,7 +83,7 @@ export default function BlindTest() {
 
       {/* Visualisation audio */}
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="w-32 h-32 rounded-full flex items-center justify-center mb-6 pulse-gold" style={{background:'rgba(245,158,11,0.15)',border:'2px solid #F59E0B'}}>
+        <div className="w-32 h-32 rounded-full flex items-center justify-center mb-6 blindtest-circle" style={{background:'rgba(245,158,11,0.15)',border:'2px solid #F59E0B'}}>
           <div className="text-5xl">🎵</div>
         </div>
         <div className="flex items-end gap-1 mb-6 h-10">
@@ -118,11 +118,11 @@ export default function BlindTest() {
 
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center px-6" style={{background:'#1a0a00'}}>
-      <div className="text-5xl mb-4">{won ? '🎉' : '😔'}</div>
-      <h2 className="text-[#F5E6D3] text-2xl font-black mb-2">{won ? 'Bonne réponse !' : 'Raté...'}</h2>
+      <div className="text-6xl mb-4 slide-up">{won ? '🎉' : '😔'}</div>
+      <h2 className="text-2xl font-black mb-2 slide-up" style={{color: won ? '#F59E0B' : '#ef4444', textShadow: won ? '0 0 20px rgba(245,158,11,0.6)' : '0 0 20px rgba(239,68,68,0.5)'}}>{won ? 'Bonne réponse !' : 'Raté...'}</h2>
       <p className="text-[#F5E6D3]/60 mb-1">C'était <strong className="text-[#F5E6D3]">{track.title}</strong></p>
       <p className="text-[#F5E6D3]/60 text-sm mb-6">{track.artist} — {track.year}</p>
-      <div className="text-5xl font-black mb-2" style={{color: won ? '#F59E0B' : '#ef4444'}}>
+      <div className={`text-5xl font-black mb-2 ${won ? 'score-win' : 'slide-up'}`} style={{color: won ? '#F59E0B' : '#ef4444', textShadow: won ? '0 0 24px rgba(245,158,11,0.7)' : '0 0 20px rgba(239,68,68,0.6)'}}>
         {won ? `+${bet * 3}` : `-${bet}`}
       </div>
       <p className="text-[#F5E6D3]/50 text-sm mb-1">coins {won ? 'gagnés' : 'perdus'}</p>

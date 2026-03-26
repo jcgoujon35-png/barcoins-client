@@ -39,7 +39,7 @@ export default function Leaderboard() {
     <div className="min-h-dvh pb-20" style={{ background: 'linear-gradient(180deg, #1a0a00 0%, #2d1200 50%, #1a0a00 100%)' }}>
       {/* Header */}
       <div className="px-4 pt-12 pb-2">
-        <h1 className="text-[#F5E6D3] text-xl font-black">Classement — Ce Soir</h1>
+        <h1 className="text-xl font-black" style={{ color: '#F5E6D3', textShadow: '0 0 16px rgba(245,158,11,0.3)' }}>Classement — Ce Soir</h1>
         <div className="flex items-center gap-2 mt-1">
           <span className="w-2 h-2 rounded-full bg-red-400 live-dot inline-block"></span>
           <span className="text-[#FF6B35] text-xs font-medium">Live — mise à jour en temps réel</span>
@@ -87,18 +87,17 @@ export default function Leaderboard() {
                 {p?.initials}
               </div>
               <div
-                className={`w-20 ${heights[i]} rounded-t-xl flex flex-col items-center justify-center`}
+                className={`w-20 ${heights[i]} rounded-t-xl flex flex-col items-center justify-center ${isCenter ? 'podium-first shimmer' : ''}`}
                 style={{
                   background: isCenter
-                    ? 'linear-gradient(180deg, #F59E0B, #D97706)'
+                    ? undefined
                     : 'rgba(255,255,255,0.07)',
                   border: isCenter ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: isCenter ? '0 0 20px rgba(245,158,11,0.3)' : 'none',
                 }}>
-                <div className="text-xs font-bold" style={{ color: isCenter ? '#1a0a00' : '#F5E6D3' }}>
+                <div className="text-xs font-black" style={{ color: isCenter ? '#1a0a00' : '#F5E6D3' }}>
                   {p?.name.split(' ')[0]}
                 </div>
-                <div className="text-sm font-black" style={{ color: isCenter ? '#1a0a00' : '#F59E0B' }}>
+                <div className="text-sm font-black" style={{ color: isCenter ? '#1a0a00' : '#F59E0B', textShadow: isCenter ? 'none' : '0 0 8px rgba(245,158,11,0.5)' }}>
                   {p?.coins}
                 </div>
               </div>
