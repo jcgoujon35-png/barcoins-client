@@ -1,11 +1,25 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 export default function Landing() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [returning, setReturning] = useState(false)
   const [userName, setUserName] = useState('')
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (status === 'authenticated') {
+      const role = session?.user?.role as string | undefined;
+      if (role && ['OWNER', 'MANAGER', 'ANIMATOR', 'BARMAN'].includes(role)) {
+        router.push('/gerant');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [status, session, router])
 
   useEffect(() => {
     const stored = localStorage.getItem('barcoins_user')

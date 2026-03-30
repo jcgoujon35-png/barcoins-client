@@ -87,6 +87,13 @@ export default function Dashboard() {
     }
     if (status !== 'authenticated') return;
 
+    // Staff (gérant, barman…) → leur dashboard est /gerant
+    const role = session?.user?.role as string | undefined;
+    if (role && ['OWNER', 'MANAGER', 'ANIMATOR', 'BARMAN'].includes(role)) {
+      router.push('/gerant');
+      return;
+    }
+
     async function fetchData() {
       try {
         const res = await fetch('/api/user/me');
