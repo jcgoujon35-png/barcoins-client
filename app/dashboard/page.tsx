@@ -1,92 +1,193 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import BottomNav from '@/components/BottomNav'
-import { getEffectiveMultiplier, PLAYER_STATUS_THRESHOLDS } from '@/config/business-rules'
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import BottomNav from '@/components/BottomNav';
+import { getEffectiveMultiplier, PLAYER_STATUS_THRESHOLDS, calcCoinsForAmount } from '@/config/business-rules';
+import type { PlanKey } from '@/config/business-rules';
 
-const programme = [
-  { time: '20h30', label: 'Blind Test années 2000', icon: '🎵' },
-  { time: '21h15', label: 'Quiz Culture Bar', icon: '❓' },
-  { time: '22h00', label: 'Double XP coins — 30 min', icon: '⚡' },
-  { time: '22h30', label: 'Grand classement final', icon: '🏆' },
-]
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-// Multiplicateur actif (plan Standard, pas de boost ce soir — TODO: venir de l'API bar)
-const PLAN_ACTIF = 'STANDARD' as const
-const BOOST_ACTIF = false
-const mult = getEffectiveMultiplier(PLAN_ACTIF, BOOST_ACTIF)
+interface UserData {
+  user: { id: string; firstName?: string | null; nickname?: string | null; phone: string };
+  barClient: { playBalance: number; fideliteBalance: number; totalCoinsEarned: number };
+  bar: { id: string; name: string; plan: string; boostActive: boolean; boostExpiresAt?: string | null } | null;
+  recentTransactions: { reason: string; amount: number; createdAt: string }[];
+}
 
-// Produits vedette — coins calculés dynamiquement via multiplier
-// Prix en centimes pour éviter les flottants, TODO: venir API bar
-const produitsBase = [
-  { icon: '🍺', label: 'Pinte artisanale', prix: '6€', prixVal: 6 },
-  { icon: '🥂', label: 'Pitcher pour 2',   prix: '14€', prixVal: 14 },
-  { icon: '🍕', label: 'Planche charcuterie', prix: '12€', prixVal: 12 },
-  { icon: '🍹', label: 'Cocktail du soir', prix: '9€', prixVal: 9 },
-]
-const produitsVedette = produitsBase.map(p => ({
-  ...p,
-  coins: `+${Math.round(p.prixVal * mult)} coins`
-}))
+interface LeaderboardEntry { rank: number; userId: string; displayName: string; totalCoins: number }
 
-// Paliers — TODO: venir du dashboard gérant via BDD (COINS_PALIERS_DEMO placeholder)
-const paliersCoins = [
-  { conso: '5€',  coins: '— TODO', label: 'Soft / café'      },
-  { conso: '10€', coins: '— TODO', label: 'Bière / verre'    },
-  { conso: '20€', coins: '— TODO', label: 'Cocktail + apéro' },
-  { conso: '50€', coins: '— TODO', label: 'Table complète'   },
-]
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const REASON_LABELS: Record<string, string> = {
+  QR_SCAN: 'Consommation validée',
+  QUIZ_WIN: 'Quiz — Victoire',
+  BLIND_TEST_WIN: 'Blind Test — Victoire',
+  PVP_WIN: 'Défi privé — Victoire',
+  PACK_PURCHASE: 'Pack fidélité',
+  REFERRAL: 'Parrainage',
+  MANUAL_CREDIT: 'Crédit gérant',
+};
+
+function reasonLabel(reason: string): string {
+  return REASON_LABELS[reason] ?? reason;
+}
+
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const min = Math.floor(diff / 60000);
+  if (min < 1) return 'à l\'instant';
+  if (min < 60) return `il y a ${min} min`;
+  const h = Math.floor(min / 60);
+  if (h < 24) return `il y a ${h}h`;
+  return `il y a ${Math.floor(h / 24)}j`;
+}
+
+// ─── Styles communs ───────────────────────────────────────────────────────────
 
 const glassCard = {
   background: '#1A2942',
   border: '1px solid rgba(201,146,42,0.15)',
   backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)'
-}
-const glassCardSubtle = {
-  background: '#162035',
-  border: '1px solid rgba(201,146,42,0.10)'
-}
+  WebkitBackdropFilter: 'blur(10px)',
+};
+const glassCardSubtle = { background: '#162035', border: '1px solid rgba(201,146,42,0.10)' };
+
+// Programme fixe soirée (TODO : venir de l'API bar quand le gérant peut le saisir)
+const programme = [
+  { time: '20h30', label: 'Blind Test années 2000', icon: '🎵' },
+  { time: '21h15', label: 'Quiz Culture Bar', icon: '❓' },
+  { time: '22h00', label: 'Double XP coins — 30 min', icon: '⚡' },
+  { time: '22h30', label: 'Grand classement final', icon: '🏆' },
+];
+
+// Produits vedette fixes (TODO : venir de la carte saisie par le gérant)
+const produitsBase = [
+  { icon: '🍺', label: 'Pinte artisanale', prix: '6€', prixVal: 6 },
+  { icon: '🥂', label: 'Pitcher pour 2', prix: '14€', prixVal: 14 },
+  { icon: '🍕', label: 'Planche charcuterie', prix: '12€', prixVal: 12 },
+  { icon: '🍹', label: 'Cocktail du soir', prix: '9€', prixVal: 9 },
+];
+
+// ─── Composant ────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
-  const router = useRouter()
-  const [user, setUser] = useState({ name: 'Alexandre M.', initials: 'AM', coins: 1247, status: 'VIP' })
-  // Statut calculé dynamiquement via business-rules
-  const computedStatus = user.coins >= PLAYER_STATUS_THRESHOLDS.LEGEND ? 'LEGEND' : user.coins >= PLAYER_STATUS_THRESHOLDS.VIP ? 'VIP' : 'REGULAR'
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [myRank, setMyRank] = useState<number | null>(null);
+  const [totalPlayers, setTotalPlayers] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('barcoins_user')
-    if (stored) {
-      try { setUser(JSON.parse(stored)) } catch {}
+    if (status === 'unauthenticated') {
+      router.push('/login');
+      return;
     }
-  }, [])
+    if (status !== 'authenticated') return;
 
-  const firstName = user.name.split(' ')[0]
-  const gapTo1st = Math.max(0, 1580 - user.coins)
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/user/me');
+        if (!res.ok) return;
+        const data: UserData = await res.json();
+        setUserData(data);
+
+        // Classement en temps réel pour ce bar
+        if (data.bar?.id) {
+          const lb = await fetch(`/api/bars/${data.bar.id}/leaderboard?type=SOIREE&limit=100`);
+          if (lb.ok) {
+            const lbData: { leaderboard: LeaderboardEntry[] } = await lb.json();
+            setTotalPlayers(lbData.leaderboard.length);
+            const myEntry = lbData.leaderboard.find((e) => e.userId === session?.user?.id);
+            if (myEntry) setMyRank(myEntry.rank);
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [status, session, router]);
+
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0D1B2E' }}>
+        <div className="text-5xl animate-pulse">⚡</div>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0D1B2E' }}>
+        <div className="text-center">
+          <p className="text-red-400 mb-4">Erreur de chargement</p>
+          <button onClick={() => window.location.reload()} className="text-sm" style={{ color: '#C9922A' }}>Réessayer</button>
+        </div>
+      </div>
+    );
+  }
+
+  const { user, barClient, bar, recentTransactions } = userData;
+
+  // Calculs dynamiques depuis les vraies données
+  const plan = (bar?.plan ?? 'STARTER') as PlanKey;
+  const boostActive = bar?.boostActive ?? false;
+  const mult = getEffectiveMultiplier(plan, boostActive);
+  const coins = barClient.playBalance;
+  const computedStatus = coins >= PLAYER_STATUS_THRESHOLDS.LEGEND ? 'LEGEND'
+    : coins >= PLAYER_STATUS_THRESHOLDS.VIP ? 'VIP' : 'REGULAR';
+  const firstName = user.nickname ?? user.firstName ?? user.phone.slice(-4);
+  const initials = firstName.slice(0, 2).toUpperCase();
+  // TODO: calculer l'écart avec le 1er quand le classement est chargé
+
+  // Produits avec vraie valeur coins
+  const produitsVedette = produitsBase.map((p) => ({
+    ...p,
+    coins: `+${calcCoinsForAmount(p.prixVal, mult)} pts`,
+  }));
+
+  // Paliers coins calculés dynamiquement
+  const paliersCoins = [
+    { conso: '5€',  prixVal: 5,  label: 'Soft / café' },
+    { conso: '10€', prixVal: 10, label: 'Bière / verre' },
+    { conso: '20€', prixVal: 20, label: 'Cocktail + apéro' },
+    { conso: '50€', prixVal: 50, label: 'Table complète' },
+  ].map((p) => ({ ...p, coins: calcCoinsForAmount(p.prixVal, mult) }));
 
   return (
     <div className="min-h-dvh pb-20" style={{ background: 'linear-gradient(180deg, #0F1923 0%, #0D1B2E 50%, #1A1035 100%)' }}>
+
       {/* Header */}
       <div className="px-4 pt-10 pb-5" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%)' }}>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xl barcoins-title" style={{ color: '#C9922A' }}>Bar⚡Coins</span>
+          <span className="text-xl font-black" style={{ color: '#C9922A' }}>Bar⚡Coins</span>
           <button onClick={() => router.push('/profile')}
             className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
             style={{ background: 'linear-gradient(135deg, #C9922A, #E8860A)', color: '#0F1923' }}>
-            {user.initials}
+            {initials}
           </button>
         </div>
-        <div className="text-[#F5F0E8]/60 text-sm mb-2">Bonsoir, <span className="text-[#F5F0E8] font-bold">{firstName}</span> 👋</div>
+        <div className="text-[#F5F0E8]/60 text-sm mb-2">
+          Bonsoir, <span className="text-[#F5F0E8] font-bold">{firstName}</span> 👋
+        </div>
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-5xl font-black glow-pulse" style={{ color: '#C9922A' }}>⚡ {user.coins.toLocaleString()}</div>
-            <div className="text-[#F5F0E8]/40 text-xs mt-0.5">coins ce soir</div>
+            <div className="text-5xl font-black" style={{ color: '#C9922A' }}>⚡ {coins.toLocaleString()}</div>
+            <div className="text-[#F5F0E8]/40 text-xs mt-0.5">points de jeu ce soir</div>
           </div>
           <div className="text-right">
-            <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1" style={{ background: 'rgba(201,146,42,0.2)', color: '#C9922A', border: '1px solid rgba(201,146,42,0.5)' }}>⭐ {computedStatus}</div>
-            {gapTo1st > 0 ? (
-              <div className="text-[#F5F0E8]/50 text-xs">encore <span className="text-[#F5F0E8] font-bold">{gapTo1st}</span> coins pour 🥇</div>
-            ) : (
+            <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1"
+              style={{ background: 'rgba(201,146,42,0.2)', color: '#C9922A', border: '1px solid rgba(201,146,42,0.5)' }}>
+              ⭐ {computedStatus}
+            </div>
+            {myRank && myRank > 1 && (
+              <div className="text-[#F5F0E8]/50 text-xs">Position <span className="text-[#F5F0E8] font-bold">#{myRank}</span></div>
+            )}
+            {myRank === 1 && (
               <div className="text-xs font-bold" style={{ color: '#22C55E' }}>🥇 Tu mènes la soirée !</div>
             )}
           </div>
@@ -94,45 +195,55 @@ export default function Dashboard() {
       </div>
 
       <div className="px-4 pt-2 flex flex-col gap-4">
-        <div className="bg-glow-gold" />
-        <div className="bg-glow-violet" />
+
         {/* Soirée active */}
         <div className="rounded-2xl p-4 slide-up" style={{
           background: 'linear-gradient(135deg, #1A2942 0%, #2D1248 100%)',
           border: '1px solid rgba(201,146,42,0.4)',
-          borderRadius: '16px',
-          boxShadow: '0 8px 32px rgba(201,146,42,0.15), inset 0 1px 0 rgba(255,255,255,0.05)'
+          boxShadow: '0 8px 32px rgba(201,146,42,0.15)',
         }}>
           <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full live-dot inline-block" style={{ background: '#22C55E' }}></span>
+            <span className="w-2 h-2 rounded-full inline-block" style={{ background: '#22C55E', animation: 'pulse-live 1.5s infinite' }}></span>
             <span className="text-xs font-bold tracking-wider" style={{ color: '#22C55E' }}>SOIRÉE EN COURS</span>
           </div>
-          <div className="text-[#F5F0E8] font-bold text-lg">Le Bar des Amis</div>
-          <div className="text-[#F5F0E8]/50 text-sm mb-3">Vendredi 20 mars 2026 — 21h30 · 24 joueurs</div>
+          <div className="text-[#F5F0E8] font-bold text-lg">{bar?.name ?? 'BarCoins'}</div>
+          <div className="text-[#F5F0E8]/50 text-sm mb-3">
+            {totalPlayers > 0 ? `${totalPlayers} joueurs ce soir` : 'Rejoins la partie'}
+          </div>
           <button onClick={() => router.push('/leaderboard')} className="text-sm font-bold" style={{ color: '#C9922A' }}>
             Voir le classement en direct →
           </button>
         </div>
 
         {/* Position */}
-        <div className="rounded-2xl p-4 flex items-center justify-between slide-up" style={glassCard}>
-          <div>
-            <div className="text-xs uppercase tracking-wider mb-1" style={{ color: 'rgba(245,240,232,0.5)' }}>Ta position ce soir</div>
-            <div className="text-5xl font-black" style={{ color: '#F5F0E8', textShadow: '0 0 10px rgba(201,146,42,0.3)' }}>🏆 3<span className="text-lg">ème</span></div>
-            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>sur 24 joueurs</div>
+        {myRank && (
+          <div className="rounded-2xl p-4 flex items-center justify-between slide-up" style={glassCard}>
+            <div>
+              <div className="text-xs uppercase tracking-wider mb-1" style={{ color: 'rgba(245,240,232,0.5)' }}>Ta position ce soir</div>
+              <div className="text-5xl font-black" style={{ color: '#F5F0E8' }}>
+                {myRank === 1 ? '🥇' : myRank === 2 ? '🥈' : myRank === 3 ? '🥉' : `#${myRank}`}
+              </div>
+              <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>sur {totalPlayers} joueurs</div>
+            </div>
+            <div className="text-right">
+              <div className="text-4xl font-black" style={{ color: '#22C55E' }}>{coins.toLocaleString()}</div>
+              <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>points ce soir</div>
+            </div>
           </div>
-          <div className="text-right">
-            <div className="text-4xl font-black glow-amber" style={{ color: '#22C55E', textShadow: '0 0 12px rgba(34,197,94,0.5)' }}>+320</div>
-            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>coins ce soir</div>
-            {gapTo1st > 0 && (
-              <div className="text-xs mt-1 font-medium" style={{ color: '#E8860A' }}>🎯 {gapTo1st} coins pour 1<sup>er</sup></div>
-            )}
-          </div>
-        </div>
+        )}
 
-        {/* Programme ce soir */}
+        {/* Boost actif */}
+        {boostActive && (
+          <div className="rounded-xl px-4 py-2 flex items-center gap-2"
+            style={{ background: 'rgba(201,146,42,0.2)', border: '1.5px solid #C9922A' }}>
+            <span className="text-lg">⚡</span>
+            <span className="font-black text-sm" style={{ color: '#C9922A' }}>BOOST ×2 ACTIF — Multiplicateur ×{mult}</span>
+          </div>
+        )}
+
+        {/* Programme */}
         <div className="rounded-2xl p-4" style={glassCard}>
-          <div className="section-label mb-3">📅 Programme ce soir</div>
+          <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(245,240,232,0.5)' }}>📅 Programme ce soir</div>
           {programme.map((p, i) => (
             <div key={i} className="flex items-center gap-3 py-2 border-b last:border-0"
               style={{ borderColor: 'rgba(201,146,42,0.1)' }}>
@@ -143,26 +254,11 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Badge boost actif */}
-        {BOOST_ACTIF && (
-          <div className="rounded-xl px-4 py-2 flex items-center gap-2 pulse-gold"
-            style={{ background: 'rgba(201,146,42,0.2)', border: '1.5px solid #C9922A' }}>
-            <span className="text-lg">⚡</span>
-            <span className="font-black text-sm" style={{ color: '#C9922A' }}>BOOST ×2 ACTIF — Multiplicateur ×{mult}</span>
-          </div>
-        )}
-
-        {/* Offre du moment */}
-        <div className="rounded-2xl p-4 overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #C9922A, #E8860A)', boxShadow: '0 4px 24px rgba(201,146,42,0.35)' }}>
-          <div className="text-xs font-black uppercase tracking-wider text-amber-900 mb-1">🔥 Offre du moment</div>
-          <div className="font-black text-lg leading-tight" style={{ color: '#0F1923' }}>Pitcher = +200 coins</div>
-          <div className="text-amber-900/80 text-sm">Ce soir seulement — jusqu'à 23h</div>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl opacity-20">🍺</div>
-        </div>
-
-        {/* Produits vedette */}
+        {/* Carte produits */}
         <div className="rounded-2xl p-4" style={glassCard}>
-          <div className="section-label mb-3">🍽️ Carte ce soir</div>
+          <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(245,240,232,0.5)' }}>
+            🍽️ Carte ce soir · multiplicateur ×{mult}
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {produitsVedette.map((p, i) => (
               <div key={i} className="rounded-xl p-3" style={glassCardSubtle}>
@@ -175,9 +271,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Paliers coins */}
+        {/* Paliers */}
         <div className="rounded-2xl p-4" style={glassCard}>
-          <div className="section-label mb-3">⚡ Paliers — Coins par conso</div>
+          <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(245,240,232,0.5)' }}>⚡ Points par conso</div>
           <div className="flex flex-col gap-2">
             {paliersCoins.map((p, i) => (
               <div key={i} className="flex items-center justify-between py-1.5 border-b last:border-0"
@@ -187,97 +283,97 @@ export default function Dashboard() {
                     style={{ background: 'rgba(201,146,42,0.15)', color: '#C9922A' }}>{p.conso}</div>
                   <span className="text-sm" style={{ color: 'rgba(245,240,232,0.5)' }}>{p.label}</span>
                 </div>
-                <span className="font-black text-sm" style={{ color: '#C9922A' }}>+{p.coins} coins</span>
+                <span className="font-black text-sm" style={{ color: '#C9922A' }}>+{p.coins} pts</span>
               </div>
             ))}
           </div>
-          <div className="text-xs mt-2 text-center" style={{ color: 'rgba(245,240,232,0.5)' }}>Le gérant saisit ta conso · Les coins arrivent instantanément</div>
+          <div className="text-xs mt-2 text-center" style={{ color: 'rgba(245,240,232,0.5)' }}>
+            Le gérant valide ta visite · Les points arrivent instantanément
+          </div>
         </div>
 
-        {/* Défi Privé CTA */}
+        {/* Jeux */}
+        <div className="text-xs font-bold uppercase tracking-wider px-1" style={{ color: 'rgba(245,240,232,0.5)' }}>Jeux lancés par le bar</div>
+        <div className="grid grid-cols-2 gap-3">
+          <button onClick={() => router.push('/games/blindtest')}
+            className="rounded-2xl p-4 text-left transition-transform active:scale-95" style={glassCard}>
+            <div className="text-2xl mb-2">🎵</div>
+            <div className="text-[#F5F0E8] font-bold text-sm">Blind Test</div>
+            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>Mise avant écoute</div>
+            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>jusqu&apos;à ×5</div>
+          </button>
+          <button onClick={() => router.push('/games/quiz')}
+            className="rounded-2xl p-4 text-left transition-transform active:scale-95" style={glassCard}>
+            <div className="text-2xl mb-2">❓</div>
+            <div className="text-[#F5F0E8] font-bold text-sm">Quiz Bar</div>
+            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>500 questions</div>
+            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>+20 à +100 pts</div>
+          </button>
+        </div>
+
+        {/* Défi privé */}
         <button onClick={() => router.push('/games/challenge')}
           className="rounded-2xl p-4 flex items-center gap-3 transition-transform active:scale-95"
-          style={{ ...glassCard, border: '1.5px solid rgba(201,146,42,0.4)', boxShadow: '0 0 16px rgba(201,146,42,0.1)' }}>
+          style={{ ...glassCard, border: '1.5px solid rgba(201,146,42,0.4)' }}>
           <span className="text-3xl">⚔️</span>
           <div className="flex-1">
             <div className="text-[#F5F0E8] font-bold text-sm">Créer un défi privé</div>
             <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>Challenge ta table entre potes</div>
           </div>
-          <div className="btn-primary text-xs px-3 py-1.5">Go</div>
+          <div className="px-3 py-1.5 rounded-lg text-xs font-bold"
+            style={{ background: 'linear-gradient(135deg, #C9922A, #E8860A)', color: '#0D1B2E' }}>Go</div>
         </button>
 
-        {/* Jeux */}
-        <div className="section-label px-1">Jeux lancés par le bar</div>
-        <div className="grid grid-cols-2 gap-3">
-          <button onClick={() => router.push('/games/blindtest')}
-            className="rounded-2xl p-4 text-left transition-transform active:scale-95"
-            style={{ ...glassCard, boxShadow: '0 0 12px rgba(201,146,42,0.1)' }}>
-            <div className="text-2xl mb-2">🎵</div>
-            <div className="text-[#F5F0E8] font-bold text-sm">Blind Test</div>
-            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>Mise avant écoute</div>
-            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>jusqu'à ×5</div>
-          </button>
-          <button onClick={() => router.push('/games/quiz')}
-            className="rounded-2xl p-4 text-left transition-transform active:scale-95"
-            style={glassCard}>
-            <div className="text-2xl mb-2">❓</div>
-            <div className="text-[#F5F0E8] font-bold text-sm">Quiz Bar</div>
-            <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>500 questions</div>
-            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>+20 à +100 coins</div>
-          </button>
-        </div>
-
-        {/* Dernières transactions */}
+        {/* Transactions récentes */}
         <div className="rounded-2xl p-4" style={glassCard}>
-          <div className="section-label mb-3">Dernières transactions</div>
-          {[
-            { label: 'Quiz Blind Test', coins: '+150', time: 'il y a 12 min' },
-            { label: 'Consommation 16€', coins: '+80', time: 'il y a 34 min' },
-            { label: 'Connexion soirée', coins: '+25', time: 'il y a 1h' },
-          ].map((t, i) => (
-            <div key={i} className="flex items-center justify-between py-2 border-b last:border-0"
-              style={{ borderColor: 'rgba(201,146,42,0.08)' }}>
-              <div>
-                <div className="text-sm font-medium text-[#F5F0E8]">{t.label}</div>
-                <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>{t.time}</div>
+          <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(245,240,232,0.5)' }}>Dernières transactions</div>
+          {recentTransactions.length === 0 ? (
+            <p className="text-sm text-center py-4" style={{ color: 'rgba(245,240,232,0.4)' }}>
+              Pas encore de transactions ce soir
+            </p>
+          ) : (
+            recentTransactions.map((t, i) => (
+              <div key={i} className="flex items-center justify-between py-2 border-b last:border-0"
+                style={{ borderColor: 'rgba(201,146,42,0.08)' }}>
+                <div>
+                  <div className="text-sm font-medium text-[#F5F0E8]">{reasonLabel(t.reason)}</div>
+                  <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>{timeAgo(t.createdAt)}</div>
+                </div>
+                <span className="font-bold text-sm" style={{ color: t.amount > 0 ? '#22C55E' : '#EF4444' }}>
+                  {t.amount > 0 ? `+${t.amount}` : t.amount} pts
+                </span>
               </div>
-              <span className="font-bold text-sm" style={{ color: '#22C55E' }}>{t.coins}</span>
-            </div>
-          ))}
+            ))
+          )}
           <button onClick={() => router.push('/history')} className="text-xs mt-2 font-medium" style={{ color: '#C9922A' }}>
-            Voir tout l'historique →
+            Voir tout l&apos;historique →
           </button>
         </div>
 
-        {/* 🔮 Prochainement */}
+        {/* Prochainement */}
         <div className="rounded-2xl p-4" style={{ ...glassCard, border: '1px solid rgba(201,146,42,0.2)' }}>
           <div className="flex items-center gap-2 mb-3">
             <span>🔮</span>
-            <span className="text-[#F5F0E8] font-black text-sm">Bientôt sur BarCoins</span>
+            <span className="text-[#F5F0E8] font-black text-sm">Disponible prochainement</span>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {[
-              { icon: '🛒', label: 'Acheter des coins', desc: 'Recharge en ligne' },
-              { icon: '🎁', label: 'Coins fidélité', desc: 'Échange vs réductions' },
-              { icon: '🎰', label: 'Roue de la Fortune', desc: 'Bientôt disponible' },
-              { icon: '🌍', label: 'Multi-bars', desc: 'Tes coins partout (V2)' },
+              { icon: '🎁', label: 'Points fidélité', desc: 'Échange vs réductions' },
+              { icon: '🎰', label: 'Roue de la Fortune', desc: 'Disponible prochainement' },
+              { icon: '🌍', label: 'Multi-bars', desc: 'Tes points partout (V2)' },
               { icon: '⚽', label: 'Paris sportifs', desc: 'Sur le match en cours' },
             ].map((f, i) => (
-              <div key={i} className="flex-shrink-0 rounded-xl p-3 w-28 text-center"
-                style={glassCardSubtle}>
+              <div key={i} className="flex-shrink-0 rounded-xl p-3 w-28 text-center" style={glassCardSubtle}>
                 <div className="text-xl mb-1">{f.icon}</div>
                 <div className="text-[#F5F0E8] text-xs font-bold leading-tight">{f.label}</div>
                 <div className="text-xs mt-0.5" style={{ color: 'rgba(245,240,232,0.5)' }}>{f.desc}</div>
               </div>
             ))}
           </div>
-          <button onClick={() => router.push('/profile')} className="text-xs mt-3 font-medium" style={{ color: 'rgba(201,146,42,0.7)' }}>
-            Voir ton profil fidélité →
-          </button>
         </div>
 
       </div>
       <BottomNav active="dashboard" />
     </div>
-  )
+  );
 }

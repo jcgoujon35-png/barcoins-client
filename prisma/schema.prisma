@@ -1,0 +1,629 @@
+// ============================================================
+// BARCOINS — SCHÉMA PRISMA COMPLET
+// Stack : PostgreSQL (Railway) + Prisma ORM
+// ⚠️  Toute modification métier → valider avec JC d'abord
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Plan {
+  STARTER
+  STANDARD
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+}
+
+enum StaffRole {
+  OWNER
+  MANAGER
+  ANIMATOR
+  BARMAN
+}
+
+enum OnboardingPhase {
+  DISCOVERY
+  ENGAGEMENT
+  COMPLETE
+}
+
+enum CoinType {
+  PLAY
+  FIDELITE
+}
+
+enum CoinReason {
+  QR_SCAN
+  PVP_WIN
+  PVP_LOSS
+  QUIZ_WIN
+  BLIND_TEST_WIN
+  SPORTS_BET_WIN
+  SPORTS_BET_LOSS
+  PACK_PURCHASE
+  SPIN_COST
+  SPIN_WIN
+  REWARD_REDEMPTION
+  LEADERBOARD_REWARD
+  BOOST_PURCHASE
+  STATUS_PURCHASE
+  MANUAL_CREDIT
+  MANUAL_DEBIT
+  TOURNAMENT_ENTRY
+  TOURNAMENT_WIN
+  STEAL
+  REVERSAL
+  REFERRAL
+}
+
+enum TransactionStatus {
+  PENDING
+  CLAIMED
+  EXPIRED
+}
+
+enum GameType {
+  QUIZ
+  BLIND_TEST
+  PVP
+  SPORTS_BET
+  TOURNAMENT
+}
+
+enum GameStatus {
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum PvPStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  IN_PROGRESS
+  COMPLETED
+  DISPUTED
+}
+
+enum SportMatchStatus {
+  UPCOMING
+  ACTIVE
+  CLOSED
+  REFUNDED
+}
+
+enum SportMatchResult {
+  HOME
+  DRAW
+  AWAY
+}
+
+enum SportBetStatus {
+  PENDING
+  WON
+  LOST
+  REFUNDED
+}
+
+enum LeaderboardType {
+  SOIREE
+  HEBDO
+  MENSUEL
+  ANNUEL
+}
+
+enum SpinOutcomeType {
+  RETRY
+  PLAY_BONUS
+  DISCOUNT
+  DRINK
+  JACKPOT
+}
+
+enum VoucherStatus {
+  PENDING
+  REDEEMED
+  EXPIRED
+}
+
+enum PackType {
+  DECOUVERTE
+  STANDARD
+  PREMIUM
+}
+
+enum StatusType {
+  VIP_ECRAN
+  MAITRE_QUIZ
+  DOUBLE_OU_RIEN
+  DJ_MOMENT
+  MON_COCKTAIL
+  LE_LEGEND
+}
+
+enum PhysicalGameType {
+  DARTS
+  POOL
+  FOOSBALL
+  CUSTOM
+}
+
+// ─────────────────────────────────────────────
+// ABONNEMENTS
+// ─────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  barId                String             @unique
+  bar                  Bar                @relation(fields: [barId], references: [id], onDelete: Cascade)
+  plan                 Plan               @default(STARTER)
+  status               SubscriptionStatus @default(TRIALING)
+  stripeSubscriptionId String?            @unique
+  stripeCustomerId     String?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// BARS
+// ─────────────────────────────────────────────
+
+model Bar {
+  id                  String          @id @default(cuid())
+  slug                String          @unique
+  name                String
+  address             String?
+  city                String?
+  ownerId             String
+  owner               StaffMember     @relation("BarOwner", fields: [ownerId], references: [id])
+  plan                Plan            @default(STARTER)
+  activeMultiplier    Float           @default(1.0)
+  boostActive         Boolean         @default(false)
+  boostExpiresAt      DateTime?
+  wheelEnabled        Boolean         @default(false) // ← JAMAIS true en beta — validation JC obligatoire
+  onboardingPhase     OnboardingPhase @default(DISCOVERY)
+  healthScore         Int             @default(0)
+  jackpotCountMonthly Int             @default(0)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  subscription        Subscription?
+  staff               StaffMember[]    @relation("BarStaff")
+  clients             BarClient[]
+  transactions        Transaction[]
+  games               Game[]
+  questions           Question[]
+  pvpMatches          PvPMatch[]
+  sportMatches        SportMatch[]
+  leaderboards        Leaderboard[]
+  spins               Spin[]
+  fidelitePacks       FidelitePack[]
+  rewards             Reward[]
+  activeStatuses      ActiveStatus[]
+  physicalGames       PhysicalGame[]
+  healthScoreLogs     HealthScoreLog[]
+  coinLedgers         CoinLedger[]
+}
+
+// ─────────────────────────────────────────────
+// STAFF (gérants, managers, animateurs, barmans)
+// ─────────────────────────────────────────────
+
+model StaffMember {
+  id           String        @id @default(cuid())
+  barId        String?
+  bar          Bar?          @relation("BarStaff", fields: [barId], references: [id], onDelete: SetNull)
+  email        String        @unique
+  passwordHash String
+  role         StaffRole
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  ownedBars    Bar[]         @relation("BarOwner")
+  transactions Transaction[]
+}
+
+// ─────────────────────────────────────────────
+// CLIENTS (joueurs — auth via OTP SMS)
+// ─────────────────────────────────────────────
+
+model User {
+  id            String     @id @default(cuid())
+  phone         String     @unique
+  firstName     String?
+  lastName      String?
+  birthDate     DateTime?
+  gender        String?
+  nickname      String?
+  avatarUrl     String?
+  isVerified18  Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  barClients          BarClient[]
+  coinLedgers         CoinLedger[]
+  claimedTransactions Transaction[]      @relation("TransactionClaimer")
+  gameAnswers         GameAnswer[]
+  pvpAsChallenged     PvPMatch[]         @relation("PvPChallenger")
+  pvpAsOpponent       PvPMatch[]         @relation("PvPOpponent")
+  pvpWins             PvPMatch[]         @relation("PvPWinner")
+  sportBets           SportBet[]
+  spins               Spin[]
+  fidelitePacks       FidelitePack[]
+  rewardRedemptions   RewardRedemption[]
+  activeStatuses      ActiveStatus[]
+  wonLeaderboards     Leaderboard[]
+}
+
+// Relation joueur ↔ bar (balances, onboarding)
+model BarClient {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId            String
+  bar              Bar             @relation(fields: [barId], references: [id], onDelete: Cascade)
+  playBalance      Int             @default(0)
+  fideliteBalance  Int             @default(0)
+  totalCoinsEarned Int             @default(0)
+  onboardingPhase  OnboardingPhase @default(DISCOVERY)
+  joinedAt         DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@unique([userId, barId])
+  @@index([barId])
+}
+
+// ─────────────────────────────────────────────
+// MONNAIE — LEDGER (append-only, jamais DELETE en prod)
+// ─────────────────────────────────────────────
+
+model CoinLedger {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId     String
+  bar       Bar        @relation(fields: [barId], references: [id], onDelete: Cascade)
+  coinType  CoinType
+  amount    Int        // positif = crédit | négatif = débit
+  reason    CoinReason
+  sourceId  String?    // ex: transactionId, gameId, pvpMatchId, spinId
+  note      String?    // usage admin/debug uniquement
+  createdAt DateTime   @default(now())
+
+  @@index([userId, barId])
+  @@index([barId, createdAt])
+  @@index([userId, coinType])
+}
+
+// ─────────────────────────────────────────────
+// TRANSACTIONS QR (scan barman → coins joueur)
+// ─────────────────────────────────────────────
+
+model Transaction {
+  id                String            @id @default(cuid())
+  barId             String
+  bar               Bar               @relation(fields: [barId], references: [id], onDelete: Cascade)
+  staffId           String
+  staff             StaffMember       @relation(fields: [staffId], references: [id])
+  amount            Float             // montant consommation en €
+  coinsAwarded      Int
+  qrToken           String            @unique @default(cuid())
+  qrExpiresAt       DateTime          // now + QR_EXPIRY_SECONDS (90s)
+  status            TransactionStatus @default(PENDING)
+  claimedByUserId   String?
+  claimedBy         User?             @relation("TransactionClaimer", fields: [claimedByUserId], references: [id])
+  claimedAt         DateTime?
+  multiplierApplied Float             @default(1.0)
+  createdAt         DateTime          @default(now())
+
+  @@index([barId, status])
+  @@index([qrToken])
+}
+
+// ─────────────────────────────────────────────
+// JEUX
+// ─────────────────────────────────────────────
+
+model Game {
+  id                   String     @id @default(cuid())
+  barId                String
+  bar                  Bar        @relation(fields: [barId], references: [id], onDelete: Cascade)
+  type                 GameType
+  status               GameStatus @default(SCHEDULED)
+  config               Json       @default("{}")
+  currentQuestionIndex Int        @default(0)
+  isAutoMode           Boolean    @default(false)
+  scheduledAt          DateTime?
+  startedAt            DateTime?
+  endedAt              DateTime?
+  createdAt            DateTime   @default(now())
+
+  answers    GameAnswer[]
+  pvpMatches PvPMatch[]
+
+  @@index([barId, status])
+}
+
+model Question {
+  id           String    @id @default(cuid())
+  theme        String
+  difficulty   Int       @default(1) // 1 = facile | 2 = moyen | 3 = difficile
+  question     String
+  options      Json      // string[] — 4 choix
+  correctIndex Int       // 0-3
+  imageUrl     String?
+  audioUrl     String?   // preview Spotify/Deezer 30s
+  tags         String[]
+  barId        String?   // null = banque globale BarCoins | renseigné = question custom bar
+  bar          Bar?      @relation(fields: [barId], references: [id], onDelete: SetNull)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+
+  gameAnswers GameAnswer[]
+
+  @@index([theme, difficulty])
+  @@index([barId])
+}
+
+model GameAnswer {
+  id            String    @id @default(cuid())
+  gameId        String
+  game          Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId    String?
+  question      Question? @relation(fields: [questionId], references: [id])
+  questionIndex Int
+  answerIndex   Int
+  isCorrect     Boolean
+  coinsAwarded  Int       @default(0)
+  answeredAt    DateTime  @default(now())
+
+  @@unique([gameId, userId, questionIndex])
+  @@index([gameId])
+}
+
+// ─────────────────────────────────────────────
+// PVP
+// ─────────────────────────────────────────────
+
+model PvPMatch {
+  id                 String        @id @default(cuid())
+  barId              String
+  bar                Bar           @relation(fields: [barId], references: [id], onDelete: Cascade)
+  challengerId       String
+  challenger         User          @relation("PvPChallenger", fields: [challengerId], references: [id])
+  opponentId         String
+  opponent           User          @relation("PvPOpponent", fields: [opponentId], references: [id])
+  gameType           GameType
+  physicalGameId     String?
+  physicalGame       PhysicalGame? @relation(fields: [physicalGameId], references: [id])
+  gameId             String?
+  game               Game?         @relation(fields: [gameId], references: [id])
+  challengerBet      Int
+  opponentBet        Int
+  totalPot           Int
+  commission         Int           // PVP_COMMISSION * totalPot
+  winnerPayout       Int           // totalPot - commission
+  winnerId           String?
+  winner             User?         @relation("PvPWinner", fields: [winnerId], references: [id])
+  status             PvPStatus     @default(PENDING)
+  challengerDeclared String?       // "WIN" | "LOSS"
+  opponentDeclared   String?       // "WIN" | "LOSS"
+  acceptExpiresAt    DateTime?     // now + PVP_ACCEPT_TIMEOUT_MIN
+  resolveExpiresAt   DateTime?     // now + PVP_RESULT_TIMEOUT_MIN
+  createdAt          DateTime      @default(now())
+  resolvedAt         DateTime?
+
+  @@index([barId, status])
+  @@index([challengerId])
+  @@index([opponentId])
+}
+
+// ─────────────────────────────────────────────
+// PARIS SPORTIFS (V1 post-beta)
+// ─────────────────────────────────────────────
+
+model SportMatch {
+  id           String           @id @default(cuid())
+  barId        String
+  bar          Bar              @relation(fields: [barId], references: [id], onDelete: Cascade)
+  title        String
+  teamHome     String
+  teamAway     String
+  oddsHome     Float
+  oddsDraw     Float
+  oddsAway     Float
+  status       SportMatchStatus @default(UPCOMING)
+  result       SportMatchResult?
+  autoRefundAt DateTime
+  kickoffAt    DateTime
+  createdAt    DateTime         @default(now())
+
+  bets SportBet[]
+
+  @@index([barId, status])
+}
+
+model SportBet {
+  id         String         @id @default(cuid())
+  matchId    String
+  match      SportMatch     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prediction String         // "HOME" | "DRAW" | "AWAY"
+  amount     Int            // coins Play misés
+  payout     Int?
+  status     SportBetStatus @default(PENDING)
+  createdAt  DateTime       @default(now())
+
+  @@index([matchId])
+  @@index([userId])
+}
+
+// ─────────────────────────────────────────────
+// CLASSEMENTS
+// ─────────────────────────────────────────────
+
+model Leaderboard {
+  id          String          @id @default(cuid())
+  barId       String
+  bar         Bar             @relation(fields: [barId], references: [id], onDelete: Cascade)
+  type        LeaderboardType
+  periodStart DateTime
+  periodEnd   DateTime
+  winnerId    String?
+  winner      User?           @relation(fields: [winnerId], references: [id])
+  reward      Json            @default("{}") // { description, valueEur, type }
+  isFinalized Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  @@unique([barId, type, periodStart])
+  @@index([barId, type, isFinalized])
+}
+
+// ─────────────────────────────────────────────
+// ROUE DE LA FORTUNE (wheelEnabled=false pendant toute la beta)
+// ─────────────────────────────────────────────
+
+model Spin {
+  id            String          @id @default(cuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId         String
+  bar           Bar             @relation(fields: [barId], references: [id], onDelete: Cascade)
+  outcomeType   SpinOutcomeType
+  outcomeDetail Json            @default("{}")
+  voucherCode   String?         @unique
+  voucherStatus VoucherStatus   @default(PENDING)
+  createdAt     DateTime        @default(now())
+
+  @@index([userId, barId])
+}
+
+// ─────────────────────────────────────────────
+// PACKS FIDÉLITÉ (achat Stripe)
+// ─────────────────────────────────────────────
+
+model FidelitePack {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId           String
+  bar             Bar      @relation(fields: [barId], references: [id], onDelete: Cascade)
+  packType        PackType
+  fideliteCoins   Int
+  spinsIncluded   Int      @default(0)
+  bonusPlayCoins  Int      @default(0)
+  stripePaymentId String?  @unique
+  createdAt       DateTime @default(now())
+
+  @@index([userId, barId])
+}
+
+// ─────────────────────────────────────────────
+// RÉCOMPENSES
+// ─────────────────────────────────────────────
+
+model Reward {
+  id          String     @id @default(cuid())
+  barId       String
+  bar         Bar        @relation(fields: [barId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  coinCost    Int
+  coinType    CoinType   @default(PLAY)
+  isActive    Boolean    @default(true)
+  stock       Int?       // null = illimité
+  category    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  redemptions RewardRedemption[]
+}
+
+model RewardRedemption {
+  id          String        @id @default(cuid())
+  rewardId    String
+  reward      Reward        @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId       String
+  voucherCode String        @unique @default(cuid())
+  status      VoucherStatus @default(PENDING)
+  redeemedAt  DateTime?
+  createdAt   DateTime      @default(now())
+
+  @@index([userId, barId])
+  @@index([voucherCode])
+}
+
+// ─────────────────────────────────────────────
+// STATUTS SOIRÉE (achetés en coins Fidélité)
+// ─────────────────────────────────────────────
+
+model ActiveStatus {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  barId       String
+  bar         Bar        @relation(fields: [barId], references: [id], onDelete: Cascade)
+  statusType  StatusType
+  activatedAt DateTime   @default(now())
+  expiresAt   DateTime
+  isActive    Boolean    @default(true)
+
+  @@index([userId, barId, isActive])
+  @@index([barId, expiresAt])
+}
+
+// ─────────────────────────────────────────────
+// JEUX PHYSIQUES (fléchettes, billard, baby-foot)
+// ─────────────────────────────────────────────
+
+model PhysicalGame {
+  id       String           @id @default(cuid())
+  barId    String
+  bar      Bar              @relation(fields: [barId], references: [id], onDelete: Cascade)
+  name     String
+  type     PhysicalGameType
+  qrCode   String           @unique
+  isActive Boolean          @default(true)
+
+  pvpMatches PvPMatch[]
+}
+
+// ─────────────────────────────────────────────
+// HEALTH SCORE (calculé quotidiennement)
+// ─────────────────────────────────────────────
+
+model HealthScoreLog {
+  id           String   @id @default(cuid())
+  barId        String
+  bar          Bar      @relation(fields: [barId], references: [id], onDelete: Cascade)
+  score        Int      // 0-100
+  breakdown    Json     // { sessions: Int, joueurs: Int, coins: Int, features: Int }
+  calculatedAt DateTime @default(now())
+
+  @@index([barId, calculatedAt])
+}

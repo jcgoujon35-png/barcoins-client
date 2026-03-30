@@ -2,22 +2,22 @@
 # BarCoins V1 Client — Deploy to Vercel
 # Run this from WSL: bash DEPLOY.sh
 
-echo "⚡ BarCoins V1 — Déploiement Vercel"
-echo "======================================"
+echo "BarCoins V1 — Deploiement Vercel"
+echo "================================="
 
-# Go to WSL native copy (faster builds)
-cd ~/barcoins-client
+# Sync Windows edits to WSL native copy (faster builds)
+WINDOWS_SRC="/mnt/c/Users/jean-/OneDrive/Documents/Barcoins/DEV/barcoins-client"
+WSL_DEST="$HOME/barcoins-client"
 
-# Login if needed
-echo ""
-echo "🔐 Login Vercel (ouvre ton browser)..."
-npx vercel login
+echo "Sync Windows -> WSL..."
+rsync -av --exclude='node_modules' --exclude='.git' "$WINDOWS_SRC/" "$WSL_DEST/" --quiet
 
-# Deploy
-echo ""
-echo "🚀 Déploiement en production..."
+cd "$WSL_DEST"
+
+# Deploy (token cached in ~/.local/share/com.vercel.cli/auth.json)
+echo "Deploiement en production..."
 npx vercel --prod --yes
 
 echo ""
-echo "✅ Déployé ! L'URL apparaît ci-dessus."
-echo "📱 Pour installer sur iPhone : Safari → Partager → Sur l'écran d'accueil"
+echo "Deploye sur https://barcoins-client.vercel.app"
+echo "iPhone : Safari > Partager > Sur l'ecran d'accueil"
