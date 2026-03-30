@@ -1,5 +1,6 @@
 // POST /api/auth/send-otp
 // Envoie un code OTP par SMS au joueur (étape 1 du login)
+// Dev mode : si Twilio non configuré, retourne devCode dans la réponse
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sendOtp } from '@/lib/otp';
@@ -25,5 +26,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: result.error }, { status: 429 });
   }
 
-  return NextResponse.json({ success: true, message: 'Code envoyé par SMS' });
+  return NextResponse.json({
+    success: true,
+    message: 'Code envoyé par SMS',
+    ...(result.devCode ? { devCode: result.devCode } : {}),
+  });
 }
