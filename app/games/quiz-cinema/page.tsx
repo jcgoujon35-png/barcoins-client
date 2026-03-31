@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 import { gameReducer } from '@/lib/game-engine/reducer'
 import { INITIAL_GAME_STATE } from '@/lib/game-engine/state'
-import { createInitialGameState, createDefaultPlayers } from '@/lib/game-engine/session'
+import { createDefaultPlayers } from '@/lib/game-engine/session'
 
 import { LobbyScreen } from '@/components/barcoins-game/LobbyScreen'
 import { QuestionScreen } from '@/components/barcoins-game/QuestionScreen'

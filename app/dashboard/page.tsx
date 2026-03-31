@@ -235,14 +235,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Boost actif */}
-        {boostActive && (
-          <div className="rounded-xl px-4 py-2 flex items-center gap-2"
-            style={{ background: 'rgba(201,146,42,0.2)', border: '1.5px solid #C9922A' }}>
-            <span className="text-lg">⚡</span>
-            <span className="font-black text-sm" style={{ color: '#C9922A' }}>BOOST ×2 ACTIF — Multiplicateur ×{mult}</span>
-          </div>
-        )}
+        {/* Boost actif — V2 multijoueur */}
 
         {/* Programme */}
         <div className="rounded-2xl p-4" style={glassCard}>
