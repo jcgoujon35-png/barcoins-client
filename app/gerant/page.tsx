@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import type { PlanKey } from '@/config/business-rules';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

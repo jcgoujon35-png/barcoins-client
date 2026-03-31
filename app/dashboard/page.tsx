@@ -253,7 +253,7 @@ export default function Dashboard() {
         {/* Carte produits */}
         <div className="rounded-2xl p-4" style={glassCard}>
           <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'rgba(245,240,232,0.5)' }}>
-            🍽️ Carte ce soir · multiplicateur ×{mult}
+            🍽️ Carte ce soir
           </div>
           <div className="grid grid-cols-2 gap-2">
             {produitsVedette.map((p, i) => (
