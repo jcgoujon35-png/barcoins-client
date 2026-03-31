@@ -35,6 +35,7 @@ const PUBLIC_ROUTES = [
   '/api/auth',
   '/api/health',
   '/manifest.json',
+  '/games/quiz-cinema',
 ];
 
 // ─────────────────────────────────────────────
