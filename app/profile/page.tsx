@@ -40,9 +40,9 @@ const recompenses = [
 ];
 
 const comingSoon = [
-  { icon: '🛒', label: 'Achat de coins', desc: 'Recharge ton solde en ligne' },
-  { icon: '🎁', label: 'Cadeaux & bons', desc: 'Échange tes coins contre des réductions' },
-  { icon: '🌍', label: 'Multi-bars V2', desc: 'Tes coins valables partout' },
+  { icon: '🛒', label: 'Achat de Bcoins', desc: 'Recharge ton solde en ligne' },
+  { icon: '🎁', label: 'Cadeaux & bons', desc: 'Échange tes Bcoins contre des réductions' },
+  { icon: '🌍', label: 'Multi-bars V2', desc: 'Tes Bcoins valables partout' },
   { icon: '⚽', label: 'Paris sportifs', desc: 'Miser sur le match en cours' },
   { icon: '🎰', label: 'Roue de la Fortune', desc: 'Bientôt disponible' },
   { icon: '🏅', label: 'Championnats', desc: 'Tournois inter-bars mensuels' },
@@ -134,12 +134,12 @@ export default function Profile() {
           <div className="flex-1 rounded-2xl px-3 py-2"
             style={{ background: 'rgba(232,134,10,0.12)', border: '1px solid rgba(232,134,10,0.4)' }}>
             <div className="text-3xl font-black" style={{ color: '#C9922A', textShadow: '0 0 20px rgba(201,146,42,0.6)' }}>{coinsPlay.toLocaleString()}</div>
-            <div className="text-[#F5F0E8]/50 text-xs">⚡ Coins Play</div>
+            <div className="text-[#F5F0E8]/50 text-xs">⚡ Bcoins Play</div>
           </div>
           <div className="flex-1 rounded-2xl px-3 py-2"
             style={{ background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.35)' }}>
             <div className="text-3xl font-black" style={{ color: '#22C55E' }}>{coinsFidelite.toLocaleString()}</div>
-            <div className="text-[#F5F0E8]/50 text-xs">🎁 Coins Fidélité</div>
+            <div className="text-[#F5F0E8]/50 text-xs">🎁 Bcoins Fidélité</div>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function Profile() {
         {/* Coins Fidélité + récompenses */}
         <div className="rounded-2xl p-4" style={glassCard}>
           <div className="flex items-center justify-between mb-3">
-            <div className="font-bold text-sm" style={{ color: 'rgba(245,240,232,0.7)' }}>🎁 Coins Fidélité</div>
+            <div className="font-bold text-sm" style={{ color: 'rgba(245,240,232,0.7)' }}>🎁 Bcoins Fidélité</div>
             <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: 'rgba(34,197,94,0.15)', color: '#22C55E' }}>Beta</span>
           </div>
           <div className="flex justify-between items-center mb-1">

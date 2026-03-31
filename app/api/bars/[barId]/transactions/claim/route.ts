@@ -116,6 +116,6 @@ export async function POST(
     coinsAwarded: transaction.coinsAwarded,
     newPlayBalance: coinResult.newBalance,
     multiplierApplied: transaction.multiplierApplied,
-    message: `+${transaction.coinsAwarded} points de jeu crédités !`,
+    message: `+${transaction.coinsAwarded} Bcoins crédités !`,
   });
 }

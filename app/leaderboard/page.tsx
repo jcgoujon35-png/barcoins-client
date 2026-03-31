@@ -115,7 +115,7 @@ export default function Leaderboard() {
           style={{ background: 'rgba(201,146,42,0.12)', border: '1px solid rgba(201,146,42,0.4)' }}>
           <span className="text-lg">🎯</span>
           <span className="text-sm" style={{ color: '#C9922A' }}>
-            Il te manque <strong>{gapTo1st} coins</strong> pour prendre la 1ère place !
+            Il te manque <strong>{gapTo1st} Bcoins</strong> pour prendre la 1ère place !
           </span>
         </div>
       )}

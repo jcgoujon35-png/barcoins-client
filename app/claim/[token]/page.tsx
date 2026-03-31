@@ -96,7 +96,7 @@ export default function ClaimPage() {
         <div className="text-center space-y-4 animate-bounce-once">
           <div className="text-7xl mb-2">🎉</div>
           <h2 className="text-2xl font-bold" style={{ color: '#22C55E' }}>
-            +{result.coinsAwarded} points !
+            +{result.coinsAwarded} Bcoins !
           </h2>
           <p className="text-base" style={{ color: 'rgba(245,240,232,0.7)' }}>
             Multiplicateur ×{result.multiplierApplied} appliqué
@@ -107,7 +107,7 @@ export default function ClaimPage() {
           >
             <p className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>Solde total</p>
             <p className="text-3xl font-bold" style={{ color: '#F2C96B' }}>
-              {result.newPlayBalance} pts
+              {result.newPlayBalance} Bcoins
             </p>
           </div>
           <p className="text-xs mt-6" style={{ color: 'rgba(245,240,232,0.4)' }}>

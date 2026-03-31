@@ -59,7 +59,7 @@ export default function Quiz() {
           <span className="text-4xl font-black" style={{color:'#F59E0B'}}>{bet}</span>
           <button onClick={() => setBet(b => Math.min(coins, b + 50))} className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>+</button>
         </div>
-        <div className="text-center text-[#F5E6D3]/40 text-xs mt-3">Solde : {coins} coins</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs mt-3">Solde : {coins} Bcoins</div>
       </div>
       <button onClick={startGame} className="w-full py-4 rounded-2xl font-bold text-lg transition-transform active:scale-95" style={{background:'#F59E0B',color:'#1a0a00'}}>
         Commencer le quiz ⚡
@@ -115,8 +115,8 @@ export default function Quiz() {
       <h2 className="text-[#F5E6D3] text-3xl font-black mb-2">{score >= 4 ? 'Bravo !' : 'Pas mal !'}</h2>
       <p className="text-[#F5E6D3]/60 mb-6">{score} / {questions.length} bonnes réponses</p>
       <div className="text-5xl font-black mb-2" style={{color:'#F59E0B'}}>+{earned}</div>
-      <p className="text-[#F5E6D3]/50 text-sm mb-2">coins gagnés</p>
-      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-2">Bcoins gagnés</p>
+      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} Bcoins ⚡</p>
       <button onClick={() => { setStep('bet'); setQIndex(0); setScore(0); setSelected(null); setShowConf(false) }}
         className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
         style={{background:'#F59E0B',color:'#1a0a00'}}>Rejouer</button>

@@ -5,8 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { parseBody, createTransactionSchema } from '@/lib/validations';
-import { getEffectiveMultiplier, calcCoinsForAmount, COIN_ECONOMICS } from '@/config/business-rules';
-import type { PlanKey } from '@/config/business-rules';
+import { getTierMultiplier, QR_RULES } from '@/config/business-rules';
+import { calculateQRPlayCoins } from '@/lib/coins';
 
 export async function POST(
   request: NextRequest,
@@ -37,10 +37,10 @@ export async function POST(
 
   const { amount } = parsed.data;
 
-  // Récupération du bar avec son plan et multiplicateur
+  // Récupération du bar
   const bar = await prisma.bar.findUnique({
     where: { id: barId },
-    select: { id: true, plan: true, activeMultiplier: true, boostActive: true, boostExpiresAt: true },
+    select: { id: true },
   });
 
   if (!bar) {
@@ -56,15 +56,12 @@ export async function POST(
     return NextResponse.json({ error: 'Non autorisé pour ce bar' }, { status: 403 });
   }
 
-  // Calcul du boost (expiration vérifiée)
-  const boostActive =
-    bar.boostActive && bar.boostExpiresAt ? bar.boostExpiresAt > new Date() : false;
-
-  const effectiveMultiplier = getEffectiveMultiplier(bar.plan as PlanKey, boostActive);
-  const coinsAwarded = calcCoinsForAmount(amount, effectiveMultiplier);
+  // Calcul des coins : paliers sur le montant de la note (pas le plan)
+  const coinsAwarded        = calculateQRPlayCoins(amount);
+  const tierMultiplier      = getTierMultiplier(amount);
 
   // Création de la transaction avec QR token unique
-  const qrExpiresAt = new Date(Date.now() + COIN_ECONOMICS.QR_EXPIRY_SECONDS * 1000);
+  const qrExpiresAt = new Date(Date.now() + QR_RULES.EXPIRY_SECONDS * 1000);
 
   const transaction = await prisma.transaction.create({
     data: {
@@ -73,7 +70,7 @@ export async function POST(
       amount,
       coinsAwarded,
       qrExpiresAt,
-      multiplierApplied: effectiveMultiplier,
+      multiplierApplied: tierMultiplier,
       status: 'PENDING',
     },
     select: {

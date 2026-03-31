@@ -4,8 +4,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getEffectiveMultiplier, calcCoinsForAmount, COIN_ECONOMICS } from '@/config/business-rules';
-import type { PlanKey } from '@/config/business-rules';
+import { getTierMultiplier, QR_RULES } from '@/config/business-rules';
+import { calculateQRPlayCoins } from '@/lib/coins';
 
 export async function POST(
   request: NextRequest,
@@ -31,17 +31,15 @@ export async function POST(
 
   const bar = await prisma.bar.findUnique({
     where: { id: barId },
-    select: { plan: true, boostActive: true, boostExpiresAt: true },
+    select: { id: true },
   });
 
   if (!bar) return NextResponse.json({ error: 'Bar introuvable' }, { status: 404 });
 
-  const boostActive = bar.boostActive && bar.boostExpiresAt
-    ? new Date(bar.boostExpiresAt) > new Date() : false;
-
-  const effectiveMultiplier = getEffectiveMultiplier(bar.plan as PlanKey, boostActive);
-  const coinsAwarded        = calcCoinsForAmount(amount, effectiveMultiplier);
-  const qrExpiresAt         = new Date(Date.now() + COIN_ECONOMICS.QR_EXPIRY_SECONDS * 1000);
+  // Calcul des coins : paliers sur le montant de la note (pas le plan)
+  const coinsAwarded   = calculateQRPlayCoins(amount);
+  const tierMultiplier = getTierMultiplier(amount);
+  const qrExpiresAt    = new Date(Date.now() + QR_RULES.EXPIRY_SECONDS * 1000);
 
   const transaction = await prisma.transaction.create({
     data: {
@@ -50,7 +48,7 @@ export async function POST(
       amount,
       coinsAwarded,
       qrExpiresAt,
-      multiplierApplied: effectiveMultiplier,
+      multiplierApplied: tierMultiplier,
       status: 'PENDING',
     },
     select: { id: true, qrToken: true, coinsAwarded: true, qrExpiresAt: true, multiplierApplied: true },
@@ -64,6 +62,6 @@ export async function POST(
     coinsAwarded: transaction.coinsAwarded,
     multiplierApplied: transaction.multiplierApplied,
     expiresAt: transaction.qrExpiresAt.toISOString(),
-    expiresInSeconds: COIN_ECONOMICS.QR_EXPIRY_SECONDS,
+    expiresInSeconds: QR_RULES.EXPIRY_SECONDS,
   });
 }

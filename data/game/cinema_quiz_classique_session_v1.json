@@ -1,0 +1,21 @@
+{
+  "session_id": "cinema_quiz_classique_v1",
+  "game_ref": "quiz_cinema_classique",
+  "configuration": {
+    "nombre_total_questions": 15,
+    "temps_par_question": 10,
+    "temps_affichage_reponse": 3
+  },
+  "manches": [
+    { "id": 1, "nom": "Échauffement",    "questions_ids": ["q1","q2","q3","q4","q5"],   "multiplicateur_points": 1 },
+    { "id": 2, "nom": "Cœur de partie", "questions_ids": ["q6","q7","q8","q9","q10"],  "multiplicateur_points": 1 },
+    { "id": 3, "nom": "Finale",          "questions_ids": ["q11","q12","q13","q14","q15"], "multiplicateur_points": 2 }
+  ],
+  "scoring": {
+    "mode": "rapidite",
+    "points_distribution": [20, 15, 10, 5, 0]
+  },
+  "conditions": {
+    "fin": "fin_manches"
+  }
+}

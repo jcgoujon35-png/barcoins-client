@@ -3,10 +3,11 @@ import { useRouter } from 'next/navigation'
 import BottomNav from '@/components/BottomNav'
 
 const games = [
-  { id: 'blindtest', icon: '🎵', title: 'Blind Test Musical', desc: 'Mise de coins avant d\'écouter', gain: '×2 à ×5 ta mise', active: true, route: '/games/blindtest' },
-  { id: 'quiz', icon: '❓', title: 'Quiz Culture Bar', desc: '500 questions — boissons, pop culture', gain: '+20 à +100 coins', active: true, route: '/games/quiz' },
+  { id: 'blindtest', icon: '🎵', title: 'Blind Test Musical', desc: 'Mise de Bcoins avant d\'écouter', gain: '×2 à ×5 ta mise', active: true, route: '/games/blindtest' },
+  { id: 'quiz', icon: '❓', title: 'Quiz Culture Bar', desc: '500 questions — boissons, pop culture', gain: '+20 à +100 Bcoins', active: true, route: '/games/quiz' },
+  { id: 'quiz-cinema', icon: '🎬', title: 'Quiz Cinéma Classique', desc: '15 questions · 3 manches · Bcoins au top 3', gain: '+Bcoins si top 3', active: true, route: '/games/quiz-cinema' },
   { id: 'roue', icon: '🎰', title: 'Roue de la Fortune', desc: 'Bientôt disponible', gain: 'Surprise !', active: false, soon: 'ANJ' },
-  { id: 'tournois', icon: '🏆', title: 'Tournois', desc: 'Qualification soirée', gain: 'Jackpot coins', active: false },
+  { id: 'tournois', icon: '🏆', title: 'Tournois', desc: 'Qualification soirée', gain: 'Jackpot Bcoins', active: false },
   { id: 'paris', icon: '⚽', title: 'Paris Sportifs', desc: 'Miser sur le match en cours', gain: 'Cotes variables', active: false },
 ]
 
@@ -51,7 +52,7 @@ export default function Games() {
             {['🎵 Blind Test', '❓ Quiz', '🏆 Score'].map((t, i) => (
               <span key={i} className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,146,42,0.2)', color: '#C9922A' }}>{t}</span>
             ))}
-            <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,146,42,0.06)', color: 'rgba(245,240,232,0.5)' }}>accès 10 coins · mise partagée</span>
+            <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,146,42,0.06)', color: 'rgba(245,240,232,0.5)' }}>accès 10 Bcoins · mise partagée</span>
           </div>
         </button>
 

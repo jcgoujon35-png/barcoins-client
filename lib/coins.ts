@@ -7,6 +7,17 @@
 
 import { CoinType, CoinReason } from '@prisma/client';
 import { prisma } from './prisma';
+import { calculatePlayCoins } from '@/config/business-rules';
+
+// ─────────────────────────────────────────────
+// calculateQRPlayCoins — calcul officiel pour tout QR scan
+// Le multiplicateur vient du MONTANT DE LA NOTE (paliers),
+// pas du plan d'abonnement du bar.
+// ─────────────────────────────────────────────
+
+export function calculateQRPlayCoins(montantEuros: number): number {
+  return calculatePlayCoins(montantEuros);
+}
 
 // ─────────────────────────────────────────────
 // Types

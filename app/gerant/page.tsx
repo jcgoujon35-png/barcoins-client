@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getEffectiveMultiplier } from '@/config/business-rules';
 import type { PlanKey } from '@/config/business-rules';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -141,7 +140,7 @@ export default function GerantDashboard() {
     );
   }
 
-  const mult = bar ? getEffectiveMultiplier(bar.plan as PlanKey, bar.boostActive) : 1;
+  const multLabel = '×1 → ×4';  // paliers sur le montant de la note (business-rules.ts)
   const sessionActive = activeGame?.status === 'ACTIVE';
 
   return (
@@ -188,7 +187,7 @@ export default function GerantDashboard() {
           {sessionActive ? (
             <div className="space-y-3">
               <p className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>
-                Multiplicateur actif : <strong style={{ color: '#C9922A' }}>×{mult}</strong>
+                Multiplicateur actif : <strong style={{ color: '#C9922A' }}>{multLabel}</strong>
                 {bar?.boostActive && <span style={{ color: '#E8860A' }}> (BOOST ×2)</span>}
               </p>
               <button onClick={handleEndSession}
@@ -248,7 +247,7 @@ export default function GerantDashboard() {
                   className="w-full h-full rounded-xl"
                 />
               </div>
-              <p className="font-black text-lg" style={{ color: '#22C55E' }}>+{qrData.coinsAwarded} pts</p>
+              <p className="font-black text-lg" style={{ color: '#22C55E' }}>+{qrData.coinsAwarded} Bcoins</p>
               <p className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>Multiplicateur ×{qrData.multiplierApplied}</p>
               <div className="mt-3 flex items-center justify-center gap-2">
                 <div className={`text-sm font-bold ${qrSecondsLeft < 20 ? 'text-red-400' : ''}`}
@@ -270,7 +269,7 @@ export default function GerantDashboard() {
                 style={{ background: 'rgba(201,146,42,0.2)', color: '#C9922A' }}>
                 {bar?.plan ?? '…'}
               </span>
-              <span className="ml-3 text-sm" style={{ color: '#F5F0E8' }}>Multiplicateur ×{mult}</span>
+              <span className="ml-3 text-sm" style={{ color: '#F5F0E8' }}>Multiplicateur {multLabel}</span>
               {bar?.boostActive && (
                 <span className="ml-2 text-xs font-bold" style={{ color: '#E8860A' }}>BOOST ×2 ACTIF</span>
               )}

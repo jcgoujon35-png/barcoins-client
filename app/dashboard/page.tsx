@@ -3,8 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import BottomNav from '@/components/BottomNav';
-import { getEffectiveMultiplier, PLAYER_STATUS_THRESHOLDS, calcCoinsForAmount } from '@/config/business-rules';
-import type { PlanKey } from '@/config/business-rules';
+import { PLAYER_STATUS_THRESHOLDS, calculatePlayCoins } from '@/config/business-rules';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,7 +56,7 @@ const glassCardSubtle = { background: '#162035', border: '1px solid rgba(201,146
 const programme = [
   { time: '20h30', label: 'Blind Test années 2000', icon: '🎵' },
   { time: '21h15', label: 'Quiz Culture Bar', icon: '❓' },
-  { time: '22h00', label: 'Double XP coins — 30 min', icon: '⚡' },
+  { time: '22h00', label: 'Double XP Bcoins — 30 min', icon: '⚡' },
   { time: '22h30', label: 'Grand classement final', icon: '🏆' },
 ];
 
@@ -141,9 +140,6 @@ export default function Dashboard() {
   const { user, barClient, bar, recentTransactions } = userData;
 
   // Calculs dynamiques depuis les vraies données
-  const plan = (bar?.plan ?? 'STARTER') as PlanKey;
-  const boostActive = bar?.boostActive ?? false;
-  const mult = getEffectiveMultiplier(plan, boostActive);
   const coins = barClient.playBalance;
   const computedStatus = coins >= PLAYER_STATUS_THRESHOLDS.LEGEND ? 'LEGEND'
     : coins >= PLAYER_STATUS_THRESHOLDS.VIP ? 'VIP' : 'REGULAR';
@@ -151,10 +147,10 @@ export default function Dashboard() {
   const initials = firstName.slice(0, 2).toUpperCase();
   // TODO: calculer l'écart avec le 1er quand le classement est chargé
 
-  // Produits avec vraie valeur coins
+  // Produits avec vraie valeur coins — paliers sur le montant de la note
   const produitsVedette = produitsBase.map((p) => ({
     ...p,
-    coins: `+${calcCoinsForAmount(p.prixVal, mult)} pts`,
+    coins: `+${calculatePlayCoins(p.prixVal)} Bcoins`,
   }));
 
   // Paliers coins calculés dynamiquement
@@ -163,7 +159,7 @@ export default function Dashboard() {
     { conso: '10€', prixVal: 10, label: 'Bière / verre' },
     { conso: '20€', prixVal: 20, label: 'Cocktail + apéro' },
     { conso: '50€', prixVal: 50, label: 'Table complète' },
-  ].map((p) => ({ ...p, coins: calcCoinsForAmount(p.prixVal, mult) }));
+  ].map((p) => ({ ...p, coins: calculatePlayCoins(p.prixVal) }));
 
   return (
     <div className="min-h-dvh pb-20" style={{ background: 'linear-gradient(180deg, #0F1923 0%, #0D1B2E 50%, #1A1035 100%)' }}>
@@ -184,7 +180,7 @@ export default function Dashboard() {
         <div className="flex items-end justify-between">
           <div>
             <div className="text-5xl font-black" style={{ color: '#C9922A' }}>⚡ {coins.toLocaleString()}</div>
-            <div className="text-[#F5F0E8]/40 text-xs mt-0.5">points de jeu ce soir</div>
+            <div className="text-[#F5F0E8]/40 text-xs mt-0.5">Bcoins ce soir</div>
           </div>
           <div className="text-right">
             <div className="inline-block px-2 py-0.5 rounded-full text-xs font-bold mb-1"
@@ -290,7 +286,7 @@ export default function Dashboard() {
                     style={{ background: 'rgba(201,146,42,0.15)', color: '#C9922A' }}>{p.conso}</div>
                   <span className="text-sm" style={{ color: 'rgba(245,240,232,0.5)' }}>{p.label}</span>
                 </div>
-                <span className="font-black text-sm" style={{ color: '#C9922A' }}>+{p.coins} pts</span>
+                <span className="font-black text-sm" style={{ color: '#C9922A' }}>+{p.coins} Bcoins</span>
               </div>
             ))}
           </div>
@@ -314,7 +310,7 @@ export default function Dashboard() {
             <div className="text-2xl mb-2">❓</div>
             <div className="text-[#F5F0E8] font-bold text-sm">Quiz Bar</div>
             <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>500 questions</div>
-            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>+20 à +100 pts</div>
+            <div className="mt-2 text-xs font-bold" style={{ color: '#C9922A' }}>+20 à +100 Bcoins</div>
           </button>
         </div>
 
@@ -347,7 +343,7 @@ export default function Dashboard() {
                   <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>{timeAgo(t.createdAt)}</div>
                 </div>
                 <span className="font-bold text-sm" style={{ color: t.amount > 0 ? '#22C55E' : '#EF4444' }}>
-                  {t.amount > 0 ? `+${t.amount}` : t.amount} pts
+                  {t.amount > 0 ? `+${t.amount}` : t.amount} Bcoins
                 </span>
               </div>
             ))

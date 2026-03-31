@@ -129,7 +129,7 @@ export default function Challenge() {
       {selected.length > 0 && (
         <div className="rounded-2xl p-3 mb-4" style={{background:'rgba(245,158,11,0.1)', border:'1px solid rgba(245,158,11,0.3)'}}>
           <div className="text-[#F5E6D3]/60 text-xs text-center">
-            {selected.length + 1} joueurs · Accès : <strong style={{color:'#F59E0B'}}>{accessPerPerson} coins/pers.</strong> (total {ACCESS_FEE} coins partagé)
+            {selected.length + 1} joueurs · Accès : <strong style={{color:'#F59E0B'}}>{accessPerPerson} Bcoins/pers.</strong> (total {ACCESS_FEE} Bcoins partagés)
           </div>
         </div>
       )}
@@ -154,13 +154,13 @@ export default function Challenge() {
         <div className="text-[#F5E6D3]/60 text-xs font-bold uppercase tracking-wider mb-3">Frais d'accès (partagés)</div>
         <div className="flex justify-between items-center">
           <div className="text-[#F5E6D3]/70 text-sm">Total accès défi</div>
-          <div className="font-bold" style={{color:'#F59E0B'}}>{ACCESS_FEE} coins</div>
+          <div className="font-bold" style={{color:'#F59E0B'}}>{ACCESS_FEE} Bcoins</div>
         </div>
         <div className="flex justify-between items-center mt-1">
           <div className="text-[#F5E6D3]/70 text-sm">Ta part ({selected.length + 1} joueurs)</div>
-          <div className="font-bold text-[#F5E6D3]">{accessPerPerson} coins</div>
+          <div className="font-bold text-[#F5E6D3]">{accessPerPerson} Bcoins</div>
         </div>
-        <div className="text-[#F5E6D3]/30 text-xs mt-2">Ces coins alimentent le jackpot du défi 🏆</div>
+        <div className="text-[#F5E6D3]/30 text-xs mt-2">Ces Bcoins alimentent le jackpot du défi 🏆</div>
       </div>
 
       {/* Mise supplémentaire */}
@@ -182,7 +182,7 @@ export default function Challenge() {
       <div className="rounded-2xl p-4 mb-6" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
         <div className="flex justify-between items-center mb-1">
           <span className="text-[#F5E6D3]/70 text-sm">Coût total pour toi</span>
-          <span className="text-2xl font-black" style={{color:'#F59E0B'}}>{totalCost} coins</span>
+          <span className="text-2xl font-black" style={{color:'#F59E0B'}}>{totalCost} Bcoins</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-[#F5E6D3]/50 text-xs">Ton solde après</span>
@@ -244,13 +244,13 @@ export default function Challenge() {
       <div className="text-6xl mb-4 slide-up">⚔️</div>
       <h2 className="text-[#F5E6D3] text-3xl font-black mb-2">Tout le monde est prêt !</h2>
       <p className="text-[#F5E6D3]/60 mb-2">{gameType === 'blindtest' ? '🎵 Blind Test' : '❓ Quiz'} · {category}</p>
-      <p className="text-[#F5E6D3]/50 text-sm mb-8">{selected.length + 1} joueurs · Mise totale : {(bet * (selected.length + 1)) + ACCESS_FEE} coins</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-8">{selected.length + 1} joueurs · Mise totale : {(bet * (selected.length + 1)) + ACCESS_FEE} Bcoins</p>
 
       <div className="w-full max-w-sm rounded-2xl p-4 mb-8" style={{background:'rgba(245,158,11,0.15)', border:'1px solid #F59E0B'}}>
         <div className="text-center text-[#F5E6D3]/60 text-sm mb-2">Jackpot du défi</div>
         <div className="text-center text-5xl font-black" style={{color:'#F59E0B'}}>
           {(bet * (selected.length + 1)) + ACCESS_FEE}
-          <span className="text-xl ml-1">coins</span>
+          <span className="text-xl ml-1">Bcoins</span>
         </div>
         <div className="text-center text-[#F5E6D3]/40 text-xs mt-1">Le gagnant emporte tout 🏆</div>
       </div>

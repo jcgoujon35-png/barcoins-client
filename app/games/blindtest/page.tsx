@@ -57,7 +57,7 @@ export default function BlindTest() {
           <span className="text-4xl font-black" style={{color:'#F59E0B'}}>{bet}</span>
           <button onClick={() => setBet(b => Math.min(500, b + 50))} className="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold" style={{background:'rgba(255,255,255,0.1)',color:'#fff'}}>+</button>
         </div>
-        <div className="text-center text-[#F5E6D3]/40 text-xs">Solde : {coins} coins · Mise max : 500</div>
+        <div className="text-center text-[#F5E6D3]/40 text-xs">Solde : {coins} Bcoins · Mise max : 500</div>
       </div>
       <div className="flex gap-3 text-xs text-center mb-8">
         <div className="flex-1 rounded-xl p-3" style={{background:'rgba(34,197,94,0.1)',color:'#22c55e'}}>✅ Bonne réponse<br/><strong>mise × 3</strong></div>
@@ -125,8 +125,8 @@ export default function BlindTest() {
       <div className={`text-5xl font-black mb-2 ${won ? 'score-win' : 'slide-up'}`} style={{color: won ? '#F59E0B' : '#ef4444', textShadow: won ? '0 0 24px rgba(245,158,11,0.7)' : '0 0 20px rgba(239,68,68,0.6)'}}>
         {won ? `+${bet * 3}` : `-${bet}`}
       </div>
-      <p className="text-[#F5E6D3]/50 text-sm mb-1">coins {won ? 'gagnés' : 'perdus'}</p>
-      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} coins ⚡</p>
+      <p className="text-[#F5E6D3]/50 text-sm mb-1">Bcoins {won ? 'gagnés' : 'perdus'}</p>
+      <p className="text-[#F5E6D3]/40 text-xs mb-8">Nouveau solde : {coins} Bcoins ⚡</p>
       {tIndex + 1 < tracks.length ? (
         <button onClick={() => { setTIndex(t => t + 1); setStep('bet'); setSelected(null) }}
           className="w-full py-4 rounded-2xl font-bold mb-3 transition-transform active:scale-95"
