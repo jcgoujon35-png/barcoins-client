@@ -1,11 +1,12 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-07
+Date : 2026-04-08
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 
 ```
+40f89e1 chore: daily context update [2026-04-07]
 11ad3f5 feat: parseGameDefinition — adaptateur GDF vers moteur natif
 ef72089 fix: rendre /games/quiz-cinema public (demo sans auth)
 1867648 fix: remove mult ref in dashboard + PlanKey unused import in gerant
@@ -20,62 +21,64 @@ a579bf5 fix: add staff login form + OTP dev mode without Twilio/Redis
 5a24412 feat: BottomNav — fond navy rgba(13,27,46,0.95), active gold #C9922A, hauteur 72px
 4ecffd9 feat: profile — navy migration, avatar amber, barres progression navy, coins 3xl
 806d75d feat: games — navy migration, défi-privé gradient, badge ANJ roue, lueurs
-118bb38 feat: leaderboard — podium refonte (couronne, gold gradient, rise), navy migration
 ```
 
 ## Avancement beta
 
 | Priorité | Feature | Avancement | Statut |
 |---|---|---|---|
-| #1 | QR code + validation gérant | 75% | 🟡 |
+| #1 | QR code + validation gérant | 78% | 🟡 |
 | #2 | Blind test Spotify/Deezer | 10% | 🔴 |
-| #3 | Quiz 500 questions | 8% | 🔴 |
-| #4 | Coins Play + classement live | 50% | 🟡 |
-| #5 | Dashboard gérant 1 clic | 70% | 🟡 |
+| #3 | Quiz 500 questions | 12% | 🔴 |
+| #4 | Coins Play + classement live | 52% | 🟡 |
+| #5 | Dashboard gérant 1 clic | 72% | 🟡 |
 | #6 | wheelEnabled=false | ✅ | bloqué en beta |
 
 ## Fichiers les plus actifs (derniers 5 commits)
 
-- `config/business-rules.ts` — refonte majeure (+581 lignes), paliers coins, règles jeu
-- `lib/game-engine/reducer.ts` — moteur de jeu complet (nouveau, +248 lignes)
-- `lib/game-engine/parseGameDefinition.ts` — adaptateur GDF (nouveau, +151 lignes)
-- `lib/game-engine/state.ts` — états jeu (nouveau, +130 lignes)
-- `components/barcoins-game/QuestionScreen.tsx` — écran questions (nouveau, +100 lignes)
-- `app/games/quiz-cinema/page.tsx` — quiz cinéma V1 (nouveau, +70 lignes)
-- `lib/game-engine/scoring.ts` — calcul scores (nouveau, +98 lignes)
-- `app/dashboard/page.tsx` — intégration backend (+33 lignes)
+- `lib/game-engine/parseGameDefinition.ts` — adaptateur GDF → moteur natif (nouveau, +151 lignes)
+- `app/dashboard/page.tsx` — suppression ref boostActive, nettoyage
+- `app/games/quiz-cinema/page.tsx` — rendu public sans auth (demo)
+- `app/gerant/page.tsx` — suppression import PlanKey inutilisé
+- `middleware.ts` — correction route publique quiz-cinema
+- `barcoins-context/DAILY_STATUS.md` + `TODO_REPORT.md` — générés J-1
 
 ## Points d'attention
 
 ### 🔴 Priorité #2 — Blind test Spotify/Deezer (bloqué)
-- `app/games/blindtest/page.tsx` contient **données hardcodées** (3 tracks fixes)
-- **Aucune intégration Spotify/Deezer** dans le codebase — pas d'appel API, pas de client, pas de token
-- C'est un prototype UI uniquement — risque élevé pour la beta juillet 2026
+- `app/games/blindtest/page.tsx` contient **3 tracks hardcodées** — aucune API connectée
+- **Zéro intégration Spotify/Deezer** dans tout le codebase : pas de client, pas de token, pas d'endpoint
+- C'est un prototype UI uniquement — **risque critique pour la beta juillet 2026**
+- Action requise : choisir API (Spotify OAuth vs Deezer public), créer `lib/spotify.ts` ou `lib/deezer.ts`
 
 ### 🔴 Priorité #3 — Quiz 500 questions (très en retard)
-- Un seul thème disponible : `cinema_quiz_classique.json` avec **seulement 20 questions**
-- Le moteur de jeu est bien avancé (reducer, state, scoring, session, parseGameDefinition)
-- Il manque ~480 questions minimum + autres thèmes
-- **Ratio actuel : 20/500 = 4%** des questions cibles
+- **20 questions seulement** dans `data/game/cinema_quiz_classique.json` — ratio 20/500 = 4%
+- Moteur de jeu bien avancé : reducer, state, scoring, session, parseGameDefinition ✅
+- `parseGameDefinition.ts` (commit J) facilite l'ingestion de nouveaux JSON GDF
+- **Déblocage possible** : produire des fichiers JSON GDF supplémentaires (musique, sport, culture générale…)
+- Manque : ~480 questions minimum + au moins 4 autres thèmes
 
-### 🟡 Priorité #1 — QR code + validation gérant
+### 🟡 Priorité #1 — QR code + validation gérant (quasi prêt)
 - API `/api/bars/[barId]/qr` opérationnelle ✅
 - Page `/claim/[token]` opérationnelle ✅
-- Dashboard gérant avec génération QR ✅
-- Manque : rendu visuel du QR (lib frontend à brancher ?) — à vérifier en prod
+- UI gérant avec génération QR + countdown expiration ✅
+- Rendu QR via `qrserver.com` (service externe) — fonctionnel mais dépendance externe à surveiller
+- Manque : tests end-to-end complets du flow client (scan → claim → coins crédités)
 
-### 🟡 Priorité #4 — Coins Play + classement live
-- `lib/sse.ts` présent, bouton "Voir le classement en direct" dans dashboard
-- TODO non résolu : `app/dashboard/page.tsx:148` — écart avec le 1er non calculé
-- Coins Play **manuel** (attribution directe par gérant) : non visible dans le code
+### 🟡 Priorité #4 — Coins Play manuel + classement live
+- `/api/bars/[barId]/leaderboard/stream` (SSE) + `lib/sse.ts` présents ✅
+- `app/leaderboard/page.tsx` + bouton "Voir le classement en direct" dans dashboard ✅
+- `app/dashboard/page.tsx:148` — TODO non résolu : écart avec le 1er non calculé
+- Attribution manuelle Coins Play par gérant : **non visible dans le code** — à implémenter
 
 ### 🟡 Priorité #5 — Dashboard gérant 1 clic
 - Chargement données bar depuis API ✅, refresh 30s ✅, stats soirée ✅
-- Programme soirée hardcodé (`app/dashboard/page.tsx:55`) — TODO API
-- Produits vedette hardcodés (`app/dashboard/page.tsx:63`) — TODO API
+- `app/dashboard/page.tsx:55` — programme soirée encore hardcodé (TODO API)
+- `app/dashboard/page.tsx:63` — produits vedette encore hardcodés (TODO API)
+- Interface fonctionnelle mais données mock résiduelles
 
 ## Règles métier rappel
 
 - Coins : `floor(montant€ × tier_multiplier)` — paliers `<10€=×1` / `10-19€=×1.5` / `20-29€=×2` / `30-49€=×3` / `50€+=×4`
-- Jamais hardcoder hors `business-rules.ts`
-- `wheelEnabled = false` en beta (confirmé lignes 186 et 340 de `config/business-rules.ts`)
+- Jamais hardcoder hors `config/business-rules.ts`
+- `wheelEnabled = false` en beta (confirmé `config/business-rules.ts` lignes 186 et 340)
