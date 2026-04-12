@@ -1,16 +1,16 @@
 # BarCoins — TODO Report
 
-Date : 2026-04-11
+Date : 2026-04-12
 
 ## TODO_VALIDER_JC (décision JC requise)
 
 | Fichier | Ligne | Contenu |
 |---|---|---|
-| `config/business-rules.ts` | 295 | `MISE_MIN_COINS: 'TODO_VALIDER_JC'` — mise minimale coins à définir |
-| `config/business-rules.ts` | 296 | `MISE_MAX_COINS: 'TODO_VALIDER_JC'` — mise maximale coins à définir |
-| `config/business-rules.ts` | 334 | `ANNUEL: 'TODO_VALIDER_JC'` — tarif abonnement annuel à définir |
-| `config/business-rules.ts` | 480 | Seuils à affiner selon usage réel post-beta |
-| `config/business-rules.ts` | 491 | Rappel : toute valeur non listée dans ce fichier = TODO_VALIDER_JC |
+| `config/business-rules.ts` | 295 | `MISE_MIN_COINS: 'TODO_VALIDER_JC'` — mise minimale coins jeux à définir |
+| `config/business-rules.ts` | 296 | `MISE_MAX_COINS: 'TODO_VALIDER_JC'` — mise maximale coins jeux à définir |
+| `config/business-rules.ts` | 334 | `ANNUEL: 'TODO_VALIDER_JC'` — tarif abonnement annuel bar à définir |
+| `config/business-rules.ts` | 480 | Seuils statuts joueur (REGULAR/VIP/LEGEND) à affiner selon usage réel post-beta |
+| `config/business-rules.ts` | 491 | Rappel règle absolue : toute valeur non listée dans ce fichier = TODO_VALIDER_JC |
 
 ## TODO techniques
 
@@ -24,8 +24,8 @@ Date : 2026-04-11
 
 | Fichier | Ligne | Contenu |
 |---|---|---|
-| `lib/otp.ts` | 21 | `sid !== 'TODO'` — Twilio SID de prod non configuré (mode dev mock actif) |
-| `lib/otp.ts` | 26 | `url !== 'TODO'` — Twilio URL de prod non configurée (mode dev mock actif) |
+| `lib/otp.ts` | 21 | `sid !== 'TODO'` — Twilio SID de prod non configuré, OTP SMS non fonctionnel |
+| `lib/otp.ts` | 26 | `url !== 'TODO'` — Twilio URL de prod non configurée, OTP SMS non fonctionnel |
 
 ## Total
 
