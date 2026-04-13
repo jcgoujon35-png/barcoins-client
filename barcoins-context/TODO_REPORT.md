@@ -1,6 +1,6 @@
 # BarCoins — TODO Report
 
-Date : 2026-04-12
+Date : 2026-04-13
 
 ## TODO_VALIDER_JC (décision JC requise)
 
