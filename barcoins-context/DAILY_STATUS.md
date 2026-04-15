@@ -1,119 +1,109 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-14
+Date : 2026-04-15
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 
-| Hash | Message |
-|---|---|
-| `4819dcb` | chore: daily context update [2026-04-13] |
-| `2d021cf` | chore: daily context update [2026-04-12] |
-| `f67e2b2` | chore: daily context update [2026-04-11] |
-| `198a553` | chore: daily context update [2026-04-10] |
-| `fc4299d` | chore: daily context update [2026-04-09] |
-| `74261b7` | chore: daily context update [2026-04-08] |
-| `40f89e1` | chore: daily context update [2026-04-07] |
-| `11ad3f5` | feat: parseGameDefinition — adaptateur GDF vers moteur natif |
-| `ef72089` | fix: rendre /games/quiz-cinema public (demo sans auth) |
-| `1867648` | fix: remove mult ref in dashboard + PlanKey unused import in gerant |
-| `42f8ec6` | fix: build errors — remove boostActive ref + unused import |
-| `8b3c839` | feat: quiz cinema V1 — moteur de jeu complet + UI 5 écrans |
-| `605a16d` | fix: middleware public routes exact match + staff redirect to /gerant |
-| `a579bf5` | fix: add staff login form + OTP dev mode without Twilio/Redis |
-| `40c8578` | fix: add prisma generate to vercel build command |
+| # | Hash | Message |
+|---|------|---------|
+| 1 | e7a2592 | chore: daily context update [2026-04-14] |
+| 2 | 4819dcb | chore: daily context update [2026-04-13] |
+| 3 | 2d021cf | chore: daily context update [2026-04-12] |
+| 4 | f67e2b2 | chore: daily context update [2026-04-11] |
+| 5 | 198a553 | chore: daily context update [2026-04-10] |
+| 6 | fc4299d | chore: daily context update [2026-04-09] |
+| 7 | 74261b7 | chore: daily context update [2026-04-08] |
+| 8 | 40f89e1 | chore: daily context update [2026-04-07] |
+| 9 | 11ad3f5 | feat: parseGameDefinition — adaptateur GDF vers moteur natif |
+| 10 | ef72089 | fix: rendre /games/quiz-cinema public (demo sans auth) |
+| 11 | 1867648 | fix: remove mult ref in dashboard + PlanKey unused import in gerant |
+| 12 | 42f8ec6 | fix: build errors — remove boostActive ref + unused import |
+| 13 | 8b3c839 | feat: quiz cinema V1 — moteur de jeu complet + UI 5 écrans |
+| 14 | 605a16d | fix: middleware public routes exact match + staff redirect to /gerant |
+| 15 | a579bf5 | fix: add staff login form + OTP dev mode without Twilio/Redis |
+
+> Note : commits 1–8 sont des mises à jour de contexte daily agent. Le vrai travail code est sur les commits 9–15 (semaine du 07-14 avril).
 
 ## Avancement beta
 
 | Priorité | Feature | Avancement | Statut |
 |---|---|---|---|
-| #1 | QR code + validation gérant | 75% | 🟡 |
+| #1 | QR code + validation gérant | 70% | 🟡 |
 | #2 | Blind test Spotify/Deezer | 10% | 🔴 |
 | #3 | Quiz 500 questions | 20% | 🔴 |
-| #4 | Coins Play + classement live | 55% | 🟡 |
-| #5 | Dashboard gérant 1 clic | 70% | 🟡 |
+| #4 | Coins Play + classement live | 60% | 🟡 |
+| #5 | Dashboard gérant 1 clic | 65% | 🟡 |
 | #6 | wheelEnabled=false | ✅ | bloqué en beta |
 
 ### Détail par priorité
 
-**#1 QR code + validation gérant (75%)**
-- ✅ Route API `/api/bars/[barId]/qr` — génération, calcul coins + multiplicateur, token PENDING
-- ✅ Page `/claim/[token]` — tous les états gérés (success, expired, already_claimed, error, auth_required)
-- ✅ Dashboard gérant — formulaire montant, génération QR, countdown expiration
-- ✅ QR rendu via `api.qrserver.com` (service externe — point d'attention prod)
-- ⚠️ Dépendance externe `api.qrserver.com` — pas de fallback si indisponible
-- ❌ Test end-to-end joueur → scan → claim non documenté comme validé
+**#1 — QR code + validation gérant (70%)**
+- API `/api/bars/[barId]/qr` opérationnelle (67 lignes) ✅
+- Route claim `/api/bars/[barId]/transactions/claim` (121 lignes) ✅
+- Page `/claim/[token]` avec flux auth + callbackUrl ✅
+- Dashboard gérant avec génération QR + countdown ✅
+- Manque : affichage QR en image (actuellement URL seulement ?) + test E2E sur bar physique
 
-**#2 Blind test Spotify/Deezer (10%)**
-- ✅ UI mockup présente (`/games/blindtest/page.tsx`) avec système de mise
-- ❌ Données hardcodées (3 tracks statiques : Daft Punk, Stromae, The Weeknd)
-- ❌ Aucune intégration API Spotify ni Deezer dans le codebase
-- ❌ Aucune route API `/api/spotify` ou `/api/deezer`
-- 🔴 BLOQUÉ — priorité critique pour la beta
+**#2 — Blind test Spotify/Deezer (10%)**
+- UI `/games/blindtest/page.tsx` existe (142 lignes) ✅
+- MAIS : uniquement 3 pistes hardcodées (Daft Punk, Stromae, The Weeknd)
+- ZÉRO intégration API Spotify ou Deezer — aucune route, aucun SDK, aucune clé
+- Audio simulé visuellement (pas de vrai extrait sonore)
+- C'est une démo UI, pas une feature fonctionnelle
 
-**#3 Quiz 500 questions (20%)**
-- ✅ Moteur de jeu complet : reducer, state machine, session, scoring (`/lib/game-engine/`)
-- ✅ Adaptateur `parseGameDefinition` pour format GDF
-- ✅ Quiz cinema V1 fonctionnel avec 5 écrans UI (Lobby, Question, Result, Leaderboard, Final)
-- ✅ Route `/games/quiz-cinema` publique (demo sans auth)
-- ❌ Pool de questions : 20 questions cinema uniquement (20/500 = 4%)
-- ❌ Aucun autre thème de quiz (sport, musique, culture générale, etc.)
-- 🔴 BLOQUÉ sur le contenu — infrastructure prête, données manquantes
+**#3 — Quiz 500 questions (20%)**
+- Moteur de jeu complet : parseGameDefinition, reducer, scoring, state, session, questions ✅
+- Quiz cinema V1 UI (5 écrans) ✅
+- `cinema_quiz_classique.json` : **20 questions** (besoin : 500+)
+- `cinema_quiz_classique_session_v1.json` : structure manches présente, mais 0 questions injectées
+- Seule catégorie : cinéma. Besoin : culture générale, musique, sport, etc.
 
-**#4 Coins Play + classement live (55%)**
-- ✅ Classement live avec SSE (`/api/bars/[barId]/leaderboard/stream`)
-- ✅ Leaderboard page avec refresh auto 30s + temps réel SSE
-- ✅ Coins Play affichés sur profil (`/app/profile`) et dashboard joueur
-- ✅ Attribution automatique via QR claim (route transactions/claim)
-- ❌ Attribution manuelle de Coins Play par gérant — non implémentée
-- ❌ Pas de route API pour crédit manuel (gérant → joueur)
+**#4 — Coins Play + classement live (60%)**
+- Leaderboard API (90 lignes) avec types SOIREE / HEBDO / MENSUEL ✅
+- SSE stream `/leaderboard/stream` opérationnel (lib/sse.ts + SSE_CHANNELS) ✅
+- lib/coins.ts (285 lignes) pour la logique coins ✅
+- Page `/leaderboard` et `/games/challenge` existent ✅
+- Manque : flux manuel gérant pour attribuer des Coins Play sans QR (ex. champion soirée), test live SSE
 
-**#5 Dashboard gérant 1 clic (70%)**
-- ✅ Lancer soirée / Terminer soirée en 1 clic
-- ✅ Stats live (joueurs, transactions, coins distribués)
-- ✅ Générateur QR intégré avec formulaire montant
-- ✅ Health Score bar affichée
-- ✅ Auth staff avec OTP (mode dev sans Twilio/Redis)
-- ❌ Attribution manuelle Coins Play depuis le dashboard gérant
-- ❌ Gestion/lancement de jeux (quiz, blind test) depuis le dashboard gérant
-- ❌ Programme soirée dynamique (hardcodé côté dashboard joueur — TODO actif)
+**#5 — Dashboard gérant 1 clic (65%)**
+- `/gerant/page.tsx` (300 lignes) avec start/stop session, génération QR, stats soirée ✅
+- Refresh automatique toutes les 30s ✅
+- TODO en dashboard joueur : programme soirée et produits vedette encore hardcodés (`app/dashboard/page.tsx:55,63`)
+- Manque : lancer un jeu depuis le dashboard gérant, health score affiché, gestion boost
 
-**#6 wheelEnabled=false (✅)**
-- `FEATURE_FLAGS.WHEEL_ENABLED: false` dans `config/business-rules.ts:472`
-- `WHEEL_CONFIG.ENABLED_DEFAULT: false`
-- Label UI : "Disponible prochainement" — aucune activation possible sans action manuelle JC
+**#6 — wheelEnabled=false (✅)**
+- `WHEEL_CONFIG.ENABLED_DEFAULT = false` dans business-rules.ts (ligne 344) ✅
+- Commentaire serveur explicite ✅
 
-## Fichiers les plus actifs (derniers 5 commits)
+## Fichiers les plus actifs (commits 9–15, hors daily)
 
-> Note : les 5 derniers commits sont des mises à jour d'agent quotidien. Les fichiers de code actifs proviennent des commits précédents (8c3839 → 11ad3f5).
-
-- `barcoins-context/DAILY_STATUS.md` — mises à jour agent
-- `barcoins-context/TODO_REPORT.md` — mises à jour agent
-- `lib/game-engine/parseGameDefinition.ts` — commit `11ad3f5`
-- `app/games/quiz-cinema/page.tsx` — commits `ef72089`, `8b3c839`
-- `app/gerant/page.tsx` — commit `1867648`
-- `app/dashboard/page.tsx` — commit `1867648`
+| Fichier | Activité |
+|---|---|
+| `lib/game-engine/parseGameDefinition.ts` | Nouveau — 151 lignes, adaptateur GDF |
+| `app/games/quiz-cinema/page.tsx` | Quiz cinema V1 (70 lignes) |
+| `middleware.ts` | Fix routes publiques |
+| `app/gerant/page.tsx` | Dashboard gérant (300 lignes) |
+| `app/login/page.tsx` | Staff login + OTP dev mode |
+| `lib/game-engine/reducer.ts` | Moteur jeu (248 lignes) |
+| `lib/game-engine/state.ts` | État jeu (130 lignes) |
 
 ## Points d'attention
 
-1. **[CRITIQUE] Blind test sans API** — `/games/blindtest/page.tsx` est un prototype statique. Zéro code Spotify/Deezer. Besoin de clés API + intégration preview 30s (limite légale Spotify). Bloquer du temps avant juillet.
+1. **Blind test bloqué** — L'UI est là mais aucune intégration audio/API. Il faut choisir une stratégie : Spotify Embed (simple, gratuit) ou Deezer API (preview 30s). Sans cela, la feature #2 reste à 10%.
 
-2. **[CRITIQUE] Quiz : 20 questions pour un objectif de 500** — Le moteur est prêt mais le contenu est quasi inexistant. Envisager : import CSV/JSON en masse, génération IA supervisée, ou recrutement contributeur contenu.
+2. **Quiz : volume de questions critique** — 20 questions pour un quiz en soirée est insuffisant. Les Founding Partners vont saturer en 1 soirée. Objectif 500 questions = 25× le stock actuel. À prioriser avant le 1er test beta.
 
-3. **[MOYEN] QR dépendance externe** — `api.qrserver.com` est un service tiers. En prod, risque de timeout ou indisponibilité. Prévoir `qrcode` npm local (côté serveur) ou composant React côté client.
+3. **cinema_quiz_classique_session_v1.json mal formé** — La structure "manches" existe mais les questions ne sont pas injectées (count = 0). Le parseGameDefinition pourrait échouer silencieusement.
 
-4. **[MOYEN] Attribution manuelle Coins Play** — Absente du dashboard gérant. Nécessaire pour les soirées où le gérant veut récompenser manuellement un joueur (animations, challenges). Route API manquante.
+4. **HEAD détaché** — `git status` indique `HEAD detached from refs/heads/master`. Le checkout remote est en mode détaché. Les commits du daily agent (chore) ne remonteront pas sur master sans une opération de push/merge explicite.
 
-5. **[FAIBLE] Dashboard joueur — programme et produits hardcodés** — `app/dashboard/page.tsx:55` et `:63` : programme soirée et produits vedette sont des données statiques. TODO actif — dépend d'une interface de saisie gérant non encore développée.
+5. **PVP MISE_MIN/MAX et LEADERBOARD ANNUEL** — Encore en `TODO_VALIDER_JC` dans business-rules.ts. À valider avant d'activer le mode PvP.
 
-6. **[FAIBLE] Classement — écart avec le 1er** — `app/dashboard/page.tsx:148` : TODO actif, le delta de coins avec le leader n'est pas calculé.
-
-7. **[INFO] OTP en mode dev sans Twilio** — `lib/otp.ts` gère le mode dev (OTP fictif). Avant beta prod, brancher Twilio + Redis obligatoire.
+6. **Dashboard joueur** — Programme soirée et produits vedette toujours hardcodés (`app/dashboard/page.tsx:55,63`). Impact UX pour les Founding Partners.
 
 ## Règles métier rappel
 
-- Coins : `floor(montant€ × tier_multiplier)` — paliers <10€=×1 / 10-19€=×1.5 / 20-29€=×2 / 30-49€=×3 / 50€+=×4
+- **Coins** : `floor(montant€ × tier_multiplier)` — paliers <10€=×1 / 10-19€=×1.5 / 20-29€=×2 / 30-49€=×3 / 50€+=×4
 - Jamais hardcoder hors `business-rules.ts`
-- `wheelEnabled = false` en beta — activation uniquement par JC après validation ANJ
-- JAMAIS afficher "ANJ" ou "Post-ANJ" dans l'UI
-- JAMAIS utiliser le mot "token" publiquement (risque MiCA/crypto)
+- `wheelEnabled = false` en beta — vérification côté serveur obligatoire
