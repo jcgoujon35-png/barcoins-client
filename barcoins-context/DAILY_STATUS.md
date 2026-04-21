@@ -1,10 +1,11 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-20
+Date : 2026-04-21
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 ```
+037af92 chore: daily context update [2026-04-20]
 6d750c7 chore: daily context update [2026-04-19]
 cda25bd chore: daily context update [2026-04-18]
 d1ff510 chore: daily context update [2026-04-17]
@@ -19,10 +20,9 @@ fc4299d chore: daily context update [2026-04-09]
 74261b7 chore: daily context update [2026-04-08]
 40f89e1 chore: daily context update [2026-04-07]
 11ad3f5 feat: parseGameDefinition — adaptateur GDF vers moteur natif
-ef72089 fix: rendre /games/quiz-cinema public (demo sans auth)
 ```
 
-> ⚠️ Aucun commit de développement depuis le 2026-04-07 (13 jours). Les commits récents sont tous des mises à jour d'agent. Derniers vrais commits : `parseGameDefinition` + public route quiz-cinema.
+> ⚠️ Aucun commit de développement depuis le 2026-04-07 (**14 jours**). Les commits récents sont exclusivement des mises à jour d'agent. Dernier vrai commit : `parseGameDefinition` (adaptateur GDF vers moteur natif).
 
 ## Avancement beta
 | Priorité | Feature | Avancement | Statut |
@@ -80,8 +80,8 @@ ef72089 fix: rendre /games/quiz-cinema public (demo sans auth)
 
 ## Fichiers les plus actifs (derniers 5 commits)
 Tous les commits récents sont des mises à jour d'agent :
-- `barcoins-context/DAILY_STATUS.md` — +181/-113 lignes nettes sur 5 commits
-- `barcoins-context/TODO_REPORT.md` — +33/-7 lignes nettes sur 5 commits
+- `barcoins-context/DAILY_STATUS.md` — mise à jour quotidienne
+- `barcoins-context/TODO_REPORT.md` — mise à jour quotidienne
 
 Derniers fichiers modifiés par du vrai code de développement (avant 2026-04-07) :
 - `lib/game-engine/parseGameDefinition.ts` (commit `11ad3f5`)
@@ -91,11 +91,11 @@ Derniers fichiers modifiés par du vrai code de développement (avant 2026-04-07
 
 ## Points d'attention
 
-1. **Inactivité code prolongée (13 jours)** — Dernier commit réel : 2026-04-07. Aucun développement depuis. Risque de retard sur objectif beta juillet 2026.
+1. **Inactivité code prolongée (14 jours)** — Dernier commit réel : 2026-04-07. Objectif beta juillet 2026 = 10 semaines restantes. Risque de retard si reprise tardive.
 
 2. **Blind test bloqué** — Zéro intégration API audio. Spotify nécessite OAuth + preview URL (30s). Deezer a une API plus permissive. Décision architecture requise avant de coder.
 
-3. **Quiz loin de l'objectif** — ~25 questions pour 500 demandées. Besoin urgent de rédaction ou import dataset questions/réponses.
+3. **Quiz loin de l'objectif** — ~25 questions pour 500 demandées. Besoin urgent de rédaction ou import dataset questions/réponses. C'est la tâche la plus volumineuse en contenu.
 
 4. **QR externe** — Dépendance `api.qrserver.com` en production est un risque (service tiers). Bibliothèque locale recommandée (`qrcode`, `qr-code-styling`).
 
