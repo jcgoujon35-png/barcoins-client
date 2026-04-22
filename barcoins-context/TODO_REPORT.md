@@ -1,6 +1,6 @@
 # BarCoins — TODO Report
 
-Date : 2026-04-21
+Date : 2026-04-22
 
 ## TODO_VALIDER_JC (décision JC requise)
 
@@ -23,6 +23,10 @@ Date : 2026-04-21
 ## FIXME
 
 Aucun FIXME détecté dans le code source.
+
+## Notes
+
+- `lib/otp.ts:21,26` : la chaîne `'TODO'` est utilisée comme valeur sentinelle de validation (guard clause) — ce ne sont pas des TODO à traiter, c'est du code intentionnel.
 
 ## Total
 - TODO_VALIDER_JC : 5 (dont 3 valeurs métier bloquantes)
