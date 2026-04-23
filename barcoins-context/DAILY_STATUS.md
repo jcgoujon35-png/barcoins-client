@@ -1,10 +1,11 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-22
+Date : 2026-04-23
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 ```
+1fe5baf chore: daily context update [2026-04-22]
 8f21e5e chore: daily context update [2026-04-21]
 037af92 chore: daily context update [2026-04-20]
 6d750c7 chore: daily context update [2026-04-19]
@@ -19,10 +20,9 @@ f67e2b2 chore: daily context update [2026-04-11]
 198a553 chore: daily context update [2026-04-10]
 fc4299d chore: daily context update [2026-04-09]
 74261b7 chore: daily context update [2026-04-08]
-40f89e1 chore: daily context update [2026-04-07]
 ```
 
-> ⚠️ Aucun commit de développement depuis le 2026-04-07 (**15 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif).
+> ⚠️ Aucun commit de développement depuis le 2026-04-07 (**16 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif).
 
 ## Avancement beta
 | Priorité | Feature | Avancement | Statut |
@@ -91,7 +91,7 @@ Derniers fichiers modifiés par du vrai code (avant 2026-04-07) :
 
 ## Points d'attention
 
-1. **Inactivité code prolongée (15 jours)** — Aucun commit réel depuis le 2026-04-07. Objectif beta juillet 2026 = ~10 semaines restantes. Le retard s'accumule sur les 2 priorités critiques (#2 et #3).
+1. **Inactivité code prolongée (16 jours)** — Aucun commit réel depuis le 2026-04-07. Objectif beta juillet 2026 = ~10 semaines restantes. Le retard s'accumule sur les 2 priorités critiques (#2 et #3). La fenêtre pour livrer un MVP testable aux Founding Partners se réduit.
 
 2. **Blind test bloqué architecturalement** — Zéro intégration API audio. Spotify nécessite OAuth + preview URL (30s). Deezer a une API plus permissive mais moins de catalogue. Décision architecture requise AVANT de coder : choisir l'API, gérer les clés, implémenter le backend proxy preview.
 
