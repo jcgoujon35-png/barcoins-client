@@ -230,7 +230,7 @@ export default function Dashboard() {
             </div>
             <div className="text-right">
               <div className="text-4xl font-black" style={{ color: '#22C55E' }}>{coins.toLocaleString()}</div>
-              <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>points ce soir</div>
+              <div className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>Bcoins ce soir</div>
             </div>
           </div>
         )}
