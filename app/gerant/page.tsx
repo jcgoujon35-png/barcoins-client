@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { CONSUMPTION_TIERS } from '@/config/business-rules';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -139,7 +140,7 @@ export default function GerantDashboard() {
     );
   }
 
-  const multLabel = '×1 → ×4';  // paliers sur le montant de la note (business-rules.ts)
+  const multLabel = `×${CONSUMPTION_TIERS[0].multiplier} → ×${CONSUMPTION_TIERS[CONSUMPTION_TIERS.length - 1].multiplier}`;
   const sessionActive = activeGame?.status === 'ACTIVE';
 
   return (
