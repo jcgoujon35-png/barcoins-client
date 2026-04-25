@@ -1,10 +1,11 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-24
+Date : 2026-04-25
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 ```
+4e6996a chore: daily context update [2026-04-24]
 82620c1 chore: daily context update [2026-04-23]
 1fe5baf chore: daily context update [2026-04-22]
 8f21e5e chore: daily context update [2026-04-21]
@@ -19,10 +20,9 @@ e7a2592 chore: daily context update [2026-04-14]
 2d021cf chore: daily context update [2026-04-12]
 f67e2b2 chore: daily context update [2026-04-11]
 198a553 chore: daily context update [2026-04-10]
-fc4299d chore: daily context update [2026-04-09]
 ```
 
-> ⚠️ Aucun commit de développement depuis le 2026-04-07 (**17 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif).
+> ⚠️ Aucun commit de développement depuis le 2026-04-07 (**18 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif).
 
 ## Avancement beta
 | Priorité | Feature | Avancement | Statut |
@@ -39,7 +39,7 @@ fc4299d chore: daily context update [2026-04-09]
 **#1 — QR code + validation gérant (88%)** 🟢
 - ✅ API génération QR : `app/api/bars/[barId]/qr/route.ts` (POST, calcul paliers, expiry configurable)
 - ✅ API claim joueur : `app/api/bars/[barId]/transactions/claim/route.ts`
-- ✅ Page claim joueur : `app/claim/[token]/page.tsx` (gestion états : loading/success/expired/already_claimed/auth_required)
+- ✅ Page claim joueur : `app/claim/[token]/page.tsx` (états : loading/success/expired/already_claimed/auth_required)
 - ✅ Dashboard gérant : form montant + génération QR + countdown + aperçu coins : `app/gerant/page.tsx`
 - ⚠️ QR affiché via service externe `api.qrserver.com` — dépendance réseau tiers, à remplacer par lib locale avant production
 
@@ -52,31 +52,31 @@ fc4299d chore: daily context update [2026-04-09]
 
 **#3 — Quiz 500 questions (10%)** 🔴
 - ✅ Moteur de jeu complet : `lib/game-engine/` (reducer, state, session, scoring, questions, parseGameDefinition)
-- ✅ Quiz Cinema V1 jouable : `app/games/quiz-cinema/page.tsx` (20 questions dans `data/game/cinema_quiz_classique.json`)
+- ✅ Quiz Cinema V1 jouable : `app/games/quiz-cinema/page.tsx`
 - ✅ Quiz bar/cocktails générique : `app/games/quiz/page.tsx` (5 questions hardcodées)
-- ❌ ~25 questions au total toutes catégories — cible 500+ non atteinte (5%)
-- ❌ Une seule catégorie de qualité (cinéma) — manque musique, sport, culture générale, histoire, géographie
-- 🚨 Bloquant : volume de contenu insuffisant pour une soirée entière, tâche la plus volumineuse
+- ❌ ~25 questions au total toutes catégories — cible 500+ non atteinte (~5%)
+- ❌ Manque catégories : musique, sport, culture générale, histoire, géographie
+- 🚨 Bloquant : volume de contenu insuffisant pour une soirée entière
 
 **#4 — Coins Play + classement live (70%)** 🟡
 - ✅ API leaderboard : `app/api/bars/[barId]/leaderboard/route.ts` (périodes SOIREE/HEBDO/MENSUEL/ANNUEL)
 - ✅ SSE stream temps réel : `app/api/bars/[barId]/leaderboard/stream/route.ts`
-- ✅ Page leaderboard : `app/leaderboard/page.tsx` (podium top 3, classement en temps réel via SSE)
+- ✅ Page leaderboard : `app/leaderboard/page.tsx` (podium top 3, temps réel via SSE)
 - ✅ Moteur de jeu avec scoring : `lib/game-engine/scoring.ts`
 - ⚠️ TODO dans `app/dashboard/page.tsx:148` : calcul écart avec le 1er non implémenté
 - ⚠️ Attribution manuelle de coins depuis le dashboard gérant non documentée/testée
 
 **#5 — Dashboard gérant 1 clic (88%)** 🟢
-- ✅ Page gérant : `app/gerant/page.tsx` (~300 lignes — stats session, QR, jeu actif, health score, boost)
+- ✅ Page gérant : `app/gerant/page.tsx` (stats session, QR, jeu actif, health score, boost)
 - ✅ API session bar : `app/api/bars/[barId]/session/route.ts` (POST lancer / DELETE terminer)
 - ✅ Refresh automatique toutes les 30s
 - ⚠️ Programme soirée et produits vedette dans `app/dashboard/page.tsx:55,63` encore hardcodés
-- ⚠️ Le gérant ne peut pas encore saisir le programme ni la carte via l'interface
+- ⚠️ Gérant ne peut pas encore saisir programme ni carte via l'interface
 
 **#6 — wheelEnabled = false (✅)** 🔒
-- ✅ `config/business-rules.ts` : `WHEEL_CONFIG.ENABLED_DEFAULT = false` avec vérification serveur documentée
-- ✅ Commentaire explicite : "JAMAIS activer pendant toute la beta — activation uniquement par JC après validation ANJ"
-- Bloqué volontairement pour toute la durée de la beta
+- ✅ `config/business-rules.ts:344` : `WHEEL_CONFIG.ENABLED_DEFAULT = false` avec vérification serveur documentée
+- ✅ Commentaire explicite ligne 186 : bloqué pour toute la beta
+- Activation uniquement par JC après validation ANJ
 
 ## Fichiers les plus actifs (derniers 5 commits)
 Tous les commits récents sont des mises à jour d'agent — aucune activité de développement :
@@ -91,11 +91,11 @@ Derniers fichiers modifiés par du vrai code (avant 2026-04-07) :
 
 ## Points d'attention
 
-1. **Inactivité code prolongée (17 jours)** — Aucun commit réel depuis le 2026-04-07. Objectif beta juillet 2026 = ~10 semaines restantes. Le retard s'accumule sur les 2 priorités critiques (#2 et #3). La fenêtre pour livrer un MVP testable aux Founding Partners se réduit.
+1. **Inactivité code prolongée (18 jours)** — Aucun commit réel depuis le 2026-04-07. Objectif beta juillet 2026 = ~10 semaines restantes. Le retard s'accumule sur les 2 priorités critiques (#2 et #3).
 
-2. **Blind test bloqué architecturalement** — Zéro intégration API audio. Spotify nécessite OAuth + preview URL (30s). Deezer a une API plus permissive mais moins de catalogue. Décision architecture requise AVANT de coder : choisir l'API, gérer les clés, implémenter le backend proxy preview.
+2. **Blind test bloqué architecturalement** — Zéro intégration API audio. Spotify nécessite OAuth + preview URL (30s). Deezer API plus permissive. Décision architecture requise AVANT de coder : choisir l'API, gérer les clés, implémenter le backend proxy preview.
 
-3. **Quiz loin de l'objectif** — ~25 questions pour 500 demandées (5%). C'est la tâche la plus volumineuse en contenu. Deux options : rédaction manuelle ou import depuis un dataset externe (OpenTriviaDB, etc.). Le moteur est prêt — c'est la donnée qui manque.
+3. **Quiz loin de l'objectif** — ~25 questions pour 500 demandées (~5%). C'est la tâche la plus volumineuse en contenu. Options : rédaction manuelle ou import dataset externe (OpenTriviaDB, etc.). Le moteur est prêt — c'est la donnée qui manque.
 
 4. **QR externe dépendance** — `api.qrserver.com` utilisé en production provisoire. Bibliothèque locale recommandée avant lancement Founding Partners (`qrcode`, `qr-code-styling`).
 
