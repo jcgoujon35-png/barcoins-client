@@ -1,10 +1,11 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-26
+Date : 2026-04-27
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 ```
+8cb4a7d chore: daily context update [2026-04-26]
 098e9c9 chore: daily context update [2026-04-25]
 4e6996a chore: daily context update [2026-04-24]
 82620c1 chore: daily context update [2026-04-23]
@@ -19,10 +20,9 @@ d8a414e chore: daily context update [2026-04-16]
 e7a2592 chore: daily context update [2026-04-14]
 4819dcb chore: daily context update [2026-04-13]
 2d021cf chore: daily context update [2026-04-12]
-f67e2b2 chore: daily context update [2026-04-11]
 ```
 
-> ⚠️ Aucun commit de développement depuis le **2026-04-01** (**25 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif). Jalón juillet 2026 en danger si la vélocité ne reprend pas rapidement.
+> ⚠️ Aucun commit de développement depuis le **2026-04-01** (**26 jours**). Tous les commits récents sont des mises à jour d'agent. Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (adaptateur GDF vers moteur natif). Jalón juillet 2026 en danger si la vélocité ne reprend pas rapidement.
 
 ## Avancement beta
 | Priorité | Feature | Avancement | Statut |
@@ -91,7 +91,7 @@ Les 5 derniers commits réels (avant l'agent) ont touché :
 ## Points d'attention
 
 ### 🚨 Critique
-1. **25 jours sans commit de développement** — dernier commit JC le 01/04/2026. Avec un objectif beta juillet 2026, il reste ~10 semaines. Les priorités #2 et #3 nécessitent un travail substantiel.
+1. **26 jours sans commit de développement** — dernier commit JC le 01/04/2026. Avec un objectif beta juillet 2026, il reste ~9 semaines. Les priorités #2 et #3 nécessitent un travail substantiel.
 2. **Blind test sans API** — la page est un mock visuel sans audio. Décision Spotify vs Deezer indispensable avant de coder quoi que ce soit.
 3. **Quiz : ~20 questions vs 500 minimum** — le contenu est le principal bloquant pour une vraie soirée avec les Founding Partners.
 
