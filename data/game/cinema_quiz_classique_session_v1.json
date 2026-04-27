@@ -1,21 +1,74 @@
 {
-  "session_id": "cinema_quiz_classique_v1",
-  "game_ref": "quiz_cinema_classique",
+  "session_id": "cinema_quiz_classique_v2_barcoins",
+  "game_ref": "quiz_cinema_v2",
   "configuration": {
     "nombre_total_questions": 15,
     "temps_par_question": 10,
-    "temps_affichage_reponse": 3
+    "temps_affichage_reponse": 3,
+    "entree_fee": 10
   },
   "manches": [
-    { "id": 1, "nom": "Échauffement",    "questions_ids": ["q1","q2","q3","q4","q5"],   "multiplicateur_points": 1 },
-    { "id": 2, "nom": "Cœur de partie", "questions_ids": ["q6","q7","q8","q9","q10"],  "multiplicateur_points": 1 },
-    { "id": 3, "nom": "Finale",          "questions_ids": ["q11","q12","q13","q14","q15"], "multiplicateur_points": 2 }
+    { 
+      "id": 1, 
+      "nom": "RECONNAISSANCE AUDIO", 
+      "type": "audio",
+      "description": "Écoutez la réplique et répondez le plus vite !",
+      "questions_ids": ["q1","q2","q3","q4","q5"],
+      "multiplicateur_points": 1,
+      "scoring_mode": "rapidite",
+      "rules": {
+        "timer": 10,
+        "ranking_based": true,
+        "points": [100, 60, 30, 10, 0]
+      }
+    },
+    { 
+      "id": 2, 
+      "nom": "BUZZER — RÉPLIQUES CÉLÈBRES", 
+      "type": "buzzer",
+      "description": "Réplique incomplète — à vous de trouver !",
+      "questions_ids": ["q6","q7","q8","q9","q10"],
+      "multiplicateur_points": 1,
+      "scoring_mode": "buzzer",
+      "rules": {
+        "timer": 8,
+        "elimination": true,
+        "correct_points": 80,
+        "wrong_penalty": -40,
+        "timeout_penalty": -20
+      }
+    },
+    { 
+      "id": 3, 
+      "nom": "FINALE — MISE EN COINS", 
+      "type": "mise",
+      "description": "Question difficile — pariez vos coins !",
+      "questions_ids": ["q11","q12","q13","q14","q15"],
+      "multiplicateur_points": 2,
+      "scoring_mode": "mise",
+      "rules": {
+        "timer": 15,
+        "bet_required": true,
+        "correct_multiplier": 2,
+        "wrong_penalty": "lose_bet",
+        "min_bet": 5,
+        "max_bet": 100
+      }
+    }
   ],
+  "twist": {
+    "name": "DOUBLE OU RIEN",
+    "probability": 0.3,
+    "effect": "double_final_round",
+    "description": "Les enjeux sont doublés pour la finale !"
+  },
   "scoring": {
-    "mode": "rapidite",
+    "mode": "multi_manche",
     "points_distribution": [20, 15, 10, 5, 0]
   },
   "conditions": {
-    "fin": "fin_manches"
+    "fin": "fin_manches",
+    "total_rounds": 3
   }
 }
+

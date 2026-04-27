@@ -14,6 +14,12 @@ export type GamePhase =
   | 'RESULT'
   | 'LEADERBOARD'
   | 'FINAL'
+  | 'BET_SCREEN'
+  | 'TWIST_REVEAL'
+
+// --------------- Types de manches ---------------
+
+export type RoundType = 'audio' | 'buzzer' | 'mise' | 'standard'
 
 // --------------- Entités ---------------
 
@@ -29,6 +35,7 @@ export interface Round {
   nom: string
   questionIds: string[]
   multiplier: number
+  type?: 'audio' | 'buzzer' | 'mise' | 'standard'
 }
 
 export interface SessionConfig {
@@ -102,6 +109,24 @@ export interface GameState {
 
   // Anti-répétition — ids des questions déjà vues cette session
   seenQuestionIds: string[]
+
+  // Auto-transition timer (in seconds) — null = disabled, > 0 = counting down
+  autoAdvanceTimer: number | null
+
+  // Manche actuelle: type (audio, buzzer, mise, standard)
+  currentRoundType: RoundType
+
+  // Mise en coins (pour manches MISE) — par playerId
+  playerBets: Record<string, number>
+
+  // Joueurs éliminés (pour manche BUZZER)
+  eliminatedPlayers: string[]
+
+  // Événement spécial: Double ou Rien activé ?
+  doubleOrNothing: boolean
+
+  // Dernière action chronométrée (pour rapidité)
+  responseTimestamp: Record<string, number>
 }
 
 // --------------- État initial vide ---------------
@@ -127,4 +152,10 @@ export const INITIAL_GAME_STATE: GameState = {
   finalResults: [],
   coinsEarned: 0,
   seenQuestionIds: [],
+  autoAdvanceTimer: null,
+  currentRoundType: 'standard',
+  playerBets: {},
+  eliminatedPlayers: [],
+  doubleOrNothing: false,
+  responseTimestamp: {},
 }

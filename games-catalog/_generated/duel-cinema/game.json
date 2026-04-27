@@ -1,0 +1,204 @@
+{
+  "id": "duel-cinema-v1",
+  "meta": {
+    "title": "Duel Cinéma",
+    "theme": "cinema",
+    "sub_themes": ["repliques", "acteurs", "affiches", "scenes", "personnages"],
+    "version": "1.0",
+    "difficulty": "hard",
+    "target_players": { "min": 2, "max": 20 },
+    "duration_minutes": { "min": 8, "max": 12 },
+    "bar_potential": 8,
+    "monetization_potential": 9,
+    "priority": "V1",
+    "tech_complexity": "medium",
+    "media_required": ["text"]
+  },
+  "rounds": [
+    {
+      "id": "round-1",
+      "name": "Duels Rapides — Répliques",
+      "type": "duel",
+      "sub_type": "pvp_transfer_mechanic",
+      "description": "Un joueur choisit sa cible et répondent TOUS LES DEUX à la même question. Le gagnant remporte 20% des coins Play de la cible.",
+      "questions_count": 4,
+      "timer_seconds": 10,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 50,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "pvp_challenge",
+          "trigger": "duel_start",
+          "effect": "choose_opponent",
+          "label": "Joueur 1 choisit sa victime. Tous deux répondent. Gagnant = réponse correct ET rapide."
+        },
+        {
+          "id": "coins_transfer",
+          "trigger": "duel_win",
+          "effect": "transfer_20pct_opponent_wallet",
+          "label": "Gagnant reçoit 20% des coins Play de la cible (min 10, max 100)"
+        },
+        {
+          "id": "revenge_mechanic",
+          "trigger": "duel_loss",
+          "effect": "target_can_revanche",
+          "label": "Perdant peut demander 'Revanche' : nouvelle question, même adversaire, stakes doublées (40%)"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["repliques_celebres", "acteurs", "films_populaires"]
+    },
+    {
+      "id": "round-2",
+      "name": "Duels Intensité — Affiches & Scènes",
+      "type": "duel",
+      "sub_type": "pvp_transfer_mechanic_intense",
+      "description": "Même mécanique mais difficulté +2. Réplique moins connue = transfert 40% au lieu de 20%.",
+      "questions_count": 3,
+      "timer_seconds": 12,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 75,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "pvp_challenge_intense",
+          "trigger": "duel_start_round2",
+          "effect": "choose_opponent_hard",
+          "label": "Difficultée augmentée : répliques moins connues"
+        },
+        {
+          "id": "coins_transfer_intense",
+          "trigger": "duel_win_round2",
+          "effect": "transfer_40pct_opponent_wallet",
+          "label": "Gagnant reçoit 40% des coins Play de la cible (min 20, max 200)"
+        },
+        {
+          "id": "elimination_risk",
+          "trigger": "consecutive_losses_2",
+          "effect": "player_depleted_warning",
+          "label": "Après 2 pertes consécutives, joueur peut abandonner la partie"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["repliques_rares", "scenes_cultes", "films_classiques"]
+    },
+    {
+      "id": "round-3",
+      "name": "Grande Finale — Duel Suprême",
+      "type": "duel",
+      "sub_type": "tournament_elimination",
+      "description": "Le classement provisoire classe les top 2 joueurs. Ils font un duel final : tout ou rien. Transfert 60% de wallet.",
+      "questions_count": 1,
+      "timer_seconds": 15,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 150,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": true,
+        "pot_redistribution": [100, 0, 0],
+        "multiplier": 2
+      },
+      "special_rules": [
+        {
+          "id": "final_duel",
+          "trigger": "round_3_start",
+          "effect": "top2_auto_selected",
+          "label": "Top 2 provisoires face-à-face automatiquement"
+        },
+        {
+          "id": "ultimate_transfer",
+          "trigger": "final_duel_win",
+          "effect": "transfer_60pct_opponent_wallet",
+          "label": "Gagnant emporte 60% de la wallet de l'adversaire + bonus 150 points"
+        },
+        {
+          "id": "comeback_mechanic",
+          "trigger": "final_duel_loss",
+          "effect": "60pct_lost_to_winner",
+          "label": "Perdant perd 60% de ses coins au gagnant (brutal mais transparent)"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["replique_legendaire", "final_supreme", "suspense"]
+    }
+  ],
+  "dynamic_events": [
+    { "trigger": "challenge_issued", "message": "{challenger} défie {target} au duel ! ⚔️" },
+    { "trigger": "duel_win", "message": "{winner} terrasse {loser} ! 💥 +{coins_gained} coins volés !" },
+    { "trigger": "revenge_accepted", "message": "🔄 REVANCHE lancée ! {player1} vs {player2} — stakes doublées !" },
+    { "trigger": "elimination_risk", "message": "{player} au bord de l'élimination... 1 autre perte = exit 😰" },
+    { "trigger": "comeback_win", "message": "{player} REVIENT DANS LE JEU avec une victoire spectaculaire ! 🔥" },
+    { "trigger": "final_face_off", "message": "🎬 FINALE SUPRÊME ! {top1} vs {top2} — Tout ou rien ! 🏆" },
+    { "trigger": "ultimate_winner", "message": "{champion} REMPORTE LE DUEL CINÉMA ! Champion incontesté 👑🎬" }
+  ],
+  "bonuses": [
+    {
+      "id": "duel_streak",
+      "type": "consecutive_duel_wins",
+      "threshold": 3,
+      "multiplier": 1.5,
+      "description": "3 duels gagnés d'affilée = gain x1.5 sur transfert suivant"
+    },
+    {
+      "id": "comeback_bonus",
+      "type": "win_after_2loss",
+      "threshold": 2,
+      "multiplier": 2,
+      "description": "Deux pertes puis une victoire = gain doublé"
+    }
+  ],
+  "tech_needs": {
+    "text": true,
+    "audio": false,
+    "image": true,
+    "realtime_sync": true,
+    "player_targeting": true,
+    "wallet": true,
+    "animations": true,
+    "logs": true
+  },
+  "ux_risks": [
+    "Joueur cible peut refuser challenge — design UX: accept/decline auto-play ou force accept?",
+    "Wallet transfer = complex state mutation — MUST validate server-side. Log tous les transfers (audit trail).",
+    "Revanche mechanic peut créer infinite loops — limit: 1 revanche par duel only",
+    "Joueur éliminé (0 coins) = confus state — clear exit UI + 'Spectate mode' ou 'Watch & earn' option",
+    "Concurrent duels = race condition (2 joueurs se challengent mutuellement) — arbitrate with timestamp"
+  ],
+  "coin_economy": {
+    "play_coins_used": true,
+    "fidelite_coins_used": false,
+    "pvp_commission_rate": 0.10
+  },
+  "content_to_generate": {
+    "questions_needed": 8,
+    "audio_extracts_needed": 0,
+    "images_needed": 0,
+    "sample_questions": [
+      { "round": 1, "level": "easy", "question": "Complète la réplique : 'You can't handle the...'", "options": ["TRUTH", "REALITY", "POWER", "TRUTH"] },
+      { "round": 1, "level": "easy", "question": "Film : 'Frankly my dear, I don't give a...'", "options": ["DAMN", "CARE", "THING", "SH*T"], "answer": "DAMN" },
+      { "round": 2, "level": "hard", "question": "Réplique exacte : 'I'll have what she's having' — quel film ?", "options": ["When Harry Met Sally", "Sleepless in Seattle", "Notting Hill", "You've Got Mail"], "answer": "When Harry Met Sally" },
+      { "round": 2, "level": "hard", "question": "Actrice qui a dit : 'I'm the king of the world !'", "options": ["Kate Winslet", "Leonardo DiCaprio", "Billy Zane", "Frances Fisher"], "answer": "Leonardo DiCaprio" },
+      { "round": 3, "level": "extreme", "question": "Film + année : 'May the Force be with you' — réplique originale de quel film ?", "options": ["Episode IV (1977)", "Episode I (1999)", "Episode V (1980)", "Rogue One (2016)"], "answer": "Episode IV (1977)" }
+    ]
+  }
+}

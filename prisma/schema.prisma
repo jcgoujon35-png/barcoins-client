@@ -5,7 +5,8 @@
 // ============================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -38,9 +39,9 @@ enum StaffRole {
 }
 
 enum OnboardingPhase {
-  DISCOVERY
+  DECOUVERTE
   ENGAGEMENT
-  COMPLETE
+  COMPLET
 }
 
 enum CoinType {
@@ -200,7 +201,7 @@ model Bar {
   boostActive         Boolean         @default(false)
   boostExpiresAt      DateTime?
   wheelEnabled        Boolean         @default(false) // ← JAMAIS true en beta — validation JC obligatoire
-  onboardingPhase     OnboardingPhase @default(DISCOVERY)
+  onboardingPhase     OnboardingPhase @default(DECOUVERTE)
   healthScore         Int             @default(0)
   jackpotCountMonthly Int             @default(0)
   createdAt           DateTime        @default(now())
@@ -285,7 +286,7 @@ model BarClient {
   playBalance      Int             @default(0)
   fideliteBalance  Int             @default(0)
   totalCoinsEarned Int             @default(0)
-  onboardingPhase  OnboardingPhase @default(DISCOVERY)
+  onboardingPhase  OnboardingPhase @default(DECOUVERTE)
   joinedAt         DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 

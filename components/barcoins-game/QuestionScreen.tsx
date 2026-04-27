@@ -18,6 +18,11 @@ export function QuestionScreen({ state, onAnswer }: Props) {
 
   return (
     <div className="min-h-dvh flex flex-col px-6 pt-8 pb-8" style={{ background: '#1a0a00' }}>
+      {/* Manche indicator */}
+      <div className="mb-6 p-3 rounded-lg text-center font-bold text-lg" style={{ background: 'rgba(255,214,0,0.1)', color: '#FFD600' }}>
+        MANCHE {currentRoundIndex + 1}/{session.rounds.length} — {round.nom}
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>

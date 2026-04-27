@@ -23,6 +23,7 @@ export function LeaderboardScreen({ state, onNext }: Props) {
       <div className="flex flex-col gap-3 flex-1">
         {leaderboard.map((entry) => {
           const isMe = entry.playerId === currentPlayerId
+          const isEliminated = state.eliminatedPlayers.includes(entry.playerId)
           const rankIcon = RANK_ICONS[entry.rank - 1]
 
           return (
@@ -32,6 +33,7 @@ export function LeaderboardScreen({ state, onNext }: Props) {
               style={{
                 background: isMe ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.07)',
                 border: isMe ? '1px solid rgba(245,158,11,0.4)' : '1px solid transparent',
+                opacity: isEliminated ? 0.4 : 1,
               }}
             >
               <div className="text-2xl w-8 text-center">
@@ -41,6 +43,7 @@ export function LeaderboardScreen({ state, onNext }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-[#F5E6D3] font-semibold">{entry.nickname}</span>
                   {isMe && <span className="text-xs text-[#F59E0B]">Toi</span>}
+                  {isEliminated && <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'rgba(239,75,75,0.3)', color: '#EF4444' }}>ÉLIMINÉ</span>}
                 </div>
               </div>
               <div className="text-[#F59E0B] font-black text-lg">{entry.score}</div>
@@ -56,6 +59,20 @@ export function LeaderboardScreen({ state, onNext }: Props) {
       >
         {isLastRound ? 'Voir les résultats' : 'Manche suivante →'}
       </button>
+
+      {state.autoAdvanceTimer !== null && (
+        <div className="mt-6 text-center">
+          <div className="text-[#F5E6D3]/60 text-sm">
+            Passage à <span className="text-[#F59E0B] font-black">{state.autoAdvanceTimer}s</span>
+          </div>
+          <div className="mt-2 h-1 bg-white/20 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#F59E0B] transition-all duration-1000"
+              style={{ width: `${((3 - state.autoAdvanceTimer) / 3) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

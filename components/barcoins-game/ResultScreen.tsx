@@ -59,6 +59,20 @@ export function ResultScreen({ state, onNext }: Props) {
       >
         Suivant →
       </button>
+
+      {state.autoAdvanceTimer !== null && (
+        <div className="mt-6 text-center">
+          <div className="text-[#F5E6D3]/60 text-sm">
+            Passage à la question suivante dans <span className="text-[#F59E0B] font-black">{state.autoAdvanceTimer}s</span>
+          </div>
+          <div className="mt-2 h-1 bg-white/20 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#F59E0B] transition-all duration-1000"
+              style={{ width: `${((3 - state.autoAdvanceTimer) / 3) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

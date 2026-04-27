@@ -1,0 +1,165 @@
+{
+  "id": "blind-test-musical-v1",
+  "meta": {
+    "title": "Blind Test Musical",
+    "theme": "musique",
+    "sub_themes": ["années 80", "années 90", "pop", "rock", "dance"],
+    "version": "1.0",
+    "difficulty": "medium",
+    "target_players": { "min": 2, "max": 20 },
+    "duration_minutes": { "min": 12, "max": 18 },
+    "bar_potential": 9,
+    "monetization_potential": 8,
+    "priority": "V1",
+    "tech_complexity": "medium",
+    "media_required": ["audio"]
+  },
+  "rounds": [
+    {
+      "id": "round-1",
+      "name": "Échauffement — Hits connus",
+      "type": "blind_test",
+      "sub_type": "audio_recognition_with_prebet",
+      "description": "Reconnaître la chanson et l'artiste. Mise progressive avant l'écoute : plus tu mises, plus tu gagnes.",
+      "questions_count": 4,
+      "timer_seconds": 20,
+      "scoring": {
+        "method": "speed_decay",
+        "max_points": 100,
+        "min_points": 20,
+        "decay_per_second": 4
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "prebet_multiplier",
+          "trigger": "before_audio",
+          "effect": "mise_x_multiplier",
+          "label": "Mise optionnelle 10-50 coins avant l'extrait (x1.5 si correct)"
+        }
+      ],
+      "content_source": "audio_extracts",
+      "content_tags": ["hits_internationaux", "années_80_90", "pop_rock"]
+    },
+    {
+      "id": "round-2",
+      "name": "Difficulté moyenne — Perles rares",
+      "type": "blind_test",
+      "sub_type": "audio_recognition_with_prebet",
+      "description": "Chanson moins connue mais incontournable. Mise plus importante = gain plus élevé.",
+      "questions_count": 4,
+      "timer_seconds": 25,
+      "scoring": {
+        "method": "speed_decay",
+        "max_points": 150,
+        "min_points": 30,
+        "decay_per_second": 5
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "prebet_multiplier_round2",
+          "trigger": "before_audio",
+          "effect": "mise_x_multiplier",
+          "label": "Mise optionnelle 20-100 coins avant l'extrait (x2 si correct)"
+        }
+      ],
+      "content_source": "audio_extracts",
+      "content_tags": ["perles_rares", "artistes_emblématiques", "90s_2000s"]
+    },
+    {
+      "id": "round-3",
+      "name": "Finale — Tout risquer",
+      "type": "blind_test",
+      "sub_type": "audio_recognition_with_prebet",
+      "description": "Les pires perles rares. Mise maximale, gain maximal. Un sans-faute ?",
+      "questions_count": 3,
+      "timer_seconds": 30,
+      "scoring": {
+        "method": "speed_decay",
+        "max_points": 200,
+        "min_points": 40,
+        "decay_per_second": 6
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": true,
+        "pot_redistribution": [60, 30, 10],
+        "multiplier": 1.5
+      },
+      "special_rules": [
+        {
+          "id": "prebet_multiplier_round3",
+          "trigger": "before_audio",
+          "effect": "mise_x_multiplier",
+          "label": "Mise obligatoire 50-200 coins avant l'extrait (x2.5 si correct, x0 si faux)"
+        },
+        {
+          "id": "perfect_round_bonus",
+          "trigger": "round_3_perfect",
+          "effect": "bonus_coins_100",
+          "label": "Sans-faute ? Bonus 100 coins Play"
+        }
+      ],
+      "content_source": "audio_extracts",
+      "content_tags": ["ultra_rare", "underground", "découvertes"]
+    }
+  ],
+  "dynamic_events": [
+    { "trigger": "streak_3", "message": "{player} est en feu 🔥 3 bonnes réponses d'affilée !" },
+    { "trigger": "leaderboard_overtake", "message": "{player} prend la tête du classement ! 📈" },
+    { "trigger": "final_round", "message": "C'est MAINTENANT ou jamais... Dernière manche, tout peut basculer ⚡" },
+    { "trigger": "wrong_x2", "message": "{player} vacille... 2 fausses réponses d'affilée 😰" },
+    { "trigger": "perfect_round", "message": "{player} signe un SANS-FAUTE ! Génie musical reconnu 🏆" },
+    { "trigger": "high_bet_win", "message": "{player} REMPORTE une mise énorme ! 💰" }
+  ],
+  "bonuses": [
+    {
+      "id": "streak_multiplier",
+      "type": "consecutive_wins",
+      "threshold": 3,
+      "multiplier": 1.25,
+      "description": "Multiplicateur +25% après 3 réponses correctes consécutives"
+    }
+  ],
+  "tech_needs": {
+    "text": true,
+    "audio": true,
+    "image": false,
+    "realtime_sync": true,
+    "player_targeting": true,
+    "wallet": true,
+    "animations": true,
+    "logs": true
+  },
+  "ux_risks": [
+    "Audio extraction delay from Spotify/Deezer API may impact UX latency — cache prefetch recommended",
+    "Mise display before audio reveals song length — mitigate with fixed-duration feedback screen",
+    "Multi-language support for streaks/events (FR/EN) — implement i18n"
+  ],
+  "coin_economy": {
+    "play_coins_used": true,
+    "fidelite_coins_used": false,
+    "pvp_commission_rate": 0.10
+  },
+  "content_to_generate": {
+    "questions_needed": 11,
+    "audio_extracts_needed": 11,
+    "images_needed": 0,
+    "sample_questions": [
+      { "round": 1, "title": "Reconnaître l'artiste — 'Sweet Child O' Mine'", "hint": "Années 90, rock éponyme" },
+      { "round": 2, "title": "Artiste rare — 'Under the Bridge'", "hint": "Californie, funk-rock" },
+      { "round": 3, "title": "Ultra-rare — 'Teardrop' (remix instrumental)", "hint": "Électro 90s, underground français" }
+    ]
+  }
+}

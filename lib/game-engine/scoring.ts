@@ -96,3 +96,34 @@ export function calculateBcoinsReward(
   if (!share) return 0
   return Math.floor(pot * share)
 }
+
+/**
+ * Scoring manche BUZZER.
+ * Bonne réponse : +80 pts × multiplicateur
+ * Mauvaise réponse : -40 pts + doit être éliminé (géré dans reducer)
+ * Timeout : -20 pts, pas d'élimination
+ */
+export function calculateBuzzerPoints(
+  isCorrect: boolean,
+  timedOut: boolean,
+  roundMultiplier: number
+): number {
+  if (timedOut) return -20
+  if (isCorrect) return 80 * roundMultiplier
+  return -40
+}
+
+/**
+ * Scoring manche MISE.
+ * Bonne réponse : +bet × 2 × multiplicateur
+ * Mauvaise réponse : -bet
+ * Pas de mise enregistrée : traité comme mise 0
+ */
+export function calculateMisePoints(
+  isCorrect: boolean,
+  bet: number,
+  roundMultiplier: number
+): number {
+  if (isCorrect) return bet * 2 * roundMultiplier
+  return -bet
+}

@@ -1,0 +1,213 @@
+{
+  "id": "quiz-sport-mise-variable-v1",
+  "meta": {
+    "title": "Quiz Sport À Mise Variable",
+    "theme": "sport",
+    "sub_themes": ["football", "tennis", "F1", "rugby", "basketball", "records"],
+    "version": "1.0",
+    "difficulty": "medium",
+    "target_players": { "min": 2, "max": 25 },
+    "duration_minutes": { "min": 10, "max": 16 },
+    "bar_potential": 9,
+    "monetization_potential": 9,
+    "priority": "V1",
+    "tech_complexity": "medium",
+    "media_required": []
+  },
+  "rounds": [
+    {
+      "id": "round-1",
+      "name": "Échauffement — Mise Libre",
+      "type": "quiz_classique",
+      "sub_type": "variable_bet_before_answer",
+      "description": "Chaque joueur mise ses coins AVANT de répondre. Bonne réponse = mise × 2. Mauvaise = tout perdu.",
+      "questions_count": 5,
+      "timer_seconds": 20,
+      "scoring": {
+        "method": "proportional_bet",
+        "bet_min": 5,
+        "bet_max": 50,
+        "correct_multiplier": 2,
+        "wrong_multiplier": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "variable_bet",
+          "trigger": "before_answer",
+          "effect": "slider_bet_5_50",
+          "label": "Glisseur : mise entre 5 et 50 coins"
+        },
+        {
+          "id": "double_or_nothing",
+          "trigger": "answer_submitted",
+          "effect": "bet_x2_if_correct",
+          "label": "Correct = mise × 2. Faux = -mise (tout perdu)"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["football", "tennis", "athletisme"]
+    },
+    {
+      "id": "round-2",
+      "name": "Intensité — Question Piège (Double Stakes)",
+      "type": "quiz_classique",
+      "sub_type": "variable_bet_with_trap",
+      "description": "Même mécanique mais une question vaut DOUBLE. Les joueurs ne savent pas laquelle. Tension maximale.",
+      "questions_count": 4,
+      "timer_seconds": 22,
+      "scoring": {
+        "method": "proportional_bet",
+        "bet_min": 10,
+        "bet_max": 100,
+        "correct_multiplier": 2,
+        "wrong_multiplier": 0,
+        "trap_question_multiplier": 2
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "variable_bet_higher_stakes",
+          "trigger": "before_answer",
+          "effect": "slider_bet_10_100",
+          "label": "Glisseur : mise entre 10 et 100 coins (stakes augmentées)"
+        },
+        {
+          "id": "trap_question",
+          "trigger": "question_index_2",
+          "effect": "points_x2",
+          "label": "Question 2 vaut DOUBLE (x4 si correct, x-1 si faux)"
+        },
+        {
+          "id": "trap_warning",
+          "trigger": "round_2_start",
+          "effect": "announce_trap",
+          "label": "Message: 'Une question vaut double... À toi de réussir !'"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["F1", "rugby", "records_sport"]
+    },
+    {
+      "id": "round-3",
+      "name": "Finale — Pot Central",
+      "type": "quiz_classique",
+      "sub_type": "variable_bet_central_pot",
+      "description": "Les 3 dernières questions. Chaque joueur mise ses coins. À la fin, on calcule : pot total = somme mises. Top 3 gagnants se partagent 60/30/10.",
+      "questions_count": 3,
+      "timer_seconds": 25,
+      "scoring": {
+        "method": "proportional_bet",
+        "bet_min": 20,
+        "bet_max": 200,
+        "correct_multiplier": 2,
+        "wrong_multiplier": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": true,
+        "pot_redistribution": [60, 30, 10],
+        "multiplier": 1.5
+      },
+      "special_rules": [
+        {
+          "id": "high_stakes_bet",
+          "trigger": "round_3_start",
+          "effect": "slider_bet_20_200",
+          "label": "Glisseur haute : mise entre 20 et 200 coins"
+        },
+        {
+          "id": "central_pot_mechanic",
+          "trigger": "round_3_end",
+          "effect": "redistribute_60_30_10",
+          "label": "Pot final = somme toutes mises M3. Classement par points. Top 1 (60%), 2 (30%), 3 (10%)"
+        },
+        {
+          "id": "final_question_bonus",
+          "trigger": "question_3_correct",
+          "effect": "bonus_50_points",
+          "label": "Bonne réponse à Q3 finale = +50 points bonus"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["records", "trivia_sport", "legendes"]
+    }
+  ],
+  "dynamic_events": [
+    { "trigger": "bold_bet_x100", "message": "{player} mise GROS : 100 coins ! 💰" },
+    { "trigger": "correct_after_high_bet", "message": "{player} REMPORTE {coins} coins sur une mise folle ! 🎯" },
+    { "trigger": "trap_question_unlocked", "message": "🪤 Question piège révélée ! Les mises doublent..." },
+    { "trigger": "trap_question_correct", "message": "{player} a MAÎTRISÉ la piège ! +{coins} coins !" },
+    { "trigger": "trap_question_fail", "message": "{player} tombé dans le piège... 😬" },
+    { "trigger": "leaderboard_shift", "message": "{player} grimpe au classement ! 📈" },
+    { "trigger": "final_round", "message": "FINALE ! Les 3 dernières questions... Pot = {total_pot} coins !" },
+    { "trigger": "pot_redistribution", "message": "🏆 Redistribution ! 1er +{coins1} | 2e +{coins2} | 3e +{coins3}" }
+  ],
+  "bonuses": [
+    {
+      "id": "correct_streak_multiplier",
+      "type": "consecutive_correct",
+      "threshold": 3,
+      "multiplier": 1.25,
+      "description": "3 bonnes réponses consécutives = +25% sur la prochaine mise (capped at 250 coins)"
+    },
+    {
+      "id": "trap_mastery",
+      "type": "trap_question_win",
+      "threshold": 1,
+      "multiplier": 2,
+      "description": "Gagner la question piège = bonus x2 points"
+    }
+  ],
+  "tech_needs": {
+    "text": true,
+    "audio": false,
+    "image": false,
+    "realtime_sync": true,
+    "player_targeting": true,
+    "wallet": true,
+    "animations": true,
+    "logs": true
+  },
+  "ux_risks": [
+    "Slider bet UI sur mobile = finicky — ensure large touch targets + clear min/max labels",
+    "Bet × answer latency = player clicks before seeing Q fully — pre-load Q + disable submit until timer starts",
+    "Pot calculation complexity — verify server math before distribution (unit test 100%)",
+    "Trap question surprise can freeze UX (players expect Q2 normal) — add 'Surprise!' banner",
+    "High-stakes betting psychology: if player loses big, console with 'rejoin next game' CTA"
+  ],
+  "coin_economy": {
+    "play_coins_used": true,
+    "fidelite_coins_used": false,
+    "pvp_commission_rate": 0.10
+  },
+  "content_to_generate": {
+    "questions_needed": 12,
+    "audio_extracts_needed": 0,
+    "images_needed": 0,
+    "sample_questions": [
+      { "round": 1, "question": "Combien de Coupes du Monde a remportées Pelé ?", "options": ["2", "3", "4", "5"], "answer": "3" },
+      { "round": 1, "question": "Quel tennisien a gagné le plus de titres Grand Slam (record all-time) ?", "options": ["Federer", "Nadal", "Djokovic", "Murray"], "answer": "Djokovic" },
+      { "round": 1, "question": "Quelle équipe de rugby a remporté le plus de Coupes du Monde ?", "options": ["Nouvelle-Zélande", "Afrique du Sud", "Irlande", "France"], "answer": "Nouvelle-Zélande" },
+      { "round": 1, "question": "Quel pilote de F1 détient le record de podiums ?", "options": ["Hamilton", "Vettel", "Alonso", "Schumacher"], "answer": "Hamilton" },
+      { "round": 1, "question": "Combien de basketteurs sur un terrain par équipe ?", "options": ["4", "5", "6", "7"], "answer": "5" },
+      { "round": 2, "question": "[PIÈGE] Quel est le record de victoires consécutives en tennis (même tournoi) ?", "options": ["8", "10", "12", "14"], "answer": "14" },
+      { "round": 2, "question": "En quel année la Coupe du Monde de football a-t-elle été créée ?", "options": ["1920", "1930", "1950", "1970"], "answer": "1930" },
+      { "round": 2, "question": "Quel est le score maximum possible en bowling ?", "options": ["150", "200", "250", "300"], "answer": "300" },
+      { "round": 2, "question": "Combien de pays ont participé à la première Coupe du Monde de rugby ?", "options": ["8", "12", "16", "20"], "answer": "16" },
+      { "round": 3, "question": "Quel record détient Cristiano Ronaldo (au 2024) ?", "options": ["Buts totaux", "Assists", "Trophées", "Appearances"], "answer": "Buts totaux" },
+      { "round": 3, "question": "Quel athlète a remporté le plus de médailles olympiques (all-time) ?", "options": ["Phelps", "Ohno", "Federer", "Bolt"], "answer": "Phelps" },
+      { "round": 3, "question": "Combien de Ballon d'Or a remporté Messi (jusqu'à 2024) ?", "options": ["7", "8", "9", "10"], "answer": "8" }
+    ]
+  }
+}

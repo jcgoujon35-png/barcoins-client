@@ -1,0 +1,230 @@
+{
+  "id": "bluff-culture-generale-v1",
+  "meta": {
+    "title": "Bluff Culture Générale",
+    "theme": "culture_generale",
+    "sub_themes": ["géographie", "histoire", "sciences", "art", "littérature"],
+    "version": "1.0",
+    "difficulty": "hard",
+    "target_players": { "min": 3, "max": 20 },
+    "duration_minutes": { "min": 12, "max": 18 },
+    "bar_potential": 7,
+    "monetization_potential": 8,
+    "priority": "V2",
+    "tech_complexity": "hard",
+    "media_required": []
+  },
+  "rounds": [
+    {
+      "id": "round-1",
+      "name": "Affirmations — Mini Bluff",
+      "type": "bluff",
+      "sub_type": "bet_on_others",
+      "description": "Un 'sachant' affirme une fact. Les autres parient POURS ou CONTRE. Révélation simultanée. Ceux qui ont raison gagnent.",
+      "questions_count": 5,
+      "timer_seconds": 30,
+      "scoring": {
+        "method": "proportional_bet",
+        "max_points": 80,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "sachant_role",
+          "trigger": "round_1_start",
+          "effect": "assign_sachant",
+          "label": "1 joueur = 'le Sachant'. Affirme une phrase (vrai/faux aléatoire). Autres parient VRAI ou FAUX."
+        },
+        {
+          "id": "pari_sur_autrui",
+          "trigger": "betting_phase",
+          "effect": "bet_on_sachant_answer",
+          "label": "Chacun mise ses coins : 'Je pense que le Sachant a RAISON' ou 'NON, c'est du BLUFF'"
+        },
+        {
+          "id": "sachant_volontaire",
+          "trigger": "sachant_incorrect",
+          "effect": "sachant_loses_nothing",
+          "label": "Si le Sachant se trompe, les pariants gagnent (le Sachant ne perd rien)."
+        },
+        {
+          "id": "sachant_bonus_if_true",
+          "trigger": "sachant_correct",
+          "effect": "sachant_gains_10pct_of_bets",
+          "label": "Si affirmation VRAIE, le Sachant reçoit 10% des mises des trompés."
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["faits", "affirmations", "vrai_faux"]
+    },
+    {
+      "id": "round-2",
+      "name": "Intensité — Double Sachants",
+      "type": "bluff",
+      "sub_type": "dual_sachants_conflict",
+      "description": "2 joueurs = Sachants OPPOSÉS. L'un affirme VRAI, l'autre affirme FAUX de la même fact. Pari + complexe.",
+      "questions_count": 4,
+      "timer_seconds": 35,
+      "scoring": {
+        "method": "proportional_bet",
+        "max_points": 120,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1.5
+      },
+      "special_rules": [
+        {
+          "id": "dual_sachants",
+          "trigger": "round_2_start",
+          "effect": "assign_2_sachants",
+          "label": "2 joueurs deviennent Sachants. 1 defends VRAI, l'autre defends FAUX du même fact."
+        },
+        {
+          "id": "sachant_vs_sachant_bet",
+          "trigger": "betting_phase_round2",
+          "effect": "choose_side",
+          "label": "Restants parient SOIT 'Team Sachant1 (VRAI)', SOIT 'Team Sachant2 (FAUX)'"
+        },
+        {
+          "id": "correct_sachant_wins",
+          "trigger": "answer_revealed",
+          "effect": "distribute_loser_coins",
+          "label": "Sachant qui avait raison + ses pariants gagnent. Sachant faux + ses pariants perdent."
+        },
+        {
+          "id": "sachant_bonus_dual",
+          "trigger": "sachant_correct_dual",
+          "effect": "sachant_gains_20pct_of_opponent_bets",
+          "label": "Sachant correct reçoit 20% des mises de l'équipe perdante."
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["controverses", "debats", "perspectives"]
+    },
+    {
+      "id": "round-3",
+      "name": "Finale — 3 Affirmations Joker 50/50",
+      "type": "bluff",
+      "sub_type": "final_round_with_joker",
+      "description": "3 affirmations rapides. Max 1 JOKER 50/50 utilisable par joueur de toute la session. Effet: révèle directement la vérité.",
+      "questions_count": 3,
+      "timer_seconds": 40,
+      "scoring": {
+        "method": "proportional_bet",
+        "max_points": 150,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": true,
+        "pot_redistribution": [50, 30, 20],
+        "multiplier": 2
+      },
+      "special_rules": [
+        {
+          "id": "sachant_rotation",
+          "trigger": "round_3_start",
+          "effect": "new_sachant_each_q",
+          "label": "Chaque question = nouveau Sachant (rotation automatique)"
+        },
+        {
+          "id": "joker_50_50",
+          "trigger": "during_betting",
+          "effect": "skip_guessing_reveal_truth",
+          "label": "1 seul joker par joueur + session = clique JOKER = affirmation révélée automatiquement"
+        },
+        {
+          "id": "joker_usage_cost",
+          "trigger": "joker_activated",
+          "effect": "costs_nothing_but_reveals",
+          "label": "Joker ne coûte rien (20 coins) mais révèle tout. Plus d'incertitude pour cette Q."
+        },
+        {
+          "id": "pot_final",
+          "trigger": "round_3_end",
+          "effect": "pot_redistributed_50_30_20",
+          "label": "Pot = somme mises. Top 1 (50%), 2 (30%), 3 (20%)"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["enigmes", "paradoxes", "surprise"]
+    }
+  ],
+  "dynamic_events": [
+    { "trigger": "sachant_correct", "message": "{sachant} a raison ! Les bluffeurs tombent. 🎭" },
+    { "trigger": "sachant_wrong", "message": "{sachant} tentait le BLUFF... Raté ! 😬" },
+    { "trigger": "pari_gain", "message": "{player} avait raison ! +{coins} coins pour son flair 🎯" },
+    { "trigger": "dual_sachants_face_off", "message": "⚔️ Face-à-face ! {sachant1} VS {sachant2} — Qui a raison ?" },
+    { "trigger": "joker_used", "message": "🎰 {player} utilise son JOKER 50/50 ! La vérité éclate !" },
+    { "trigger": "no_joker_left", "message": "⚠️ Tous les jokers utilisés — Confiance pure maintenant." },
+    { "trigger": "final_revelation", "message": "La réponse était... {answer} ! 📌" },
+    { "trigger": "pot_redistribution_final", "message": "🏆 Distribution finale ! Top 1 +{coins1} | Top 2 +{coins2} | Top 3 +{coins3}" }
+  ],
+  "bonuses": [
+    {
+      "id": "perfect_bluff_guess",
+      "type": "correct_bet_3x_consec",
+      "threshold": 3,
+      "multiplier": 1.5,
+      "description": "3 bonnes intuitions d'affilée = x1.5 multiplicateur prochain pari"
+    },
+    {
+      "id": "sachant_accuracy",
+      "type": "sachant_correct_3x",
+      "threshold": 3,
+      "multiplier": 2,
+      "description": "Un Sachant qui a raison 3 fois = +100 bonus points"
+    }
+  ],
+  "tech_needs": {
+    "text": true,
+    "audio": false,
+    "image": false,
+    "realtime_sync": true,
+    "player_targeting": true,
+    "wallet": true,
+    "animations": true,
+    "logs": true
+  },
+  "ux_risks": [
+    "Multi-role complexity: sachant role switching + betting phase + joker mechanic = potential confusion. Mitigate: VERY clear role badges + color coding.",
+    "Simultaneous revelation: if not synchronized (WebSocket), causes unfair advantage. Must lock all bets server-side BEFORE reveal.",
+    "Joker mechanic not obvious: is it global per session or per round? Clear UI indicator needed.",
+    "Sachant psychology: player may refuse role or feel exposed. Add 'Decline sachant' with replacement randomization.",
+    "Pari sur autrui: hard concept for some players. Demo round recommended or tutorial popup."
+  ],
+  "coin_economy": {
+    "play_coins_used": true,
+    "fidelite_coins_used": false,
+    "pvp_commission_rate": 0.10
+  },
+  "content_to_generate": {
+    "questions_needed": 12,
+    "audio_extracts_needed": 0,
+    "images_needed": 0,
+    "sample_questions": [
+      { "round": 1, "question": "La tour Eiffel a été construite en 1889.", "answer": "vrai" },
+      { "round": 1, "question": "L'océan Pacifique couvre plus de 50% des océans du monde.", "answer": "vrai" },
+      { "round": 1, "question": "La Grande Muraille de Chine est visible depuis l'espace à l'oeil nu.", "answer": "faux" },
+      { "round": 1, "question": "Shakespeare a écrit 39 pièces de théâtre.", "answer": "vrai" },
+      { "round": 1, "question": "Le Titanic a coulé en 1912 après avoir heurté un iceberg.", "answer": "vrai" },
+      { "round": 2, "question": "La Joconde a été peinte par Léonard de Vinci entre 1503 et 1519.", "answer": "vrai" },
+      { "round": 2, "question": "La Révolution française a commencé en 1788.", "answer": "faux" },
+      { "round": 2, "question": "L'Égypte ancienne s'étendait sur plus de 3000 ans.", "answer": "vrai" },
+      { "round": 2, "question": "Rome a été construite en un jour.", "answer": "faux" },
+      { "round": 3, "question": "Les dinosaures et les humains vivaient à la même époque.", "answer": "faux" },
+      { "round": 3, "question": "L'Antarctique est un continent désertique.", "answer": "vrai" },
+      { "round": 3, "question": "Napoléon était nain par rapport aux standards de son époque.", "answer": "faux" }
+    ]
+  }
+}

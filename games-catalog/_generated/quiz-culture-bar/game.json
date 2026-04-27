@@ -1,0 +1,219 @@
+{
+  "id": "quiz-culture-bar-v1",
+  "meta": {
+    "title": "Quiz Culture Bar",
+    "theme": "bar_culture",
+    "sub_themes": ["alcools", "cocktails", "histoire_bars", "apéro", "pairings"],
+    "version": "1.0",
+    "difficulty": "easy",
+    "target_players": { "min": 2, "max": 25 },
+    "duration_minutes": { "min": 10, "max": 15 },
+    "bar_potential": 10,
+    "monetization_potential": 7,
+    "priority": "V1",
+    "tech_complexity": "easy",
+    "media_required": []
+  },
+  "rounds": [
+    {
+      "id": "round-1",
+      "name": "Alcools & Origines",
+      "type": "quiz_classique",
+      "sub_type": "first_correct_wins",
+      "description": "Qui dit Rioja, dit quoi ? Quelle est l'origine du Martini ? Premier qui répond correct gagne.",
+      "questions_count": 5,
+      "timer_seconds": 15,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 80,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 15,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [],
+      "content_source": "text_questions",
+      "content_tags": ["alcools_monde", "origines", "régions"]
+    },
+    {
+      "id": "round-2",
+      "name": "Cocktails classiques",
+      "type": "quiz_classique",
+      "sub_type": "first_correct_wins",
+      "description": "Quel alcool dans un Mojito ? Combien d'ingrédients dans une Margarita ? Rapidité récompensée.",
+      "questions_count": 5,
+      "timer_seconds": 12,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 100,
+        "min_points": 0,
+        "streak_bonus": 1.25
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "streak_mult_round2",
+          "trigger": "consecutive_correct_x3",
+          "effect": "points_x1.25",
+          "label": "+25% points après 3 bonnes réponses"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["cocktails_celebres", "recettes", "techniques"]
+    },
+    {
+      "id": "round-3",
+      "name": "Culture générale bar",
+      "type": "quiz_classique",
+      "sub_type": "first_correct_wins",
+      "description": "Quelle est la plus vieille brasserie du monde ? Qui a inventé le champagne ? Vrai ou faux ?",
+      "questions_count": 4,
+      "timer_seconds": 15,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 120,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [],
+      "content_source": "text_questions",
+      "content_tags": ["histoire", "traditions", "faits"]
+    },
+    {
+      "id": "round-4",
+      "name": "Thème du soir (gérant choisi)",
+      "type": "quiz_classique",
+      "sub_type": "first_correct_wins_themed",
+      "description": "Le gérant active un thème du jour : bières du monde, rhums, vins... Le groupe joue ensemble.",
+      "questions_count": 4,
+      "timer_seconds": 13,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 90,
+        "min_points": 0,
+        "streak_bonus": 1.25
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": false,
+        "pot_redistribution": [],
+        "multiplier": 1
+      },
+      "special_rules": [
+        {
+          "id": "themed_round",
+          "trigger": "round_4_start",
+          "effect": "gerant_selects_theme",
+          "label": "Gérant déverrouille theme du jour (stock 10 thèmes prédéfinis)"
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["thématique_jour", "configurable"]
+    },
+    {
+      "id": "round-5",
+      "name": "Manche finale — Jackpot",
+      "type": "quiz_classique",
+      "sub_type": "first_correct_wins_jackpot",
+      "description": "UNE question. Un ataka final. Le jackpot : cagnotte = toutes les entrées des 4 premières manches.",
+      "questions_count": 1,
+      "timer_seconds": 20,
+      "scoring": {
+        "method": "first_correct",
+        "max_points": 500,
+        "min_points": 0
+      },
+      "coin_logic": {
+        "entry_fee": 0,
+        "pot_contribution": true,
+        "pot_redistribution": [100, 0, 0],
+        "multiplier": 3
+      },
+      "special_rules": [
+        {
+          "id": "jackpot_round",
+          "trigger": "round_5_start",
+          "effect": "pot_centralized_from_round_1",
+          "label": "Pot = somme des 5 × entry_fee manche 1 (15 coins × nb joueurs entrée)"
+        },
+        {
+          "id": "jackpot_winner_only",
+          "trigger": "correct_answer_round_5",
+          "effect": "100_percent_jackpot",
+          "label": "Premier qui répond correct remporte TOUT le pot. Autres = 0."
+        }
+      ],
+      "content_source": "text_questions",
+      "content_tags": ["finale", "suspense", "jackpot"]
+    }
+  ],
+  "dynamic_events": [
+    { "trigger": "streak_3", "message": "{player} maîtrise la culture bar 🍹 3 d'affilée !" },
+    { "trigger": "leaderboard_overtake", "message": "{player} devient le Quiz Master du bar ! 👑" },
+    { "trigger": "round_4_theme_unlock", "message": "🎯 Thème du jour déverrouillé : {theme}" },
+    { "trigger": "final_round", "message": "C'EST LA FINALE ! Un question, Une réponse, Le JACKPOT 💣" },
+    { "trigger": "jackpot_winner", "message": "{player} REMPORTE LE JACKPOT !!! 🏆💰💰💰" },
+    { "trigger": "wrong_x2", "message": "{player} vacille sur la culture bar... 🍷" }
+  ],
+  "bonuses": [
+    {
+      "id": "perfect_thematic",
+      "type": "perfect_round_themed",
+      "threshold": 4,
+      "multiplier": 2,
+      "description": "Sans-faute en manche thématique = x2 points de manche"
+    },
+    {
+      "id": "final_streak",
+      "type": "streak_into_final",
+      "threshold": 4,
+      "multiplier": 1.5,
+      "description": "Bonus x1.5 au jackpot si streak ≥ 4 en manche 4"
+    }
+  ],
+  "tech_needs": {
+    "text": true,
+    "audio": false,
+    "image": false,
+    "realtime_sync": true,
+    "player_targeting": true,
+    "wallet": true,
+    "animations": true,
+    "logs": true
+  },
+  "ux_risks": [
+    "5 manches = fatigue UX si manche 4 pas assez différente — ensure thematic variation is obvious",
+    "Jackpot psychology: loser frustration if entry fee lost early — add 'rejoin next round' call-to-action",
+    "Thème gérant: intégration UI + gestion thèmes prédéfinis en DB — need dropdown/carousel simple"
+  ],
+  "coin_economy": {
+    "play_coins_used": true,
+    "fidelite_coins_used": false,
+    "pvp_commission_rate": 0.10
+  },
+  "content_to_generate": {
+    "questions_needed": 19,
+    "audio_extracts_needed": 0,
+    "images_needed": 0,
+    "sample_questions": [
+      { "round": 1, "question": "Quel alcool est l'ingrédient principal du Mojito ?", "options": ["Rhum blanc", "Vodka", "Genièvre", "Tequila"], "answer": "Rhum blanc" },
+      { "round": 2, "question": "Combien d'ingrédients principaux dans une Margarita classique ?", "options": ["2", "3", "4", "5"], "answer": "3" },
+      { "round": 3, "question": "Vrai ou faux : le champagne peut être produit partout en France.", "options": ["Vrai", "Faux"], "answer": "Faux" },
+      { "round": 4, "question": "[Thème Bières] D'où vient la Guinness originale ?", "options": ["Belgique", "Irlande", "Allemagne", "République Tchèque"], "answer": "Irlande" },
+      { "round": 5, "question": "Qui a inventé le Martini dry cocktail (vrai créateur historique) ?", "options": ["Primo Conti", "Jerry Thomas", "Don Facendo", "Imbibe Anonyme"], "answer": "Jerry Thomas" }
+    ]
+  }
+}
