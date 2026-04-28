@@ -468,6 +468,8 @@ export const COIN_ECONOMICS = {
 // 14. FEATURE FLAGS
 // ------------------------------------------------------------
 
+export const BOOST_MULTIPLIER = 2.0 as const; // Multiplicateur soirée "Double ou Rien"
+
 export const FEATURE_FLAGS = {
   WHEEL_ENABLED: false,         // ← JAMAIS true sans validation JC
   SPORTS_BET_ENABLED: false,    // V1 post-beta

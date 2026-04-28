@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { CONSUMPTION_TIERS } from '@/config/business-rules';
+import { CONSUMPTION_TIERS, BOOST_MULTIPLIER } from '@/config/business-rules';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -188,7 +188,7 @@ export default function GerantDashboard() {
             <div className="space-y-3">
               <p className="text-xs" style={{ color: 'rgba(245,240,232,0.5)' }}>
                 Multiplicateur actif : <strong style={{ color: '#C9922A' }}>{multLabel}</strong>
-                {bar?.boostActive && <span style={{ color: '#E8860A' }}> (BOOST ×2)</span>}
+                {bar?.boostActive && <span style={{ color: '#E8860A' }}> (BOOST ×{BOOST_MULTIPLIER})</span>}
               </p>
               <button onClick={handleEndSession}
                 className="w-full py-3 rounded-xl font-bold text-sm"
@@ -271,7 +271,7 @@ export default function GerantDashboard() {
               </span>
               <span className="ml-3 text-sm" style={{ color: '#F5F0E8' }}>Multiplicateur {multLabel}</span>
               {bar?.boostActive && (
-                <span className="ml-2 text-xs font-bold" style={{ color: '#E8860A' }}>BOOST ×2 ACTIF</span>
+                <span className="ml-2 text-xs font-bold" style={{ color: '#E8860A' }}>BOOST ×{BOOST_MULTIPLIER} ACTIF</span>
               )}
             </div>
             <div className="text-right">
