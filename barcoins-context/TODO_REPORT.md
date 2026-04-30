@@ -1,6 +1,6 @@
 # BarCoins — TODO Report
 
-Date : 2026-04-29
+Date : 2026-04-30
 
 ## TODO_VALIDER_JC (décision JC requise)
 
@@ -24,15 +24,15 @@ Date : 2026-04-29
 
 Aucun FIXME détecté dans les fichiers source actuels.
 
-## Mentions `'TODO'` comme valeur de chaîne (non-commentaires)
+## Mentions `'TODO'` comme valeur de chaîne (dev guards — non actionnable)
 
 | # | Fichier | Ligne | Nature |
 |---|---|---|---|
-| 1 | `lib/otp.ts` | 21 | `sid !== 'TODO'` — garde dev-mode pour Twilio non configuré |
-| 2 | `lib/otp.ts` | 26 | `url !== 'TODO'` — garde dev-mode pour Twilio non configuré |
+| 1 | `lib/otp.ts` | 21 | `sid !== 'TODO'` — garde dev-mode Twilio non configuré |
+| 2 | `lib/otp.ts` | 26 | `url !== 'TODO'` — garde dev-mode Twilio non configuré |
 
-> Ces deux occurrences ne sont pas des TODOs de code mais des gardes pour le mode dev OTP.
-> Elles deviendront inutiles dès que Twilio/Redis sera configuré.
+> Ces deux occurrences sont des gardes dev-mode OTP, pas des TODOs de code.
+> Elles disparaîtront dès que Twilio/Redis sera configuré en production.
 
 ## Total
 - **TODO_VALIDER_JC** : 5
@@ -44,4 +44,4 @@ Aucun FIXME détecté dans les fichiers source actuels.
 1. `config/business-rules.ts:334` — tarif annuel (bloque la page pricing)
 2. `config/business-rules.ts:295-296` — mises min/max (bloque la validation des jeux en production)
 3. `app/dashboard/page.tsx:55,63` — contenu soirée dynamique (bloque le dashboard gérant complet)
-4. `lib/otp.ts:21,26` — configurer Twilio/Redis avant beta Founding Partners
+4. `lib/otp.ts:21,26` — configurer Twilio/Redis avant la beta Founding Partners
