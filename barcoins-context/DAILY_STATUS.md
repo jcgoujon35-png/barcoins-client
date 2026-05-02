@@ -1,10 +1,11 @@
 # BarCoins — Daily Status
 
-Date : 2026-04-30
+Date : 2026-05-02
 Généré par : agent remote planifié (07h00 Paris)
 
 ## Derniers commits (15)
 ```
+d840a4d chore: daily context update [2026-04-30]
 8a15083 chore: daily context update [2026-04-29]
 86c9f4b chore: daily context update [2026-04-28]
 c43bfe2 chore: daily context update [2026-04-27]
@@ -19,13 +20,12 @@ c43bfe2 chore: daily context update [2026-04-27]
 cda25bd chore: daily context update [2026-04-18]
 d1ff510 chore: daily context update [2026-04-17]
 d8a414e chore: daily context update [2026-04-16]
-75d3419 chore: daily context update [2026-04-15]
 ```
 
-> ⚠️ **ALERTE VÉLOCITÉ — CRITIQUE** — Aucun commit de développement depuis le **2026-04-01** (**29 jours**).
+> ⚠️ **ALERTE VÉLOCITÉ — CRITIQUE** — Aucun commit de développement depuis le **2026-04-07** (**25 jours**).
 > Tous les commits récents sont des mises à jour d'agent automatique.
-> Dernier vrai commit : `11ad3f5 feat: parseGameDefinition` (01/04/2026).
-> **Jalon juillet 2026 à 63 jours. Priorités #2 et #3 à <15%. Risque beta Perpignan très élevé.**
+> Dernier vrai commit de dev : `11ad3f5 feat: parseGameDefinition` (~07/04/2026).
+> **Jalon juillet 2026 à 60 jours. Priorités #2 et #3 à <15%. Risque beta Perpignan très élevé.**
 
 ## Avancement beta
 | Priorité | Feature | Avancement | Statut |
@@ -45,64 +45,66 @@ d8a414e chore: daily context update [2026-04-16]
 - ✅ Page claim joueur : `app/claim/[token]/page.tsx` (états : loading / success / expired / already_claimed / auth_required)
 - ✅ Dashboard gérant : form montant + génération QR + countdown expiry + aperçu coins → `app/gerant/page.tsx`
 - ⚠️ QR affiché via service externe `api.qrserver.com` — dépendance réseau tiers, à remplacer par lib locale avant production
-- ⚠️ OTP en mode dev (`sid !== 'TODO'`) dans `lib/otp.ts` — Twilio/Redis non configuré
+- ⚠️ OTP en mode dev (`sid !== 'TODO'`) dans `lib/otp.ts` — Twilio/Redis non configuré pour production
 
 **#2 — Blind test Spotify/Deezer (15%)** 🔴
 - ✅ UI prototype : `app/games/blindtest/page.tsx` (3 écrans : bet / listen / result)
 - ❌ AUCUNE intégration API Spotify ou Deezer — 3 tracks hardcodées (Daft Punk, Stromae, The Weeknd)
 - ❌ Pas de lecture audio réelle — visualisation animée simulée, timer 30s factice, aucun `<audio>`
 - ❌ Pas de backend pour preview 30s ni gestion licences streaming
-- 🚨 **Bloquant** : décision architecture (Spotify OAuth vs Deezer API) non prise — 29 jours sans avancement
+- 🚨 **Bloquant** : décision architecture (Spotify OAuth vs Deezer API) non prise — 25 jours sans avancement
 
 **#3 — Quiz 500 questions (12%)** 🔴
 - ✅ Moteur de jeu complet : `lib/game-engine/` (reducer, state, session, scoring, questions, parseGameDefinition)
-- ✅ Adaptateur GDF : `lib/game-engine/parseGameDefinition.ts` (dernier commit de dev 01/04)
+- ✅ Adaptateur GDF : `lib/game-engine/parseGameDefinition.ts`
 - ✅ Quiz Cinema V1 jouable : `app/games/quiz-cinema/page.tsx`
-- ✅ Quiz générique : `app/games/quiz/page.tsx` (~5 questions hardcodées)
-- ❌ ~20 questions au total — cible 500+ atteinte à ~4%
-- ❌ Catégories manquantes : musique, sport, culture générale, histoire, géographie, anecdotes bar
-- 🚨 **Bloquant** : volume de contenu critique pour beta Founding Partners Perpignan
+- ⚠️ Un seul fichier de questions : `data/game/cinema_quiz_classique.json` (22 lignes ≈ 5 questions max)
+- ❌ Objectif 500 questions non atteint — stock de contenu quasiment vide
+- 🚨 **Bloquant** : contenu quiz à créer entièrement — travail manuel important
 
-**#4 — Coins Play + classement live (70%)** 🟡
-- ✅ Classement live SSE : `app/api/bars/[barId]/leaderboard/stream/route.ts` + `app/leaderboard/page.tsx` (232 lignes)
-- ✅ Hook `useSSE` : `hooks/useSSE.ts` — mises à jour temps réel fonctionnelles
-- ✅ Distribution coins via QR scan opérationnelle (paliers calculés dynamiquement)
-- ⚠️ "Coins Play manuel" (ajout coins direct par gérant sans QR) : absent du dashboard gérant actuel
-- ⚠️ Classement non testé sous charge réelle (aucune session bar réelle)
+**#4 — Coins Play manuel + classement live (70%)** 🟡
+- ✅ SSE stream classement : `app/api/bars/[barId]/leaderboard/stream/route.ts`
+- ✅ Page leaderboard joueur : `app/leaderboard/page.tsx`
+- ✅ Moteur de jeu complet avec 5 écrans (Lobby / Question / Result / Leaderboard / Final)
+- ✅ Dashboard joueur affiche rang et delta vs 1er
+- ⚠️ TODO dans `app/dashboard/page.tsx:148` — calcul écart avec 1er non implémenté
+- ⚠️ Coins Play "manuel" (hors jeu) non testé en conditions réelles
 
 **#5 — Dashboard gérant 1 clic (85%)** 🟢
-- ✅ Page gérant complète : `app/gerant/page.tsx` (~300 lignes, connectée à l'API réelle)
-- ✅ Stats soirée : coins distribués, transactions, joueurs actifs
-- ✅ Génération QR en 1 clic : saisie montant → QR + countdown expiry + aperçu coins
-- ✅ Auth staff OTP fonctionnelle (`lib/otp.ts`, dev mode sans Twilio/Redis)
-- ⚠️ Pas de bouton start/stop soirée visible
-- ⚠️ Programme soirée et produits vedette hardcodés dans `app/dashboard/page.tsx` (lignes 55, 63)
+- ✅ Page gérant complète : `app/gerant/page.tsx` (300 lignes)
+- ✅ Stats soirée (coins distribués, transactions, joueurs)
+- ✅ Génération QR 1 clic avec montant libre
+- ⚠️ Programme soirée fixe hardcodé (`app/dashboard/page.tsx:55`) — pas encore saisissable par gérant
+- ⚠️ Produits vedette fixes (`app/dashboard/page.tsx:63`) — pas encore via carte gérant
 
-**#6 — wheelEnabled=false** ✅
-- ✅ `WHEEL_ENABLED: false` verrouillé dans `config/business-rules.ts:472`
-- ✅ Commentaire : `// ← JAMAIS true sans validation JC`
-- ✅ Double protection : règle affichage + vérification serveur
+**#6 — wheelEnabled=false (✅)** — bloqué en beta
+- ✅ `WHEEL_CONFIG.ENABLED_DEFAULT = false` dans `config/business-rules.ts:340`
+- ✅ Badge ANJ "Disponible prochainement" sur la page games
 
 ## Fichiers les plus actifs (derniers 5 commits)
-> Les 5 derniers commits ne touchent que les fichiers de contexte agent (aucun code modifié) :
+> Aucun fichier source modifié — uniquement les 2 fichiers de contexte agent :
 - `barcoins-context/DAILY_STATUS.md`
 - `barcoins-context/TODO_REPORT.md`
 
-Derniers fichiers modifiés par du vrai code (commit `11ad3f5`, 01/04/2026) :
-- `lib/game-engine/parseGameDefinition.ts`
-- `lib/game-engine/questions.ts`
-- `lib/barcoins/gameTypes.ts`
-
 ## Points d'attention
-1. **29 jours sans commit de dev** — risque jalon juillet 2026 (63 jours restants) critique. Les 2 priorités les plus urgentes (#2 et #3) sont à ≤15%.
-2. **Blind test (P2)** : décision bloquante non prise (Spotify OAuth vs Deezer API). Aucun extrait audio réel en place.
-3. **Quiz contenu (P3)** : ~20 questions disponibles sur 500 requises (~4%). Founding Partners Perpignan attendent du contenu jouable.
-4. **Coins Play manuel (P4)** : fonctionnalité absente du dashboard gérant — le gérant ne peut pas distribuer des coins hors QR scan.
-5. **OTP production (P1/P5)** : Twilio/Redis non configurés — `lib/otp.ts` tourne en dev mode (`sid !== 'TODO'`).
-6. **QR externe** : `api.qrserver.com` = dépendance réseau tiers non maîtrisée, à remplacer avant la beta.
-7. **TODOs hardcodés** : programme soirée (`dashboard/page.tsx:55`) et produits vedette (`dashboard/page.tsx:63`) codés en dur.
+
+### 🚨 Critique
+- **Vélocité nulle** — 25 jours sans commit de dev. Jalon beta juillet 2026 à 60 jours.
+- **Blind test** (#2) : décision architecture Spotify vs Deezer bloquante. 0% de lecture audio réelle.
+- **Quiz questions** (#3) : 5 questions disponibles pour un objectif de 500. Travail de contenu massif non commencé.
+
+### ⚠️ À surveiller
+- OTP Twilio/Redis non configuré — mode dev uniquement (`lib/otp.ts:21-26`)
+- QR dépendant de `api.qrserver.com` externe — à remplacer par `qrcode` lib locale
+- `MISE_MIN_COINS` / `MISE_MAX_COINS` / `ANNUEL` en `TODO_VALIDER_JC` dans business-rules — décisions commerciales en suspens
+- Programme soirée et carte produits hardcodés dans le dashboard joueur
+
+### ✅ Solide
+- Architecture backend QR claim + anti-fraude opérationnelle
+- Dashboard gérant fonctionnel
+- Moteur de jeu quiz avec SSE live leaderboard
 
 ## Règles métier rappel
 - Coins : `floor(montant€ × tier_multiplier)` — paliers <10€=×1 / 10-19€=×1.5 / 20-29€=×2 / 30-49€=×3 / 50€+=×4
 - Jamais hardcoder hors `business-rules.ts`
-- `wheelEnabled = false` en beta — jamais activer sans validation JC
+- `wheelEnabled = false` en beta
