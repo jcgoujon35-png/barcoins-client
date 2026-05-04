@@ -1,0 +1,3971 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BarCoins — Vos clients jouent. Ils restent. Ils reviennent.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-900: #0A1523;
+    --navy-800: #0D1B2E;
+    --navy-700: #142745;
+    --navy-600: #1C3358;
+    --navy-line: rgba(233, 193, 107, 0.12);
+    --gold-500: #C9902A;
+    --gold-400: #E9C16B;
+    --gold-300: #F2D690;
+    --ivory: #F5F2EC;
+    --ivory-dark: #EBE6DB;
+    --ink: #0D1B2E;
+    --white: #FFFFFF;
+    --text-light: rgba(245, 242, 236, 0.72);
+    --text-muted: rgba(245, 242, 236, 0.52);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--navy-800);
+    color: var(--ivory);
+    font-weight: 400;
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .font-display { font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(13, 27, 46, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--navy-line);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 20px; letter-spacing: -0.02em;
+    color: var(--ivory);
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: contain;
+    display: block;
+    animation: bcoin-pulse 2.8s ease-in-out infinite;
+    will-change: transform, filter;
+  }
+  @keyframes bcoin-pulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: drop-shadow(0 2px 8px rgba(201,144,42,0.35));
+    }
+    50% {
+      transform: scale(1.06);
+      filter: drop-shadow(0 2px 16px rgba(233,193,107,0.7));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-mark { animation: none; filter: drop-shadow(0 4px 12px rgba(201, 144, 42, 0.4)); }
+  }
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--text-light); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold-400); }
+  .nav-burger {
+    display: none;
+    background: none; border: 1px solid rgba(233,193,107,.3); border-radius: 10px;
+    width: 42px; height: 42px; padding: 0; cursor: pointer;
+    align-items: center; justify-content: center; flex-direction: column; gap: 4px;
+    transition: all .2s;
+  }
+  .nav-burger:hover { border-color: var(--gold-400); }
+  .nav-burger span { display:block; width: 18px; height: 2px; background: var(--gold-400); border-radius: 2px; transition: transform .3s, opacity .2s; }
+  .nav-burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .nav-drawer {
+    position: fixed; top: 0; right: 0; height: 100dvh; width: min(320px, 85vw);
+    background: rgba(13, 27, 46, 0.98); backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid var(--navy-line);
+    z-index: 120; transform: translateX(100%); transition: transform .35s cubic-bezier(.5,.1,.3,1);
+    padding: 86px 28px 32px; display: flex; flex-direction: column; gap: 6px;
+    overflow-y: auto;
+  }
+  .nav-drawer.open { transform: translateX(0); }
+  .nav-drawer a {
+    color: var(--ivory); text-decoration: none;
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    font-size: 18px; letter-spacing: -0.01em;
+    padding: 14px 4px; border-bottom: 1px solid var(--navy-line);
+    transition: color .2s; display: block;
+  }
+  .nav-drawer a:hover { color: var(--gold-400); }
+  .nav-drawer a:last-child { border-bottom: none; }
+  .nav-drawer .drawer-login {
+    margin-top: 16px; border: none; color: var(--text-muted);
+    font-size: 14px; font-weight: 500; font-family: 'Outfit', sans-serif;
+    padding: 8px 4px;
+  }
+  .nav-drawer .drawer-cta {
+    margin-top: 12px; justify-content: center; font-size: 15px; padding: 14px 18px;
+    border-bottom: none;
+  }
+  .nav-scrim {
+    position: fixed; inset: 0; background: rgba(8, 16, 30, 0.55);
+    backdrop-filter: blur(3px); z-index: 110;
+    opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  .nav-scrim.open { opacity: 1; pointer-events: auto; }
+  body.nav-locked { overflow: hidden; }
+
+  .nav-cta {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .nav-login {
+    color: var(--text-light); text-decoration: none;
+    font-size: 14px; font-weight: 500;
+  }
+  .nav-login:hover { color: var(--gold-400); }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    color: var(--navy-800);
+    box-shadow: 0 8px 24px -8px rgba(201, 144, 42, 0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -8px rgba(201, 144, 42, 0.7), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ivory);
+    border: 1px solid rgba(245, 242, 236, 0.24);
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold-400);
+    color: var(--gold-400);
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 140px 48px 80px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 30%, rgba(201, 144, 42, 0.18), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 70%, rgba(233, 193, 107, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(233, 193, 107, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(233, 193, 107, 0.035) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 90%);
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 14px 8px 10px;
+    border-radius: 999px;
+    background: rgba(233, 193, 107, 0.08);
+    border: 1px solid rgba(233, 193, 107, 0.24);
+    font-size: 13px; font-weight: 500;
+    color: var(--gold-300);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold-400);
+    box-shadow: 0 0 0 4px rgba(233, 193, 107, 0.18);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(233, 193, 107, 0.18); }
+    50% { box-shadow: 0 0 0 8px rgba(233, 193, 107, 0.06); }
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(42px, 5.2vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin-bottom: 28px;
+    color: var(--ivory);
+  }
+  .hero-title .line { display: block; }
+  .hero-title .gold {
+    background: linear-gradient(135deg, var(--gold-300) 0%, var(--gold-500) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text-light);
+    max-width: 520px;
+    margin-bottom: 36px;
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex; gap: 14px;
+    margin-bottom: 44px;
+    flex-wrap: wrap;
+  }
+
+  .hero-note {
+    font-size: 13px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 8px;
+    margin-top: -28px;
+    margin-bottom: 44px;
+  }
+  .hero-note svg { color: var(--gold-400); }
+
+  /* Social proof */
+  .social-proof {
+    border-top: 1px solid var(--navy-line);
+    padding-top: 28px;
+  }
+  .social-proof-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .logo-row {
+    display: flex; gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: 0.65;
+  }
+  .logo-row .brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text-light);
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-row .brand.italic { font-style: italic; font-weight: 600; }
+  .logo-row .brand.serif { font-family: Georgia, serif; letter-spacing: -0.02em; }
+  .logo-row .brand svg { opacity: 0.7; }
+
+  /* ============ MOCKUP MOBILE ============ */
+  .hero-mockup {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .phone-stage {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1;
+  }
+  .phone-glow {
+    position: absolute;
+    inset: -10%;
+    background: radial-gradient(circle at 50% 50%, rgba(233, 193, 107, 0.22) 0%, transparent 60%);
+    filter: blur(20px);
+    z-index: 0;
+  }
+
+  .phone {
+    position: relative;
+    width: 300px;
+    height: 620px;
+    margin: 0 auto;
+    background: #000;
+    border-radius: 46px;
+    padding: 10px;
+    box-shadow:
+      0 40px 80px -20px rgba(0, 0, 0, 0.6),
+      0 0 0 1.5px rgba(233, 193, 107, 0.35),
+      0 0 60px -10px rgba(201, 144, 42, 0.4);
+    z-index: 1;
+    transform: perspective(1200px) rotateY(-8deg) rotateX(3deg);
+  }
+  .phone-screen {
+    width: 100%; height: 100%;
+    background: var(--navy-900);
+    border-radius: 38px;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .phone-notch {
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 96px; height: 24px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 22px 8px;
+    font-size: 13px; font-weight: 600;
+    color: var(--ivory);
+  }
+  .status-right { display: flex; gap: 6px; align-items: center; }
+
+  /* App header */
+  .app-header {
+    padding: 16px 22px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--navy-line);
+  }
+  .app-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--gold-400);
+    letter-spacing: -0.02em;
+  }
+  .app-venue {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .app-coin {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    background: rgba(233, 193, 107, 0.12);
+    border: 1px solid rgba(233, 193, 107, 0.3);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold-300);
+  }
+  .app-coin .coin-icon {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    display: grid; place-items: center;
+    font-size: 8px; color: var(--navy-800);
+    font-weight: 800;
+  }
+
+  /* Tabs */
+  .app-tabs {
+    display: flex; gap: 4px;
+    padding: 12px 22px 4px;
+    font-size: 11px;
+  }
+  .app-tab {
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .app-tab.active {
+    background: rgba(233, 193, 107, 0.14);
+    color: var(--gold-300);
+  }
+
+  /* Leaderboard title */
+  .lb-title {
+    padding: 14px 22px 4px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ivory);
+    letter-spacing: -0.02em;
+  }
+  .lb-sub {
+    padding: 0 22px 14px;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+  }
+
+  /* Podium */
+  .podium {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    gap: 6px;
+    padding: 8px 16px 14px;
+    align-items: end;
+  }
+  .podium-slot {
+    background: rgba(233, 193, 107, 0.05);
+    border: 1px solid rgba(233, 193, 107, 0.14);
+    border-radius: 12px;
+    padding: 10px 6px 8px;
+    text-align: center;
+  }
+  .podium-slot.first {
+    background: linear-gradient(180deg, rgba(233, 193, 107, 0.22), rgba(233, 193, 107, 0.08));
+    border-color: rgba(233, 193, 107, 0.45);
+    padding-top: 14px; padding-bottom: 12px;
+  }
+  .podium-rank {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-400);
+    margin-bottom: 4px;
+  }
+  .podium-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--navy-800);
+  }
+  .podium-avatar.gold { background: linear-gradient(135deg, #F2D690, #C9902A); }
+  .podium-avatar.silver { background: linear-gradient(135deg, #E0DFDB, #9B9A96); color: var(--navy-800); }
+  .podium-avatar.bronze { background: linear-gradient(135deg, #D8A87A, #8F5E32); color: var(--navy-800); }
+  .podium-name {
+    font-size: 10px; font-weight: 600; color: var(--ivory);
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .podium-score {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--gold-300);
+  }
+  .podium-slot.first .podium-score { font-size: 15px; }
+
+  /* Leaderboard list */
+  .lb-list { padding: 6px 16px 14px; flex: 1; }
+  .lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+  .lb-row.me {
+    background: rgba(233, 193, 107, 0.1);
+    border: 1px solid rgba(233, 193, 107, 0.28);
+  }
+  .lb-pos {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 18px;
+  }
+  .lb-row.me .lb-pos { color: var(--gold-400); }
+  .lb-avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(233, 193, 107, 0.14);
+    border: 1px solid rgba(233, 193, 107, 0.25);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 700;
+    color: var(--gold-300);
+  }
+  .lb-name {
+    flex: 1;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ivory);
+  }
+  .lb-row.me .lb-name { color: var(--gold-300); font-weight: 600; }
+  .lb-coins {
+    display: flex; align-items: center; gap: 4px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--gold-300);
+  }
+  .lb-coins::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+  }
+
+  /* Floating cards */
+  .float-card {
+    position: absolute;
+    background: rgba(20, 39, 69, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(233, 193, 107, 0.28);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow:
+      0 20px 40px -10px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(233, 193, 107, 0.08);
+    z-index: 5;
+  }
+  .float-card .fc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .float-card .fc-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--gold-300);
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .float-card .fc-value .unit {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  .float-card .fc-trend {
+    font-size: 10px;
+    color: var(--gold-400);
+    font-weight: 600;
+    margin-top: 4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .fc-top-left {
+    top: 8%; left: -8%;
+    animation: floatA 6s ease-in-out infinite;
+  }
+  .fc-bottom-right {
+    bottom: 12%; right: -6%;
+    animation: floatB 7s ease-in-out infinite;
+  }
+  .fc-right {
+    top: 38%; right: -14%;
+    animation: floatC 8s ease-in-out infinite;
+  }
+
+  @keyframes floatA {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes floatB {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes floatC {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-8px) translateX(-4px); }
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .scroll-hint .line-v {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--gold-400));
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  }
+
+  /* Reveal animations */
+  .reveal { opacity: 0; transform: translateY(24px); animation: reveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  .reveal.d1 { animation-delay: 0.05s; }
+  .reveal.d2 { animation-delay: 0.15s; }
+  .reveal.d3 { animation-delay: 0.25s; }
+  .reveal.d4 { animation-delay: 0.35s; }
+  .reveal.d5 { animation-delay: 0.45s; }
+  .reveal.d6 { animation-delay: 0.55s; }
+  @keyframes reveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 960px) {
+    .nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-burger { display: flex; }
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 120px 20px 80px;
+      gap: 40px;
+      text-align: left;
+    }
+    .hero-mockup { order: 2; }
+    .phone { transform: none; }
+    .fc-top-left { left: 0; top: 2%; }
+    .fc-bottom-right { right: 0; bottom: 4%; }
+    .fc-right { right: 0; top: 45%; }
+    .scroll-hint { display: none; }
+  }
+  @media (max-width: 480px) {
+    .hero-title { font-size: clamp(34px, 9vw, 44px); }
+    .float-card { padding: 10px 12px; }
+    .float-card .fc-value { font-size: 16px; }
+  }
+
+  /* ============ SHARED SECTIONS ============ */
+  section.s { position: relative; padding: 120px 48px; }
+  section.s.ivory { background: var(--ivory); color: var(--ink); }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+    margin-bottom: 20px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  section.s.ivory .section-eyebrow { color: var(--gold-500); }
+  .section-eyebrow::before {
+    content: ''; width: 24px; height: 1px; background: currentColor;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 4.2vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    max-width: 860px;
+  }
+  .section-title .gold {
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+  section.s.ivory .section-title .gold {
+    background: none;
+    -webkit-text-fill-color: var(--gold-500);
+    color: var(--gold-500);
+  }
+  .section-lead {
+    font-size: 19px; line-height: 1.55;
+    max-width: 640px;
+    margin-bottom: 60px;
+    color: var(--text-light);
+  }
+  section.s.ivory .section-lead { color: rgba(13, 27, 46, 0.72); }
+
+  /* ============ JOURNEY (5b) ============ */
+  .journey-wrap { position: relative; margin-top: 56px; }
+  .journey-line {
+    position: absolute; left: 10%; right: 10%; top: 42px; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(233,193,107,.55) 12%, rgba(233,193,107,.55) 88%, transparent);
+    pointer-events: none;
+  }
+  .journey-grid {
+    position: relative;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; list-style: none; padding: 0; margin: 0;
+    counter-reset: jrn;
+  }
+  .journey-card {
+    position: relative; background: #142745;
+    border: 1px solid rgba(233,193,107,0.14);
+    border-radius: 16px;
+    padding: 72px 22px 26px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+    transition-delay: calc(var(--j-delay, 0) * 120ms);
+    box-shadow: 0 20px 40px -24px rgba(0,0,0,.6);
+  }
+  .journey-card[data-j="0"] { --j-delay: 0; }
+  .journey-card[data-j="1"] { --j-delay: 1; }
+  .journey-card[data-j="2"] { --j-delay: 2; }
+  .journey-card[data-j="3"] { --j-delay: 3; }
+  .journey-card.in-view { opacity: 1; transform: translateY(0); }
+
+  .journey-badge {
+    position: absolute; top: -12px; left: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: #0D1B2E; background: #E9C16B;
+    padding: 5px 10px; border-radius: 999px;
+    border: 1px solid #C9902A;
+    box-shadow: 0 6px 14px -6px rgba(201,144,42,.6);
+  }
+  .journey-icon {
+    position: absolute; top: 24px; right: 22px;
+    width: 54px; height: 54px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 35% 30%, rgba(233,193,107,.28), rgba(201,144,42,.12) 60%, transparent 80%);
+    border: 1.5px solid rgba(233,193,107,.5);
+    box-shadow: 0 0 0 0 rgba(233,193,107,0), 0 10px 28px -10px rgba(201,144,42,.45);
+  }
+  .journey-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 22px; color: #F5F2EC; letter-spacing: -0.02em;
+    margin-top: 4px;
+  }
+  .journey-text {
+    font-family: 'Outfit', sans-serif; font-size: 14px; line-height: 1.55;
+    color: rgba(245, 242, 236, 0.72);
+  }
+
+  @media (max-width: 900px) {
+    .journey-grid { grid-template-columns: 1fr; gap: 20px; }
+    .journey-line {
+      left: 34px; right: auto; top: 0; bottom: 0; width: 2px; height: auto;
+      background: linear-gradient(180deg, transparent, rgba(233,193,107,.5) 10%, rgba(233,193,107,.5) 90%, transparent);
+    }
+    .journey-card { padding-top: 60px; }
+  }
+
+  /* ============ PROBLEM (S2 ivory) ============ */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .problem-card {
+    background: var(--white);
+    border: 1px solid rgba(13, 27, 46, 0.08);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .problem-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(201, 144, 42, 0.35);
+  }
+  .problem-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--gold-500);
+    margin-bottom: 24px;
+  }
+  .problem-quote {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .problem-desc {
+    font-size: 15px;
+    line-height: 1.55;
+    color: rgba(13, 27, 46, 0.65);
+  }
+  .problem-tag {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 4px 10px;
+    background: rgba(201, 144, 42, 0.12);
+    border: 1px solid rgba(201, 144, 42, 0.3);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-500);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============ SOLUTION (S3 navy) ============ */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .pillar {
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--navy-line);
+    border-radius: 16px;
+    padding: 32px 26px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .pillar:hover {
+    transform: translateY(-4px);
+    border-color: rgba(233, 193, 107, 0.35);
+    box-shadow: 0 20px 40px -20px rgba(201, 144, 42, 0.35);
+  }
+  .pillar::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .pillar:hover::before { opacity: 1; }
+  .pillar-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: rgba(233, 193, 107, 0.1);
+    border: 1px solid rgba(233, 193, 107, 0.25);
+    display: grid; place-items: center;
+    color: var(--gold-400);
+    margin-bottom: 20px;
+  }
+  .pillar-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: var(--ivory);
+  }
+  .pillar-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-light);
+  }
+
+  /* ============ WHY IT WORKS (S4 navy) ============ */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .why-card {
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--navy-line);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .why-card:hover { transform: translateY(-4px); }
+  .why-visual {
+    aspect-ratio: 4 / 3;
+    background: var(--navy-900);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--navy-line);
+  }
+  .why-body {
+    padding: 28px 28px 32px;
+  }
+  .why-icon-chip {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(233, 193, 107, 0.12);
+    border: 1px solid rgba(233, 193, 107, 0.28);
+    display: grid; place-items: center;
+    color: var(--gold-400);
+    margin-bottom: 16px;
+  }
+  .why-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    color: var(--ivory);
+  }
+  .why-desc {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-light);
+  }
+
+  /* Visual 1: stacked avatars */
+  .viz-avatars {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(233, 193, 107, 0.18), transparent 70%),
+      var(--navy-900);
+  }
+  .avatar-ring {
+    position: relative;
+    width: 160px; height: 160px;
+  }
+  .avatar-dot {
+    position: absolute;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--navy-800);
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--navy-800);
+  }
+  .avatar-dot.v { background: linear-gradient(135deg, #E0DFDB, #9B9A96); }
+  .avatar-dot.w { background: linear-gradient(135deg, #D8A87A, #8F5E32); }
+  .avatar-ring .a1 { top: 0; left: 50%; transform: translateX(-50%); }
+  .avatar-ring .a2 { top: 25%; right: 0; }
+  .avatar-ring .a3 { bottom: 0; right: 15%; }
+  .avatar-ring .a4 { bottom: 0; left: 15%; }
+  .avatar-ring .a5 { top: 25%; left: 0; }
+  .avatar-ring .center {
+    position: absolute; inset: 35%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    color: var(--navy-800); font-size: 14px;
+    box-shadow: 0 0 24px -4px rgba(233, 193, 107, 0.6);
+  }
+
+  /* Visual 2: growth bars */
+  .viz-bars {
+    position: absolute; inset: 0;
+    padding: 40px;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 14px;
+    background:
+      linear-gradient(180deg, transparent 70%, rgba(233, 193, 107, 0.06) 100%),
+      var(--navy-900);
+  }
+  .viz-bar {
+    width: 28px;
+    background: linear-gradient(180deg, var(--gold-400), var(--gold-500));
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    animation: barGrow 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    transform-origin: bottom;
+    transform: scaleY(0);
+  }
+  .viz-bar.dim { background: rgba(233, 193, 107, 0.2); }
+  @keyframes barGrow {
+    to { transform: scaleY(1); }
+  }
+  .viz-bar::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: -24px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* Visual 3: clock/time */
+  .viz-time {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(233, 193, 107, 0.14), transparent 70%),
+      var(--navy-900);
+  }
+  .time-card {
+    background: rgba(20, 39, 69, 0.7);
+    border: 1px solid rgba(233, 193, 107, 0.3);
+    border-radius: 14px;
+    padding: 20px 28px;
+    text-align: center;
+  }
+  .time-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .time-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--gold-300);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .time-unit {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+  .time-orbit {
+    position: absolute;
+    width: 260px; height: 260px;
+    border: 1px dashed rgba(233, 193, 107, 0.2);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .time-orbit::before {
+    content: '';
+    position: absolute; top: -4px; left: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold-400);
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px var(--gold-400);
+  }
+
+  /* ============ HOW IT WORKS (S5 ivory) ============ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    position: relative;
+  }
+  .step {
+    background: var(--white);
+    border: 1px solid rgba(13, 27, 46, 0.08);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+  }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .step-desc {
+    font-size: 15px;
+    line-height: 1.55;
+    color: rgba(13, 27, 46, 0.65);
+    margin-bottom: 20px;
+  }
+  .step-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--gold-500);
+    padding-top: 14px;
+    border-top: 1px dashed rgba(201, 144, 42, 0.3);
+  }
+
+  /* ============ ROI (S6 navy) ============ */
+  .roi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--navy-line);
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+  }
+  .roi-cell {
+    padding: 56px 40px;
+    border-right: 1px solid var(--navy-line);
+    position: relative;
+  }
+  .roi-cell:last-child { border-right: none; }
+  .roi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .roi-big {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(54px, 6vw, 84px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--gold-400);
+    margin-bottom: 12px;
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .roi-big .sign { font-size: 0.5em; color: var(--gold-300); margin-right: 4px; }
+  .roi-big .unit { font-size: 0.35em; color: var(--text-light); font-weight: 600; letter-spacing: -0.02em; }
+  .roi-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-light);
+    margin-bottom: 14px;
+  }
+  .roi-source {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+  .roi-disclaimer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ============ FEATURES (S7 navy) ============ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 1px;
+    background: var(--navy-line);
+    border: 1px solid var(--navy-line);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .feature {
+    background: var(--navy-800);
+    padding: 40px 36px;
+    transition: background 0.3s;
+    position: relative;
+  }
+  .feature:hover { background: var(--navy-700); }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(233, 193, 107, 0.1);
+    border: 1px solid rgba(233, 193, 107, 0.28);
+    display: grid; place-items: center;
+    color: var(--gold-400);
+    margin-bottom: 18px;
+  }
+  .feature-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    color: var(--ivory);
+    margin-bottom: 8px;
+  }
+  .feature-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-light);
+  }
+
+  /* ============ PRICING (S8 ivory) ============ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .price-card {
+    background: var(--white);
+    border: 1px solid rgba(13, 27, 46, 0.1);
+    border-radius: 16px;
+    padding: 40px 32px;
+    display: flex; flex-direction: column;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(201, 144, 42, 0.3);
+  }
+  .price-card.featured {
+    background: var(--ink);
+    color: var(--ivory);
+    border-color: var(--gold-400);
+    box-shadow: 0 20px 50px -20px rgba(201, 144, 42, 0.5);
+  }
+  .price-card.featured::before {
+    content: 'Le plus choisi';
+    position: absolute;
+    top: -14px; left: 32px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+    color: var(--navy-800);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 999px;
+  }
+  .price-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    margin-bottom: 12px;
+  }
+  .price-card.featured .price-tier { color: var(--gold-400); }
+  .price-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .price-card.featured .price-name { color: var(--ivory); }
+  .price-amount {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 54px;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+    display: flex; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .price-card.featured .price-amount { color: var(--gold-300); }
+  .price-amount .currency { font-size: 24px; margin-right: 2px; }
+  .price-amount .period { font-size: 15px; color: rgba(13, 27, 46, 0.55); font-weight: 500; margin-left: 6px; letter-spacing: 0; }
+  .price-card.featured .price-amount .period { color: var(--text-light); }
+  .price-desc {
+    font-size: 14px;
+    color: rgba(13, 27, 46, 0.6);
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(13, 27, 46, 0.08);
+  }
+  .price-card.featured .price-desc { color: var(--text-light); border-bottom-color: rgba(233, 193, 107, 0.2); }
+  .price-features {
+    list-style: none;
+    flex: 1;
+    margin-bottom: 28px;
+  }
+  .price-features li {
+    display: flex; gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    font-size: 14px;
+    color: rgba(13, 27, 46, 0.78);
+  }
+  .price-card.featured .price-features li { color: var(--text-light); }
+  .price-features svg {
+    color: var(--gold-500);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .price-card.featured .price-features svg { color: var(--gold-400); }
+  .price-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ============ FOUNDING PARTNERS — 3 PHASES ============ */
+  .fp-section {
+    position: relative;
+  }
+  .fp-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(201, 144, 42, 0.14), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 70%, rgba(233, 193, 107, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .fp-container { position: relative; }
+  .fp-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #F59E0B;
+    margin-bottom: 24px;
+  }
+  .fp-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #F59E0B;
+    animation: pulse 2s infinite;
+  }
+  .fp-head { text-align: left; margin-bottom: 56px; max-width: 780px; }
+  .fp-phases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .fp-card {
+    border-radius: 16px;
+    padding: 36px 32px 36px;
+    position: relative;
+    display: flex; flex-direction: column;
+    min-height: 460px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .fp-card:hover { transform: translateY(-4px); }
+  .fp-card.navy {
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--navy-line);
+    color: var(--ivory);
+  }
+  .fp-card.navy:hover {
+    border-color: rgba(233, 193, 107, 0.35);
+    box-shadow: 0 20px 40px -20px rgba(201, 144, 42, 0.35);
+  }
+  .fp-card.gold {
+    background: linear-gradient(160deg, var(--gold-400), var(--gold-500) 60%, #a57621 120%);
+    color: var(--navy-800);
+    box-shadow: 0 20px 50px -20px rgba(201, 144, 42, 0.6), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .fp-card .fp-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 22px;
+  }
+  .fp-card.navy .fp-num {
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .fp-card.gold .fp-num { color: var(--navy-800); opacity: 0.92; }
+  .fp-phase-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 500;
+    width: fit-content;
+  }
+  .fp-card.navy .fp-phase-badge {
+    background: rgba(233, 193, 107, 0.12);
+    border: 1px solid rgba(233, 193, 107, 0.3);
+    color: var(--gold-300);
+  }
+  .fp-card.gold .fp-phase-badge {
+    background: rgba(13, 27, 46, 0.18);
+    border: 1px solid rgba(13, 27, 46, 0.32);
+    color: var(--navy-800);
+  }
+  .fp-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+  }
+  .fp-card ul {
+    list-style: none;
+    flex: 1;
+  }
+  .fp-card li {
+    display: flex; gap: 10px;
+    align-items: flex-start;
+    padding: 10px 0;
+    font-size: 14.5px;
+    line-height: 1.45;
+    border-top: 1px solid rgba(233, 193, 107, 0.15);
+  }
+  .fp-card.gold li { border-top-color: rgba(13, 27, 46, 0.15); }
+  .fp-card li:first-child { border-top: none; padding-top: 0; }
+  .fp-card li::before {
+    content: '';
+    flex-shrink: 0;
+    margin-top: 8px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+  }
+  .fp-card.navy li { color: var(--text-light); }
+  .fp-card.gold li { color: rgba(13, 27, 46, 0.88); }
+
+  .fp-bottom {
+    text-align: center;
+  }
+  .fp-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--gold-300);
+    margin-bottom: 24px;
+  }
+  .fp-main {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .fp-slots {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .fp-slot {
+    aspect-ratio: 1;
+    border-radius: 14px;
+    border: 2px dashed rgba(233, 193, 107, 0.3);
+    background: rgba(20, 39, 69, 0.4);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: rgba(233, 193, 107, 0.35);
+  }
+  .fp-slot.taken {
+    background: linear-gradient(135deg, rgba(201, 144, 42, 0.2), rgba(233, 193, 107, 0.08));
+    border: 2px solid var(--gold-400);
+    color: var(--gold-300);
+  }
+  .fp-slot.taken::after {
+    content: 'Pris';
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--gold-300);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .fp-slot .num {
+    font-size: 26px;
+  }
+  .fp-benefits {
+    list-style: none;
+  }
+  .fp-benefits li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--navy-line);
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 15px;
+    color: var(--ivory);
+  }
+  .fp-benefits li:last-child { border-bottom: none; }
+  .fp-benefits .b-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(233, 193, 107, 0.14);
+    display: grid; place-items: center;
+    color: var(--gold-400);
+    flex-shrink: 0;
+  }
+  .fp-benefits strong {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+    color: var(--gold-300);
+  }
+
+  /* ============ FINAL (S10 navy) ============ */
+  .s10-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+  }
+  .testimonials {
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .testimonial {
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--navy-line);
+    border-radius: 16px;
+    padding: 28px 30px;
+  }
+  .testimonial-quote {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+    color: var(--ivory);
+    margin-bottom: 20px;
+  }
+  .testimonial-quote::before {
+    content: '"';
+    font-family: 'Syne', sans-serif;
+    font-size: 44px;
+    color: var(--gold-400);
+    line-height: 0;
+    margin-right: 6px;
+    vertical-align: -10px;
+  }
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .testimonial-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--navy-800);
+    font-size: 14px;
+  }
+  .testimonial-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .testimonial-role {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .faq-item {
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--navy-line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item[open] { border-color: rgba(233, 193, 107, 0.3); }
+  .faq-item summary {
+    padding: 20px 24px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ivory);
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+';
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--gold-400);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-answer {
+    padding: 0 24px 22px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-light);
+  }
+
+  /* Final CTA band */
+  .cta-band {
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(201, 144, 42, 0.25), transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(233, 193, 107, 0.15), transparent 60%),
+      linear-gradient(135deg, var(--navy-700), var(--navy-900));
+    border: 1px solid rgba(233, 193, 107, 0.3);
+    border-radius: 24px;
+    padding: 72px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-band::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(233, 193, 107, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(233, 193, 107, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 80%);
+  }
+  .cta-band > * { position: relative; z-index: 1; }
+  .cta-band h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ivory);
+    margin-bottom: 16px;
+    max-width: 720px; margin-inline: auto;
+  }
+  .cta-band h2 em {
+    background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+  .cta-band p {
+    font-size: 17px;
+    color: var(--text-light);
+    max-width: 560px; margin: 0 auto 32px;
+  }
+  .cta-band-actions {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+  }
+  .cta-band-note {
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    padding: 60px 48px 40px;
+    background: var(--navy-900);
+    border-top: 1px solid var(--navy-line);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px; margin: 0 auto 40px;
+  }
+  .footer-brand p {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--text-light);
+    max-width: 300px;
+  }
+  .footer-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold-400); }
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--navy-line);
+    display: flex; justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-muted);
+    flex-wrap: wrap; gap: 10px;
+  }
+
+  /* ============ RESPONSIVE for sections ============ */
+  @media (max-width: 960px) {
+    section.s { padding: 80px 20px; }
+    .problem-grid, .pillars, .why-grid, .steps,
+    .roi-grid, .features-grid, .pricing-grid, .fp-phases {
+      grid-template-columns: 1fr;
+    }
+    .pillars { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .roi-cell { border-right: none; border-bottom: 1px solid var(--navy-line); }
+    .roi-cell:last-child { border-bottom: none; }
+    .fp-card { min-height: auto; }
+    .s10-wrap { grid-template-columns: 1fr; gap: 40px; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .cta-band { padding: 48px 24px; }
+  }
+  @media (max-width: 560px) {
+    .pillars, .features-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <a href="#" class="logo">
+    <img src="/marketing/bcoin-128.png" class="logo-mark" alt="BarCoins" />
+    BarCoins
+  </a>
+  <ul class="nav-links">
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#how">Fonctionnement</a></li>
+    <li><a href="#roi">ROI</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="/login" class="nav-login">Se connecter</a>
+    <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary">
+      Rejoindre la beta
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+  <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <a href="#solution">Solution</a>
+  <a href="#how">Fonctionnement</a>
+  <a href="#journey">Parcours</a>
+  <a href="#roi">ROI</a>
+  <a href="#pricing">Tarifs</a>
+  <a href="#faq">FAQ</a>
+  <a href="/login" class="drawer-login">Se connecter</a>
+  <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary drawer-cta">Rejoindre la beta →</a>
+</div>
+<div class="nav-scrim" id="nav-scrim"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow reveal d1">
+      <span class="dot"></span>
+      Beta ouverte — Perpignan, juillet 2026
+    </div>
+
+    <h1 class="hero-title reveal d2">
+      <span class="line">Vos clients</span>
+      <span class="line gold">jouent.</span>
+      <span class="line">Ils restent.</span>
+      <span class="line gold">Ils reviennent.</span>
+    </h1>
+
+    <p class="hero-sub reveal d3">
+      BarCoins transforme chaque consommation en récompense. Points, classements, challenges — vos clients reviennent sans que vous ayez à lever le petit doigt. Installation en 10 minutes, zéro matériel.
+    </p>
+
+    <div class="hero-actions reveal d4">
+      <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary">
+        Rejoindre la beta
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#demo-video" class="btn btn-ghost">
+        Voir la démo
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="hero-note reveal d4">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Sans engagement · Setup en 10 min · Support en français
+    </div>
+
+    <div class="social-proof reveal d5">
+      <div class="social-proof-label">Ils testent BarCoins en Occitanie</div>
+      <div class="logo-row">
+        <span class="brand italic">Le Comptoir</span>
+        <span class="brand serif">HEMINGWAY&amp;CO</span>
+        <span class="brand">LA CAVE 66</span>
+        <span class="brand italic">Maison Marceau</span>
+        <span class="brand serif">TROIS RIVIÈRES</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-mockup reveal d3">
+    <div class="phone-stage">
+      <div class="phone-glow"></div>
+
+      <!-- Floating stat cards -->
+      <div class="float-card fc-top-left">
+        <div class="fc-label">Ce soir</div>
+        <div class="fc-value">+47 <span class="unit">joueurs</span></div>
+        <div class="fc-trend">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+          +23% vs hier
+        </div>
+      </div>
+
+      <div class="float-card fc-right">
+        <div class="fc-label">Panier moyen</div>
+        <div class="fc-value">18,40<span class="unit">€</span></div>
+        <div class="fc-trend">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+          +4,20€
+        </div>
+      </div>
+
+      <div class="float-card fc-bottom-right">
+        <div class="fc-label">Fréquence retour</div>
+        <div class="fc-value">2,8<span class="unit">×/mois</span></div>
+        <div class="fc-trend">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+          +68%
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+
+          <div class="status-bar">
+            <span>21:47</span>
+            <div class="status-right">
+              <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><path d="M1 9 L1 5 L3 5 L3 9 Z M5 9 L5 3 L7 3 L7 9 Z M9 9 L9 2 L11 2 L11 9 Z M13 9 L13 0 L15 0 L15 9 Z"/></svg>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M7 7.5 L7 7.5 M3.5 4.5 Q7 1.5 10.5 4.5 M1 2 Q7 -3 13 2"/></svg>
+              <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="18" height="9" rx="2"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="19.5" y="3.5" width="1.5" height="3" rx="0.5" fill="currentColor"/></svg>
+            </div>
+          </div>
+
+          <div class="app-header">
+            <div>
+              <div class="app-logo">BarCoins</div>
+              <div class="app-venue">Le Comptoir · Perpignan</div>
+            </div>
+            <div class="app-coin">
+              <span class="coin-icon">₿</span>
+              <span>1 240</span>
+            </div>
+          </div>
+
+          <div class="app-tabs">
+            <span class="app-tab active">Classement</span>
+            <span class="app-tab">Défis</span>
+            <span class="app-tab">Récompenses</span>
+          </div>
+
+          <div class="lb-title">Top joueurs du mois</div>
+          <div class="lb-sub">// Octobre · 284 participants</div>
+
+          <div class="podium">
+            <div class="podium-slot">
+              <div class="podium-rank">02</div>
+              <div class="podium-avatar silver">MA</div>
+              <div class="podium-name">Marc A.</div>
+              <div class="podium-score">3 410</div>
+            </div>
+            <div class="podium-slot first">
+              <div class="podium-rank">01</div>
+              <div class="podium-avatar gold">SL</div>
+              <div class="podium-name">Sophie L.</div>
+              <div class="podium-score">4 820</div>
+            </div>
+            <div class="podium-slot">
+              <div class="podium-rank">03</div>
+              <div class="podium-avatar bronze">JD</div>
+              <div class="podium-name">Julien D.</div>
+              <div class="podium-score">2 960</div>
+            </div>
+          </div>
+
+          <div class="lb-list">
+            <div class="lb-row">
+              <span class="lb-pos">04</span>
+              <div class="lb-avatar">CM</div>
+              <span class="lb-name">Claire M.</span>
+              <span class="lb-coins">2 140</span>
+            </div>
+            <div class="lb-row">
+              <span class="lb-pos">05</span>
+              <div class="lb-avatar">TR</div>
+              <span class="lb-name">Thomas R.</span>
+              <span class="lb-coins">1 890</span>
+            </div>
+            <div class="lb-row me">
+              <span class="lb-pos">06</span>
+              <div class="lb-avatar">VOUS</div>
+              <span class="lb-name">Vous</span>
+              <span class="lb-coins">1 240</span>
+            </div>
+            <div class="lb-row">
+              <span class="lb-pos">07</span>
+              <div class="lb-avatar">NP</div>
+              <span class="lb-name">Nina P.</span>
+              <span class="lb-coins">1 080</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="line-v"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1b — ANIMATION VIDEO ============ -->
+<section class="s" id="video-demo" style="background: linear-gradient(180deg, var(--navy-900), var(--navy-800)); padding-top: 60px; padding-bottom: 60px;">
+  <div class="container">
+    <div class="section-eyebrow" style="text-align:center">01b · Vue gérant</div>
+    <h2 class="section-title" style="text-align:center; margin-bottom: 10px;">Voici ce que voit un gérant <span class="gold">BarCoins, en temps réel.</span></h2>
+    <p class="section-lead" style="text-align:center; margin: 0 auto 36px;">De l'entrée du client à sa fidélisation — automatique.</p>
+
+    <div class="vd-root" id="vd-root">
+      <div class="vd-stage" id="vd-stage">
+        <!-- Décor permanent -->
+        <div class="vd-bg"></div>
+        <div class="vd-bottles"></div>
+        <div class="vd-neon n1"></div>
+        <div class="vd-neon n2"></div>
+        <div class="vd-counter-bar"></div>
+
+        <div class="vd-live">
+          <span class="vd-live-dot"></span>EN DIRECT · <span id="vd-live-n">47</span> joueurs
+        </div>
+        <div class="vd-coins-top">
+          <span class="vd-coin-ico">🪙</span>
+          <span id="vd-total">0</span> BC
+        </div>
+
+        <!-- Toasts (shared) -->
+        <div class="vd-toast" id="vd-toast"></div>
+
+        <!-- ÉTAPE 01 — Il entre -->
+        <div class="vd-step vd-has-bg" data-step="0" data-bg="assets/video-step-01-entre.png">
+          <div class="vd-title">01 · Il entre</div>
+          <div class="vd-bar-scene">
+            <div class="vd-door"><div class="vd-door-panel"></div></div>
+            <div class="vd-silhouette" id="vd-sil"></div>
+            <div class="vd-neon-sign">BAR</div>
+          </div>
+          <div class="vd-detect-badge" id="vd-detect">Nouveau client détecté</div>
+        </div>
+
+        <!-- ÉTAPE 02 — Il consomme -->
+        <div class="vd-step vd-has-bg" data-step="1" data-bg="assets/video-step-02-consomme.png">
+          <div class="vd-title">02 · Il consomme</div>
+          <div class="vd-infocards">
+            <div class="vd-icard" id="vd-ic-1">
+              <div class="vd-icard-ico"><svg viewBox="0 0 24 24"><path d="M7 3h9l-.6 15.2a2 2 0 0 1-2 1.8h-3.8a2 2 0 0 1-2-1.8L7 3Z"/><path d="M16 7h2a2 2 0 0 1 0 4h-2"/><path d="M10 8v8M13 8v8"/></svg></div>
+              <div>
+                <div class="vd-icard-lbl">Consommation</div>
+                <div class="vd-icard-val">Visite validée</div>
+              </div>
+            </div>
+            <div class="vd-icard" id="vd-ic-2">
+              <div class="vd-icard-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.4 1.1-2.2 2.5-2.2s2.5.8 2.5 2.2S13.4 11.5 12 11.5s-2.5.8-2.5 2.2 1.1 2.2 2.5 2.2 2.5-.8 2.5-2.2"/></svg></div>
+              <div>
+                <div class="vd-icard-lbl">Récompense</div>
+                <div class="vd-icard-val"><span class="gold">+10 BarCoins</span> crédités</div>
+              </div>
+            </div>
+            <div class="vd-icard" id="vd-ic-3">
+              <div class="vd-icard-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M7 13h4M7 15.5h6"/></svg></div>
+              <div>
+                <div class="vd-icard-lbl">Gérant</div>
+                <div class="vd-icard-val">Dashboard mis à jour</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 03 — Il scanne -->
+        <div class="vd-step vd-has-bg" data-step="2" data-bg="assets/video-step-03-scanne.png">
+          <div class="vd-title">03 · Il scanne</div>
+          <div class="vd-phone" id="vd-phone">
+            <div class="vd-phone-screen">
+              <div class="vd-qr2" id="vd-qr2">
+                <div class="vd-qr2-dots"></div>
+                <div class="vd-qr2-corner tl"></div>
+                <div class="vd-qr2-corner tr"></div>
+                <div class="vd-qr2-corner bl"></div>
+              </div>
+              <div class="vd-welcome" id="vd-welcome">
+                <div class="vd-hi">Bienvenue Lucas ! 👋</div>
+                <div class="vd-bc">10 BarCoins</div>
+              </div>
+            </div>
+          </div>
+          <div class="vd-scan-state" id="vd-scan-state">Scan en cours…</div>
+          <div class="vd-coinfly" id="vd-coinfly-1"></div>
+        </div>
+
+        <!-- ÉTAPE 04 — Il joue -->
+        <div class="vd-step" data-step="3">
+          <div class="vd-title">04 · Il joue</div>
+          <div class="vd-quiz-card">
+            <div class="vd-quiz-top">
+              <div class="vd-timer-wrap">
+                <svg width="40" height="40" viewBox="0 0 40 40">
+                  <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(233,193,107,.15)" stroke-width="3"/>
+                  <circle cx="20" cy="20" r="17" fill="none" stroke="#C9902A" stroke-width="3" stroke-linecap="round" transform="rotate(-90 20 20)" id="vd-timer-c" style="stroke-dasharray:106.8;stroke-dashoffset:0;transition:stroke-dashoffset 3.5s linear"/>
+                </svg>
+                <div class="vd-timer-n" id="vd-timer-n">15</div>
+              </div>
+              <div class="vd-quote">« Je vais lui faire une offre… »</div>
+            </div>
+            <div class="vd-question">Dans quel film ?</div>
+            <div class="vd-answers">
+              <div class="vd-ans">A — Casino</div>
+              <div class="vd-ans" id="vd-ans-b">B — Le Parrain <span class="vd-check">✓</span></div>
+              <div class="vd-ans">C — Scarface</div>
+              <div class="vd-ans">D — Les Affranchis</div>
+            </div>
+          </div>
+          <div class="vd-s2-toast" id="vd-s2-toast">⚡ Réponse éclair ! +47 BarCoins</div>
+          <div class="vd-coinfly" id="vd-coinfly-2"></div>
+        </div>
+
+        <!-- ÉTAPE 05 — Il monte -->
+        <div class="vd-step vd-has-bg" data-step="4" data-bg="assets/video-step-05-monte.png">
+          <div class="vd-title">05 · Il monte</div>
+          <div class="vd-lb">
+            <div class="vd-lb-row" data-lb="1" style="order:1"><span class="vd-lb-rank">1</span><span class="vd-lb-av" style="background:#7c3aed">SL</span><span class="vd-lb-nm">Sophie L.</span><span class="vd-lb-bc">340 BC</span></div>
+            <div class="vd-lb-row" data-lb="2" style="order:2"><span class="vd-lb-rank">2</span><span class="vd-lb-av" style="background:#2563eb">MA</span><span class="vd-lb-nm">Marc A.</span><span class="vd-lb-bc">290 BC</span></div>
+            <div class="vd-lb-row" data-lb="3" style="order:3"><span class="vd-lb-rank">3</span><span class="vd-lb-av" style="background:#16a34a">TR</span><span class="vd-lb-nm">Thomas R.</span><span class="vd-lb-bc">240 BC</span></div>
+            <div class="vd-lb-row" data-lb="4" style="order:4"><span class="vd-lb-rank">4</span><span class="vd-lb-av" style="background:#ea580c">CM</span><span class="vd-lb-nm">Claire M.</span><span class="vd-lb-bc">180 BC</span></div>
+            <div class="vd-lb-row me" data-lb="5" style="order:5"><span class="vd-lb-rank" id="vd-lb-rank-me">5</span><span class="vd-lb-av" style="background:#C9902A">LU</span><span class="vd-lb-nm">VOUS Lucas</span><span class="vd-lb-bc" id="vd-lb-bc-me">57 BC</span><span class="vd-crown" id="vd-crown">👑 N°1</span></div>
+          </div>
+          <div class="vd-s3-toast" id="vd-s3-toast">Lucas vient de passer N°1 !</div>
+          <div class="vd-rain" id="vd-rain"></div>
+        </div>
+
+        <!-- ÉTAPE 06 — Il revient -->
+        <div class="vd-step" data-step="5">
+          <div class="vd-title">06 · Il revient</div>
+          <div class="vd-s4-wrap">
+            <div class="vd-cal">
+              <div class="vd-cal-day strike" style="--d:0">Lun</div>
+              <div class="vd-cal-day strike" style="--d:.3s">Mar</div>
+              <div class="vd-cal-day star" style="--d:.6s">Mer ★</div>
+            </div>
+            <div class="vd-bubble">Je suis N°1. Je reviens mercredi pour garder mon rang. 🏆</div>
+            <div class="vd-finale">
+              <div class="vd-finale-big">Vos clients reviennent.</div>
+              <div class="vd-finale-sub">Pas par habitude. Par compétition.</div>
+              <div class="vd-stats">
+                <div class="vd-stat"><div class="vd-stat-v">+2,8×</div><div class="vd-stat-l">fréquence de visite</div></div>
+                <div class="vd-stat"><div class="vd-stat-v">+180€</div><div class="vd-stat-l">CA par soirée</div></div>
+              </div>
+              <div class="vd-manager-stat">
+                <div class="vd-ms-lbl">RAPPORT GÉRANT</div>
+                <div class="vd-ms-txt">Ce client est revenu <strong>3 fois cette semaine</strong>.<br>Panier moyen : <strong>+4,20€ / visite</strong>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 07 — Bilan gérant -->
+        <div class="vd-step" data-step="6">
+          <div class="vd-title">07 · Bilan gérant</div>
+          <div class="vd-bilan">
+            <div class="vd-bilan-eyebrow" id="vd-bil-eyebrow">Rapport automatique · 7 jours</div>
+            <h3 class="vd-bilan-title" id="vd-bil-title">Ce client a généré <span class="gold">+4,20€</span> de panier moyen supplémentaire.<br>Automatiquement.</h3>
+            <div class="vd-bilan-stats">
+              <div class="vd-bilan-stat" id="vd-bil-s1">
+                <div class="vd-bilan-stat-v">3 visites</div>
+                <div class="vd-bilan-stat-l">par semaine</div>
+              </div>
+              <div class="vd-bilan-stat" id="vd-bil-s2">
+                <div class="vd-bilan-stat-v">+4,20€</div>
+                <div class="vd-bilan-stat-l">panier moyen</div>
+              </div>
+              <div class="vd-bilan-stat" id="vd-bil-s3">
+                <div class="vd-bilan-stat-v">N°1</div>
+                <div class="vd-bilan-stat-l">classement</div>
+              </div>
+            </div>
+            <a class="vd-bilan-cta" id="vd-bil-cta" href="#contact">Voir comment <span class="arr">→</span> Rejoindre la beta</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progression -->
+      <div class="vd-progress">
+        <div class="vd-prog-track"><div class="vd-prog-fill" id="vd-prog-fill"></div></div>
+        <div class="vd-markers">
+          <button class="vd-marker" data-m="0"><span>01</span></button>
+          <button class="vd-marker" data-m="1"><span>02</span></button>
+          <button class="vd-marker" data-m="2"><span>03</span></button>
+          <button class="vd-marker" data-m="3"><span>04</span></button>
+          <button class="vd-marker" data-m="4"><span>05</span></button>
+          <button class="vd-marker" data-m="5"><span>06</span></button>
+          <button class="vd-marker" data-m="6"><span>07</span></button>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="vd-controls">
+        <button class="vd-ctl ghost" id="vd-prev">◀ Préc.</button>
+        <button class="vd-ctl play" id="vd-play">⏸ Pause</button>
+        <button class="vd-ctl ghost" id="vd-next">Suiv. ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .vd-root { max-width: 800px; margin: 0 auto; }
+    .vd-stage { position: relative; aspect-ratio: 16/9; background: #0D1B2E; border: 1px solid var(--navy-line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(201,144,42,0.15); }
+    .vd-bg { position:absolute; inset:0; background-image: radial-gradient(rgba(255,255,255,.015) 1px, transparent 1px); background-size: 3px 3px; pointer-events:none; }
+    .vd-bottles { position:absolute; bottom:10%; left:0; right:0; height:40%; pointer-events:none; opacity:.15; background:
+      radial-gradient(ellipse 20px 60px at 8% 80%, #E9C16B 50%, transparent 60%),
+      radial-gradient(ellipse 18px 70px at 15% 85%, #C9902A 50%, transparent 60%),
+      radial-gradient(ellipse 22px 65px at 22% 82%, #E9C16B 50%, transparent 60%),
+      radial-gradient(ellipse 19px 72px at 82% 85%, #C9902A 50%, transparent 60%),
+      radial-gradient(ellipse 21px 60px at 90% 80%, #E9C16B 50%, transparent 60%); }
+    .vd-neon { position:absolute; left:0; right:0; height:1px; pointer-events:none; opacity:.2; }
+    .vd-neon.n1 { top:30%; background: linear-gradient(90deg, transparent, #E9C16B 30%, #E9C16B 70%, transparent); box-shadow: 0 0 14px #E9C16B; }
+    .vd-neon.n2 { top:70%; background: linear-gradient(90deg, transparent, #C9902A 20%, #C9902A 80%, transparent); box-shadow: 0 0 12px #C9902A; }
+    .vd-counter-bar { position:absolute; bottom:0; left:0; right:0; height:10%; background: linear-gradient(180deg, rgba(201,144,42,.18), rgba(201,144,42,.05)); border-top: 1px solid rgba(233,193,107,.25); }
+
+    .vd-live { position:absolute; top:14px; left:16px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#E9C16B; z-index:6; display:flex; align-items:center; gap:6px; }
+    .vd-live-dot { width:7px; height:7px; border-radius:50%; background:#ef4444; animation: vd-blink 1s infinite; }
+    @keyframes vd-blink { 50% { opacity:.3; } }
+
+    .vd-coins-top { position:absolute; top:12px; right:16px; background:rgba(201,144,42,.12); border:1px solid rgba(233,193,107,.3); color:#E9C16B; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; padding:6px 12px; border-radius:999px; z-index:5; display:flex; align-items:center; gap:5px; transition: box-shadow .3s; }
+    .vd-coin-ico { font-size:12px; }
+    .vd-coins-top.pulse { box-shadow:0 0 0 8px rgba(201,144,42,.25); }
+
+    /* Background image per step */
+    .vd-has-bg { background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .vd-has-bg::before { content:''; position:absolute; inset:0; background:
+      linear-gradient(180deg, rgba(10,22,40,.55) 0%, rgba(10,22,40,.2) 40%, rgba(10,22,40,.45) 100%);
+      pointer-events:none; z-index:0; }
+    .vd-has-bg > * { position: relative; z-index: 2; }
+    /* Hide the old decorative faux-bar elements when we have a real bg */
+    .vd-has-bg .vd-bar-scene, .vd-has-bg .vd-bar-counter { opacity: 0; height: 0; overflow: hidden; margin: 0; padding: 0; }
+
+    /* Step 02 — 3 info cards (new) */
+    .vd-infocards { display:flex; gap:12px; width:min(620px,94%); align-items:stretch; justify-content:center; margin-top:40px; }
+    .vd-icard { flex:1 1 0; min-width:0; background:rgba(13,27,46,.88); backdrop-filter: blur(6px); border:1px solid rgba(233,193,107,.28); border-radius:14px; padding:14px 12px; display:flex; flex-direction:column; align-items:flex-start; gap:10px; opacity:0; transform:translateY(14px); transition: all .5s cubic-bezier(.2,.8,.2,1); box-shadow: 0 12px 30px -12px rgba(0,0,0,.6); }
+    .vd-step.active .vd-icard.show { opacity:1; transform:translateY(0); }
+    .vd-icard-ico { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:rgba(201,144,42,.14); border:1px solid rgba(233,193,107,.3); color:#E9C16B; }
+    .vd-icard-ico svg { width:22px; height:22px; stroke:#E9C16B; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .vd-icard-lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:#8a97ad; }
+    .vd-icard-val { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; color:#F5F2EC; line-height:1.25; letter-spacing:-.01em; }
+    .vd-icard-val .gold { color:#E9C16B; }
+
+    /* Step 03 — new clean QR */
+    .vd-qr2 { width:110px; height:110px; background:#fff; border-radius:10px; position:relative; padding:10px; opacity:0; transform:scale(.85); transition: all .45s cubic-bezier(.2,.8,.2,1); box-shadow: 0 0 0 0 rgba(233,193,107,0); }
+    .vd-step.active .vd-qr2.show { opacity:1; transform:scale(1); animation: vd-qrpulse 1.6s ease-out infinite; }
+    @keyframes vd-qrpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(233,193,107,.55); } 50% { box-shadow: 0 0 0 14px rgba(233,193,107,0); } }
+    .vd-qr2-corner { position:absolute; width:26px; height:26px; border:5px solid #0D1B2E; border-radius:4px; }
+    .vd-qr2-corner.tl { top:10px; left:10px; }
+    .vd-qr2-corner.tr { top:10px; right:10px; }
+    .vd-qr2-corner.bl { bottom:10px; left:10px; }
+    .vd-qr2-corner::after { content:''; position:absolute; inset:5px; background:#0D1B2E; border-radius:1px; }
+    .vd-qr2-dots { position:absolute; inset:10px; background-image:
+      radial-gradient(#0D1B2E 1.2px, transparent 1.4px);
+      background-size: 7px 7px; background-position: 0 0;
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 75%);
+              mask-image: radial-gradient(ellipse at center, #000 40%, transparent 75%);
+      opacity:.55; }
+    .vd-scan-state { margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#F5F2EC; opacity:0; transition: opacity .35s; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+    .vd-scan-state.show { opacity:1; }
+    .vd-scan-state.done { color:#22C55E; }
+
+    /* Bilan slide (new step 07) */
+    .vd-bilan { width:min(700px,95%); display:flex; flex-direction:column; align-items:center; gap:18px; padding: 40px 20px 20px; text-align:center; }
+    .vd-bilan-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#8a97ad; opacity:0; transform:translateY(8px); transition: all .5s; }
+    .vd-bilan-title { font-family:'Syne',sans-serif; font-weight:700; font-size: clamp(20px,2.6vw,24px); color:#F5F2EC; line-height:1.25; letter-spacing:-.02em; max-width:580px; opacity:0; transform:translateY(12px); transition: all .6s .15s; }
+    .vd-bilan-title .gold { color:#E9C16B; }
+    .vd-bilan-stats { display:flex; gap:14px; justify-content:center; margin-top:6px; flex-wrap:wrap; }
+    .vd-bilan-stat { background:rgba(201,144,42,.12); border:1px solid rgba(233,193,107,.32); border-radius:12px; padding:12px 16px; min-width:140px; opacity:0; transform:translateY(14px); transition: all .55s cubic-bezier(.2,.8,.2,1); }
+    .vd-bilan-stat-v { font-family:'Syne',sans-serif; font-weight:700; font-size:20px; color:#E9C16B; letter-spacing:-.02em; }
+    .vd-bilan-stat-l { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:#8a97ad; margin-top:2px; }
+    .vd-bilan-cta { margin-top:12px; display:inline-flex; align-items:center; gap:8px; background:#E9C16B; color:#0D1B2E; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; letter-spacing:-.01em; padding:12px 22px; border-radius:999px; border:none; cursor:pointer; opacity:0; transform:translateY(10px); transition: all .5s .9s; box-shadow: 0 12px 30px -10px rgba(233,193,107,.5); }
+    .vd-bilan-cta:hover { background:#F5D694; }
+    .vd-bilan-cta .arr { transition: transform .3s; }
+    .vd-bilan-cta:hover .arr { transform: translateX(3px); }
+    .vd-step.active .vd-bilan-eyebrow.show,
+    .vd-step.active .vd-bilan-title.show,
+    .vd-step.active .vd-bilan-stat.show,
+    .vd-step.active .vd-bilan-cta.show { opacity:1; transform:translateY(0); }
+    .vd-step[data-step="6"] { background: radial-gradient(ellipse at center top, #142745 0%, #0D1B2E 55%, #08101e 100%); }
+
+    .vd-step { position:absolute; inset:0; opacity:0; pointer-events:none; transition: opacity .5s; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 24px 14%; }
+    .vd-step.active { opacity:1; }
+    .vd-title { position:absolute; top:34px; left:16px; transform:none; font-family:'JetBrains Mono', monospace; font-weight:600; font-size: 11px; color:#E9C16B; letter-spacing:.12em; text-transform:uppercase; z-index:5; opacity:.9; }
+
+    /* Step 1 */
+    .vd-phone { width:130px; height:240px; background:#0a1220; border:2px solid #C9902A; border-radius:22px; position:relative; display:flex; align-items:center; justify-content:center; box-shadow: 0 0 24px rgba(201,144,42,.25); }
+    .vd-phone-screen { position:absolute; inset:6px; border-radius:16px; background:#0D1B2E; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .vd-qr { width:90px; height:90px; background: white; padding:6px; border-radius:4px; position:relative; opacity:0; transform:scale(.8); transition: all .4s; background-image:
+      linear-gradient(90deg, #000 25%, transparent 25%, transparent 50%, #000 50%, #000 75%, transparent 75%),
+      linear-gradient(0deg, #000 25%, transparent 25%, transparent 50%, #000 50%, #000 75%, transparent 75%);
+      background-size: 22px 22px; background-position:6px 6px; background-repeat:repeat; background-color:white; }
+    .vd-step.active .vd-qr.show { opacity:1; transform:scale(1); }
+    .vd-ripple { position:absolute; width:110px; height:110px; border:2px solid #C9902A; border-radius:50%; opacity:0; }
+    .vd-step.active .vd-ripple.go { animation: vd-ripple 1.8s ease-out infinite; }
+    .vd-ripple.r2 { animation-delay:.6s !important; }
+    .vd-ripple.r3 { animation-delay:1.2s !important; }
+    @keyframes vd-ripple { 0% { transform: scale(.7); opacity:.8; } 100% { transform: scale(1.8); opacity:0; } }
+
+    .vd-welcome { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#0D1B2E; opacity:0; transition: opacity .4s; gap:14px; padding:10px; text-align:center; }
+    .vd-welcome.show { opacity:1; }
+    .vd-hi { font-family:'Syne',sans-serif; font-weight:700; color:#F5F2EC; font-size:14px; }
+    .vd-bc { font-family:'Syne',sans-serif; font-weight:700; color:#E9C16B; font-size:22px; letter-spacing:-.02em; }
+
+    .vd-s1-toast, .vd-s2-toast, .vd-s3-toast { position:absolute; top:46px; left:50%; transform:translateX(-50%) translateY(-40px); opacity:0; padding:8px 14px; border-radius:999px; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; transition: all .4s; white-space:nowrap; z-index:6; }
+    .vd-s1-toast { background:rgba(34,197,94,.15); border:1px solid #22C55E; color:#dcfce7; }
+    .vd-s2-toast { background:rgba(201,144,42,.2); border:1px solid #C9902A; color:#E9C16B; }
+    .vd-s3-toast { background:#E9C16B; color:#0D1B2E; font-size:14px; padding:10px 18px; }
+    .vd-s1-toast.show, .vd-s2-toast.show, .vd-s3-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    .vd-coinfly { position:absolute; inset:0; pointer-events:none; }
+    .vd-coin { position:absolute; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #F2D690, #C9902A); box-shadow:0 2px 6px rgba(201,144,42,.5); animation: vd-fly 1s forwards cubic-bezier(.3,.6,.4,1); }
+    @keyframes vd-fly { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(var(--dx),var(--dy)) scale(.5); opacity:0; } }
+
+    /* Step 2 */
+    .vd-quiz-card { background:#142745; border:1px solid rgba(233,193,107,.25); border-radius:14px; padding:18px 20px; width: min(420px, 85%); }
+    .vd-quiz-top { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+    .vd-timer-wrap { position:relative; width:40px; height:40px; flex-shrink:0; }
+    .vd-timer-n { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; color:#F5F2EC; }
+    .vd-quote { font-family:'Syne',sans-serif; font-style:italic; color:#E9C16B; font-size:13px; line-height:1.3; flex:1; }
+    .vd-question { font-family:'Outfit',sans-serif; font-weight:500; font-size:12px; color:#F5F2EC; margin-bottom:10px; }
+    .vd-answers { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .vd-ans { background:rgba(255,255,255,.03); border:1px solid rgba(233,193,107,.12); border-radius:8px; padding:8px 10px; font-family:'Outfit',sans-serif; font-size:11px; color:#F5F2EC; display:flex; justify-content:space-between; align-items:center; transition: all .3s; }
+    .vd-check { opacity:0; color:#22C55E; font-weight:700; }
+    .vd-ans.correct { background:rgba(34,197,94,.15); border-color:#22C55E; animation: vd-pulse .5s; }
+    .vd-ans.correct .vd-check { opacity:1; }
+    @keyframes vd-pulse { 50% { transform:scale(1.03); box-shadow:0 0 0 4px rgba(34,197,94,.2); } }
+
+    /* Step 3 */
+    .vd-lb { width: min(400px, 90%); display:flex; flex-direction:column; gap:5px; }
+    .vd-lb-row { display:grid; grid-template-columns:20px 26px 1fr auto auto; align-items:center; gap:8px; background:rgba(233,193,107,.04); border:1px solid rgba(233,193,107,.1); border-radius:9px; padding:7px 12px; font-family:'Outfit',sans-serif; font-size:11.5px; color:#F5F2EC; transition: all .6s cubic-bezier(.4,0,.2,1); }
+    .vd-lb-row.me { background:rgba(201,144,42,.08); }
+    .vd-lb-row.me.win { background:rgba(201,144,42,.18); border:1px solid rgba(233,193,107,.35); border-left:3px solid #C9902A; padding-left:9px; }
+    .vd-lb-rank { font-family:'Syne',sans-serif; font-weight:700; font-size:11px; color:#E9C16B; }
+    .vd-lb-av { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-family:'Syne',sans-serif; font-weight:700; font-size:9px; color:white; }
+    .vd-lb-nm { font-weight:500; }
+    .vd-lb-bc { font-family:'Syne',sans-serif; font-weight:700; color:#E9C16B; font-size:11px; }
+    .vd-crown { opacity:0; font-size:10px; color:#E9C16B; transition:opacity .4s; }
+    .vd-lb-row.me.win .vd-crown { opacity:1; }
+
+    .vd-rain { position:absolute; inset:0; pointer-events:none; }
+    .vd-rain .vd-rc { position:absolute; top:-20px; width:10px; height:10px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #F2D690, #C9902A); animation: vd-rain-fall 1.6s forwards linear; }
+    @keyframes vd-rain-fall { to { transform: translateY(500px) rotate(360deg); opacity:0; } }
+
+    /* Step 4 */
+    .vd-s4-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; max-width:500px; }
+    .vd-cal { display:flex; gap:8px; }
+    .vd-cal-day { background:#142745; border:1px solid rgba(233,193,107,.2); border-radius:9px; padding:7px 14px; font-family:'Syne',sans-serif; font-weight:700; font-size:11px; color:#F5F2EC; position:relative; animation-delay:var(--d); }
+    .vd-cal-day.strike { opacity:.4; }
+    .vd-step.active .vd-cal-day.strike::after { content:''; position:absolute; left:10%; right:10%; top:50%; height:2px; background:#ef4444; animation: vd-strike .3s forwards; animation-delay: var(--d); transform: scaleX(0); transform-origin:left; }
+    @keyframes vd-strike { to { transform: scaleX(1); } }
+    .vd-cal-day.star { background:rgba(201,144,42,.2); border-color:#C9902A; color:#E9C16B; }
+
+    .vd-bubble { background:#F5F2EC; color:#0D1B2E; border-radius:12px; padding:10px 16px; font-family:'Outfit',sans-serif; font-size:12px; max-width:320px; position:relative; opacity:0; transform:translateY(8px); transition: all .5s .8s; text-align:center; }
+    .vd-step.active .vd-bubble { opacity:1; transform:translateY(0); }
+    .vd-bubble::after { content:''; position:absolute; bottom:-6px; left:20px; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:7px solid #F5F2EC; }
+
+    .vd-finale { text-align:center; margin-top:6px; opacity:0; transform:translateY(12px); transition: all .6s 2.2s; }
+    .vd-step.active .vd-finale { opacity:1; transform:translateY(0); }
+    .vd-finale-big { font-family:'Syne',sans-serif; font-weight:700; font-size:22px; color:#F5F2EC; letter-spacing:-.02em; margin-bottom:4px; }
+    .vd-finale-sub { font-family:'Outfit',sans-serif; font-size:12px; color:#E9C16B; margin-bottom:12px; }
+    .vd-stats { display:flex; gap:22px; justify-content:center; flex-wrap:wrap; }
+    .vd-stat-v { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:#E9C16B; letter-spacing:-.02em; }
+    .vd-stat-l { font-family:'Outfit',sans-serif; font-size:10px; color:rgba(245,242,236,.55); text-transform:uppercase; letter-spacing:.05em; }
+
+    /* Progress + Controls */
+    .vd-progress { margin-top:20px; position:relative; }
+    .vd-prog-track { height:2px; background: rgba(233,193,107,.15); border-radius:2px; overflow:hidden; }
+    .vd-prog-fill { height:100%; background: linear-gradient(90deg, #C9902A, #E9C16B); width:0%; transition: width .1s linear; }
+    .vd-markers { position:absolute; top:-6px; left:0; right:0; display:flex; justify-content:space-between; }
+    .vd-marker { width:24px; height:14px; background:transparent; border:none; cursor:pointer; color:#E9C16B; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; opacity:.4; transition: opacity .2s; padding:0; }
+    .vd-marker.active, .vd-marker:hover { opacity:1; }
+
+    .vd-controls { margin-top:18px; display:flex; gap:10px; justify-content:center; }
+    .vd-ctl { border-radius:999px; font-family:'Outfit',sans-serif; font-size:12px; padding:8px 18px; cursor:pointer; transition: all .2s; }
+    .vd-ctl.ghost { background:transparent; border:1px solid rgba(233,193,107,.3); color:#E9C16B; }
+    .vd-ctl.ghost:hover { background:rgba(201,144,42,.1); }
+    .vd-ctl.play { background:#C9902A; border:none; color:#0D1B2E; font-weight:600; }
+
+    /* Steps 1 & 2 — bar scene */
+    .vd-bar-scene { position:relative; width: min(380px, 90%); height: 150px; display:flex; align-items:flex-end; justify-content:center; }
+    .vd-door { position:absolute; left:18%; bottom:0; width:70px; height:130px; background: linear-gradient(180deg, #142745, #0a1628); border:2px solid #C9902A; border-radius:6px 6px 0 0; overflow:hidden; box-shadow: 0 0 18px rgba(201,144,42,.35); }
+    .vd-door-panel { position:absolute; inset:6px; border:1px solid rgba(233,193,107,.3); border-radius:3px; transform-origin:left; animation: vd-door-open 1.2s .3s cubic-bezier(.5,.1,.3,1) both; }
+    .vd-step.active .vd-door-panel { animation-play-state:running; }
+    @keyframes vd-door-open { 0% { transform: perspective(200px) rotateY(0); } 50% { transform: perspective(200px) rotateY(-55deg); } 100% { transform: perspective(200px) rotateY(-40deg); } }
+    .vd-silhouette { position:absolute; left:14%; bottom:0; width:32px; height:90px; background: linear-gradient(180deg, #0a1628, #06101e); border-radius:16px 16px 4px 4px; opacity:0; }
+    .vd-silhouette::before { content:''; position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:22px; height:22px; border-radius:50%; background:#0a1628; }
+    .vd-step.active .vd-silhouette.walk { animation: vd-walk 2.8s .6s forwards cubic-bezier(.5,.1,.3,1); }
+    @keyframes vd-walk { 0% { left:14%; opacity:0; } 15% { opacity:1; } 100% { left:58%; opacity:1; } }
+    .vd-neon-sign { position:absolute; top:-10px; right:10%; color:#E9C16B; font-family:'Syne',sans-serif; font-weight:800; font-size:24px; letter-spacing:.3em; text-shadow: 0 0 12px #E9C16B, 0 0 24px rgba(233,193,107,.5); opacity:0; animation: vd-neon-on 1s .2s forwards; }
+    .vd-step.active .vd-neon-sign { animation-play-state:running; }
+    @keyframes vd-neon-on { 0% { opacity:0; } 20% { opacity:1; } 25% { opacity:.3; } 35% { opacity:1; } 45% { opacity:.4; } 100% { opacity:1; } }
+    .vd-detect-badge { margin-top:18px; background:rgba(34,197,94,.15); border:1px solid #22C55E; color:#dcfce7; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; padding:8px 16px; border-radius:999px; opacity:0; transform:translateY(10px); transition: all .4s; }
+    .vd-detect-badge.show { opacity:1; transform:translateY(0); }
+
+    /* Step 2 — bar counter */
+    .vd-bar-counter { position:relative; width: min(380px, 90%); height:90px; display:flex; align-items:flex-end; justify-content:space-around; padding-bottom:10px; background: linear-gradient(180deg, transparent 60%, rgba(201,144,42,.25) 60%, rgba(201,144,42,.12)); border-bottom:2px solid #C9902A; }
+    .vd-barman, .vd-customer { font-size:34px; line-height:1; }
+    .vd-beer { position:relative; width:24px; height:38px; background: linear-gradient(180deg, #E9C16B, #C9902A); border-radius: 3px 3px 6px 6px; opacity:0; transform:translateY(14px); transition: all .5s; margin-bottom:4px; }
+    .vd-beer.show { opacity:1; transform:translateY(0); }
+    .vd-beer-foam { position:absolute; top:-5px; left:-2px; right:-2px; height:7px; background:#F5F2EC; border-radius:50%; }
+    .vd-barman-bubble { margin-top:14px; background:#F5F2EC; color:#0D1B2E; padding:8px 14px; border-radius:10px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:500; position:relative; opacity:0; transform:translateY(-6px); transition: all .4s; }
+    .vd-barman-bubble.show { opacity:1; transform:translateY(0); }
+    .vd-barman-bubble::before { content:''; position:absolute; top:-6px; left:24px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:7px solid #F5F2EC; }
+    .vd-mini-phone { position:absolute; right:8%; top:18%; background:#0a1628; border:1.5px solid #C9902A; border-radius:8px; padding:6px 10px; display:flex; flex-direction:column; align-items:center; opacity:0; transform:scale(.8); transition: all .4s; font-family:'Outfit',sans-serif; font-size:9px; color:rgba(245,242,236,.7); }
+    .vd-mini-phone.show { opacity:1; transform:scale(1); }
+    .vd-mini-phone strong { font-family:'Syne',sans-serif; color:#E9C16B; font-size:12px; margin-top:2px; }
+    .vd-dashboard { position:absolute; left:8%; top:18%; background:#142745; border:1px solid rgba(233,193,107,.3); border-radius:8px; padding:8px 12px; min-width:170px; opacity:0; transform:translateX(-10px); transition: all .4s; }
+    .vd-dashboard.show { opacity:1; transform:translateX(0); }
+    .vd-dash-hd { font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.14em; color:#E9C16B; margin-bottom:4px; }
+    .vd-dash-ln { font-family:'Outfit',sans-serif; font-size:10px; color:#F5F2EC; }
+    .vd-dash-ln strong { color:#E9C16B; }
+    .vd-dash-g { color:#22C55E; font-family:'Syne',sans-serif; font-weight:700; }
+
+    /* Manager stat final */
+    .vd-manager-stat { margin-top:16px; background:rgba(201,144,42,.12); border:1px solid #C9902A; border-radius:10px; padding:10px 14px; max-width:340px; margin-left:auto; margin-right:auto; }
+    .vd-ms-lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; color:#E9C16B; margin-bottom:4px; }
+    .vd-ms-txt { font-family:'Outfit',sans-serif; font-size:11px; color:#F5F2EC; line-height:1.4; }
+    .vd-ms-txt strong { color:#E9C16B; }
+
+    @media (max-width: 600px) {
+      .vd-root { max-width: 100%; }
+      .vd-stage { aspect-ratio: 4/5; border-radius: 12px; }
+      .vd-title { top: 30px; font-size: 10px; letter-spacing: .1em; }
+      .vd-live { top: 10px; left: 12px; font-size: 9px; }
+      .vd-coins-top { top: 8px; right: 12px; font-size: 11px; padding: 5px 10px; }
+      .vd-phone { width:100px; height:180px; }
+      .vd-dashboard, .vd-mini-phone { font-size:8px; padding:5px 8px; }
+      .vd-quiz-card { width:95%; padding:14px; }
+      .vd-finale-big { font-size:16px; }
+      .vd-stat-v { font-size:17px; }
+      .vd-lb { width:95%; }
+      .vd-infocards { flex-direction: column; gap: 8px; margin-top: 54px; width: 94%; }
+      .vd-icard { flex-direction: row; align-items: center; padding: 10px 12px; gap: 12px; }
+      .vd-icard-val { font-size: 13px; }
+      .vd-bilan { padding: 30px 12px 12px; gap: 12px; }
+      .vd-bilan-title { font-size: 17px; }
+      .vd-bilan-stats { gap: 8px; width: 100%; }
+      .vd-bilan-stat { padding: 10px 12px; min-width: 0; flex: 1 1 30%; }
+      .vd-bilan-stat-v { font-size: 14px; letter-spacing: -0.01em; }
+      .vd-bilan-stat-l { font-size: 8px; }
+      .vd-bilan-cta { font-size: 12px; padding: 11px 18px; }
+      .vd-markers { gap: 2px; }
+      .vd-marker { font-size: 9px; padding: 4px 6px; min-width: 0; }
+      .vd-marker span { font-size: 9px; }
+      .vd-controls { gap: 6px; flex-wrap: wrap; }
+      .vd-ctl { padding: 7px 14px; font-size: 11px; }
+      .vd-scan-state { font-size: 10px; margin-top: 10px; }
+      .vd-qr2 { width: 90px; height: 90px; }
+    }
+  </style>
+
+  <script>
+    (function(){
+      const stage = document.getElementById('vd-stage');
+      const steps = stage.querySelectorAll('.vd-step');
+      const fill = document.getElementById('vd-prog-fill');
+      const markers = document.querySelectorAll('.vd-marker');
+      const playBtn = document.getElementById('vd-play');
+      const totalEl = document.getElementById('vd-total');
+      const coinsTop = document.querySelector('.vd-coins-top');
+      const liveEl = document.getElementById('vd-live-n');
+
+      const DURATIONS = [3500, 3800, 3800, 4000, 3800, 3800, 4500];
+      const TOTAL = DURATIONS.reduce((a,b)=>a+b,0);
+      let elapsed = 0, playing = true, last = 0, currentStep = -1;
+      let totalBC = 0, targetBC = 0, bcRaf;
+
+      function tweenBC(to, duration=600) {
+        const from = totalBC, start = performance.now();
+        cancelAnimationFrame(bcRaf);
+        function tick(now) {
+          const t = Math.min(1, (now - start)/duration);
+          totalBC = Math.round(from + (to - from) * t);
+          totalEl.textContent = totalBC;
+          if (t < 1) bcRaf = requestAnimationFrame(tick);
+        }
+        bcRaf = requestAnimationFrame(tick);
+      }
+      function pulseCoins(){ coinsTop.classList.add('pulse'); setTimeout(()=>coinsTop.classList.remove('pulse'),600); }
+      function flyCoins(containerId, from, to, n=6) {
+        const c = document.getElementById(containerId); if (!c) return;
+        const r = c.getBoundingClientRect();
+        c.innerHTML = '';
+        for (let i=0;i<n;i++) {
+          const coin = document.createElement('div');
+          coin.className = 'vd-coin';
+          coin.style.left = (from.x - r.left) + 'px';
+          coin.style.top = (from.y - r.top) + 'px';
+          coin.style.setProperty('--dx', ((to.x - from.x) + (Math.random()*40-20)) + 'px');
+          coin.style.setProperty('--dy', ((to.y - from.y) + (Math.random()*20-10)) + 'px');
+          coin.style.animationDelay = (i*80) + 'ms';
+          c.appendChild(coin);
+        }
+        setTimeout(()=>{ c.innerHTML=''; }, 1400);
+      }
+      function rain(n=10) {
+        const c = document.getElementById('vd-rain'); if (!c) return;
+        c.innerHTML = '';
+        for (let i=0;i<n;i++) {
+          const d = document.createElement('div');
+          d.className = 'vd-rc';
+          d.style.left = (Math.random()*90+5) + '%';
+          d.style.animationDelay = (i*100) + 'ms';
+          c.appendChild(d);
+        }
+      }
+
+      // Step event schedules (relative to step start)
+      function runStep(i) {
+        steps.forEach((s,k)=>{
+          s.classList.toggle('active', k===i);
+          const bg = s.getAttribute('data-bg');
+          if (bg && k === i && !s.style.backgroundImage) s.style.backgroundImage = 'url("' + bg + '")';
+        });
+        stage.classList.toggle('has-step-bg', !!steps[i].getAttribute('data-bg'));
+        markers.forEach((m,k)=>m.classList.toggle('active', k===i));
+
+        if (i === 0) {
+          const sil = document.getElementById('vd-sil');
+          const det = document.getElementById('vd-detect');
+          if (sil) { sil.classList.remove('walk'); setTimeout(()=>sil.classList.add('walk'), 300); }
+          if (det) { det.classList.remove('show'); setTimeout(()=>det.classList.add('show'), 1800); }
+          // Reset counter only when looping back to the very first step
+          totalBC = 0; totalEl.textContent = 0;
+          return;
+        }
+        if (i === 1) {
+          const c1 = document.getElementById('vd-ic-1');
+          const c2 = document.getElementById('vd-ic-2');
+          const c3 = document.getElementById('vd-ic-3');
+          [c1,c2,c3].forEach(c=>c && c.classList.remove('show'));
+          setTimeout(()=>c1 && c1.classList.add('show'), 300);
+          setTimeout(()=>{ c2 && c2.classList.add('show'); tweenBC(10, 600); pulseCoins(); }, 900);
+          setTimeout(()=>c3 && c3.classList.add('show'), 1500);
+          return;
+        }
+        if (i === 2) {
+          const qr = document.getElementById('vd-qr2');
+          const welcome = document.getElementById('vd-welcome');
+          const scanState = document.getElementById('vd-scan-state');
+          qr.classList.remove('show'); welcome.classList.remove('show');
+          scanState.classList.remove('show','done'); scanState.textContent = 'Scan en cours…';
+          setTimeout(()=>qr.classList.add('show'), 250);
+          setTimeout(()=>scanState.classList.add('show'), 600);
+          setTimeout(()=>{
+            qr.classList.remove('show');
+            welcome.classList.add('show');
+            scanState.classList.add('done');
+            scanState.textContent = '✓ Profil créé !';
+            pulseCoins();
+          }, 2100);
+          return;
+        }
+        if (i === 3) {
+          const timerC = document.getElementById('vd-timer-c');
+          const timerN = document.getElementById('vd-timer-n');
+          const ansB = document.getElementById('vd-ans-b');
+          const toast = document.getElementById('vd-s2-toast');
+          timerC.style.transition='none'; timerC.style.strokeDashoffset='0'; timerN.textContent='15';
+          ansB.classList.remove('correct'); toast.classList.remove('show');
+          setTimeout(()=>{
+            timerC.style.transition='stroke-dashoffset 3.5s linear';
+            timerC.style.strokeDashoffset='57';
+            let t = 15;
+            const ti = setInterval(()=>{ t--; if (t>=8) timerN.textContent=t; else clearInterval(ti); }, 500);
+          }, 150);
+          setTimeout(()=>{ ansB.classList.add('correct'); }, 1500);
+          setTimeout(()=>{
+            const btn = ansB.getBoundingClientRect(), tr = coinsTop.getBoundingClientRect();
+            flyCoins('vd-coinfly-2', {x:btn.left+btn.width/2,y:btn.top+btn.height/2}, {x:tr.left+tr.width/2,y:tr.top+tr.height/2}, 8);
+            tweenBC(57, 800); pulseCoins();
+          }, 2000);
+          setTimeout(()=>toast.classList.add('show'), 2500);
+          return;
+        }
+        if (i === 4) {
+          const rows = steps[4].querySelectorAll('.vd-lb-row');
+          const meRow = steps[4].querySelector('.me');
+          const rankEl = document.getElementById('vd-lb-rank-me');
+          const bcEl = document.getElementById('vd-lb-bc-me');
+          const toast = document.getElementById('vd-s3-toast');
+          meRow.classList.remove('win'); toast.classList.remove('show');
+          rows[0].style.order=1; rows[1].style.order=2; rows[2].style.order=3; rows[3].style.order=4; meRow.style.order=5;
+          rankEl.textContent = '5'; bcEl.textContent = (totalBC||67) + ' BC';
+          // Cumulative progression — don't reset totalBC. Lucas climbs by gaining more BC over time.
+          const jumps = [
+            { t: 400,  order: 4, rank: '4', bc: '180 BC', total: 180 },
+            { t: 1000, order: 3, rank: '3', bc: '240 BC', total: 240 },
+            { t: 1600, order: 2, rank: '2', bc: '290 BC', total: 290 },
+            { t: 2300, order: 1, rank: '1', bc: '341 BC', total: 341 }
+          ];
+          jumps.forEach(j => setTimeout(()=>{
+            meRow.style.order = j.order;
+            rankEl.textContent = j.rank;
+            bcEl.textContent = j.bc;
+            tweenBC(j.total, 400); pulseCoins();
+          }, j.t));
+          setTimeout(()=>{ meRow.classList.add('win'); toast.classList.add('show'); rain(12); }, 2600);
+          return;
+        }
+        if (i === 5) {
+          // decor-only, css handles animations
+          return;
+        }
+        if (i === 6) {
+          const eyebrow = document.getElementById('vd-bil-eyebrow');
+          const title = document.getElementById('vd-bil-title');
+          const s1 = document.getElementById('vd-bil-s1');
+          const s2 = document.getElementById('vd-bil-s2');
+          const s3 = document.getElementById('vd-bil-s3');
+          const cta = document.getElementById('vd-bil-cta');
+          [eyebrow,title,s1,s2,s3,cta].forEach(el=>el && el.classList.remove('show'));
+          setTimeout(()=>eyebrow && eyebrow.classList.add('show'), 100);
+          setTimeout(()=>title && title.classList.add('show'), 350);
+          setTimeout(()=>s1 && s1.classList.add('show'), 900);
+          setTimeout(()=>s2 && s2.classList.add('show'), 1150);
+          setTimeout(()=>s3 && s3.classList.add('show'), 1400);
+          setTimeout(()=>cta && cta.classList.add('show'), 1900);
+          return;
+        }
+      }
+
+      function setStep(i, resetElapsed=true) {
+        if (i === currentStep) return;
+        currentStep = i;
+        if (resetElapsed) {
+          elapsed = DURATIONS.slice(0,i).reduce((a,b)=>a+b,0);
+        }
+        runStep(i);
+      }
+
+      function frame(t) {
+        if (!last) last = t;
+        const dt = t - last; last = t;
+        if (playing) {
+          elapsed += dt;
+          if (elapsed >= TOTAL) { elapsed = 0; totalBC = 0; totalEl.textContent = 0; currentStep = -1; }
+          fill.style.width = (elapsed/TOTAL*100) + '%';
+          let acc = 0, si = 0;
+          for (let i=0;i<DURATIONS.length;i++) { if (elapsed < acc+DURATIONS[i]) { si = i; break; } acc += DURATIONS[i]; }
+          if (si !== currentStep) { currentStep = si; runStep(si); }
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      markers.forEach((m,i)=>m.addEventListener('click', ()=>{ setStep(i); }));
+      document.getElementById('vd-prev').addEventListener('click', ()=>setStep(Math.max(0,currentStep-1)));
+      document.getElementById('vd-next').addEventListener('click', ()=>setStep(Math.min(5,currentStep+1)));
+      playBtn.addEventListener('click', ()=>{
+        playing = !playing;
+        playBtn.textContent = playing ? '⏸ Pause' : '▶ Lecture';
+      });
+
+      // Touch swipe
+      let tx = 0;
+      stage.addEventListener('touchstart', e=>{ tx = e.touches[0].clientX; }, {passive:true});
+      stage.addEventListener('touchend', e=>{
+        const dx = e.changedTouches[0].clientX - tx;
+        if (Math.abs(dx) > 40) setStep(dx < 0 ? Math.min(5,currentStep+1) : Math.max(0,currentStep-1));
+      });
+
+      // Live count jitter
+      setInterval(()=>{
+        const n = parseInt(liveEl.textContent) + Math.floor(Math.random()*5)-2;
+        liveEl.textContent = Math.max(42, Math.min(52, n));
+      }, 4000);
+    })();
+  </script>
+</section>
+
+<!-- ============ SECTION 2 — PROBLÈME ============ -->
+<section class="s ivory" id="problem">
+  <div class="container">
+    <div class="section-eyebrow">02 · Le problème</div>
+    <h2 class="section-title">Gérer un bar, c'est gérer <span class="gold">l'invisible.</span></h2>
+    <p class="section-lead">Les clients viennent, boivent, repartent. Vous ne savez pas qui reviendra. Vous dépensez en promos pour faire venir du monde. Et pendant ce temps, Instagram ne suffit plus.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">PAIN #01</div>
+        <div class="problem-quote">"Je fidélise comment, moi ?"</div>
+        <p class="problem-desc">Pas de CRM, pas de données clients, pas de moyen simple de savoir qui revient. Les cartes papier se perdent, les QR codes oubliés dans la poche.</p>
+        <div class="problem-tag">Aucune donnée client</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">PAIN #02</div>
+        <div class="problem-quote">"Les soirs creux me tuent."</div>
+        <p class="problem-desc">Lundi, mardi, mercredi — la salle est à moitié vide. Vous êtes obligé de casser les prix ou d'inventer un événement que personne ne voit.</p>
+        <div class="problem-tag">CA en dents de scie</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">PAIN #03</div>
+        <div class="problem-quote">"Mon Insta ne convertit plus."</div>
+        <p class="problem-desc">Vous postez chaque semaine. Reach en chute libre, zéro retour mesurable. Les promos Meta coûtent cher pour ramener des curieux qui ne reviennent jamais.</p>
+        <div class="problem-tag">Acquisition payante</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2b — QUIZ INTERACTIF ============ -->
+<section class="s" id="quiz-demo" style="background: linear-gradient(180deg, var(--navy-800), var(--navy-900));">
+  <div class="container">
+    <div class="section-eyebrow">02b · La démo vivante</div>
+    <h2 class="section-title">Vivez l'expérience <span class="gold">comme vos clients.</span></h2>
+    <p class="section-lead">5 questions, 15 secondes par question, un classement live qui bouge pendant que vous jouez. C'est exactement ce que voient vos habitués, tous les soirs.</p>
+
+    <div class="qz-root" id="qz-root">
+      <div class="qz-live-bar"><span class="qz-dot"></span>EN DIRECT · <span id="qz-live-count">47</span> joueurs · Le Comptoir, Perpignan</div>
+
+      <div class="qz-layout">
+        <div class="qz-main">
+          <div class="qz-header">
+            <div class="qz-progress">
+              <span class="qz-qnum">Question <span id="qz-q-cur">1</span>/5</span>
+              <div class="qz-progress-bar"><div class="qz-progress-fill" id="qz-progress-fill"></div></div>
+            </div>
+            <div class="qz-coins-badge" id="qz-coins-badge">🪙 <span id="qz-coins">0</span> BarCoins</div>
+          </div>
+
+          <div class="qz-card" id="qz-card">
+            <div class="qz-timer">
+              <svg width="56" height="56" viewBox="0 0 56 56">
+                <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(233,193,107,0.12)" stroke-width="4"/>
+                <circle cx="28" cy="28" r="24" fill="none" stroke="#C9902A" stroke-width="4" stroke-linecap="round" transform="rotate(-90 28 28)" id="qz-timer-ring" style="stroke-dasharray:150.8;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear, stroke 0.3s"/>
+              </svg>
+              <div class="qz-timer-num" id="qz-timer-num">15</div>
+            </div>
+
+            <h3 class="qz-question" id="qz-question">Chargement…</h3>
+            <div class="qz-answers" id="qz-answers"></div>
+
+            <div class="qz-punchbox" id="qz-punchbox"></div>
+            <div class="qz-feedback" id="qz-feedback"></div>
+            <div class="qz-coin-burst" id="qz-coin-burst"></div>
+          </div>
+
+          <div class="qz-actions">
+            <button class="qz-next-btn" id="qz-next-btn" style="display:none">Question suivante <span>→</span></button>
+          </div>
+        </div>
+
+        <aside class="qz-leaderboard">
+          <div class="qz-lb-header"><span class="qz-blink"></span>CLASSEMENT EN DIRECT</div>
+          <div class="qz-lb-list" id="qz-lb-list"></div>
+        </aside>
+      </div>
+
+      <div class="qz-toasts" id="qz-toasts"></div>
+    </div>
+  </div>
+
+  <style>
+    .qz-root { position: relative; max-width: 1040px; margin: 0 auto; background: linear-gradient(180deg, #0a1628, #0D1B2E); border: 1px solid var(--navy-line); border-radius: 20px; overflow: hidden; }
+    .qz-live-bar { background: #0a1628; color: #E9C16B; font-family: 'Outfit', sans-serif; font-size: 12px; text-align: center; padding: 8px; border-bottom: 1px solid var(--navy-line); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .qz-dot, .qz-blink { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; animation: qz-blink 1s infinite; display: inline-block; }
+    @keyframes qz-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .qz-layout { display: flex; gap: 0; padding: 0; }
+    .qz-main { flex: 1; min-width: 0; padding: 28px 28px 32px; display: flex; flex-direction: column; gap: 20px; }
+    .qz-leaderboard { width: 280px; flex-shrink: 0; background: rgba(10, 22, 40, 0.6); border-left: 1px solid var(--navy-line); padding: 22px 20px; }
+
+    .qz-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .qz-progress { flex: 1; min-width: 0; }
+    .qz-qnum { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold-400); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+    .qz-progress-bar { height: 4px; background: rgba(233,193,107,0.12); border-radius: 4px; overflow: hidden; }
+    .qz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-400), var(--gold-500)); border-radius: 4px; width: 20%; transition: width 0.4s; }
+    .qz-coins-badge { background: rgba(201,144,42,0.14); border: 1px solid rgba(233,193,107,0.3); color: #E9C16B; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 999px; white-space: nowrap; transition: box-shadow 0.3s; }
+    .qz-coins-badge.pulse { box-shadow: 0 0 0 8px rgba(201,144,42,0.3); animation: qz-coin-pulse 0.6s; }
+    @keyframes qz-coin-pulse { 0% { box-shadow: 0 0 0 0 rgba(201,144,42,0.6); } 100% { box-shadow: 0 0 0 16px rgba(201,144,42,0); } }
+
+    .qz-card { position: relative; background: #142745; border: 1px solid var(--navy-line); border-radius: 16px; padding: 28px; transition: border-color 0.2s; }
+    .qz-card.danger { border-color: #ef4444; animation: qz-danger-pulse 1s infinite; }
+    @keyframes qz-danger-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,0.2); } }
+
+    .qz-timer { position: absolute; top: 20px; right: 20px; width: 56px; height: 56px; }
+    .qz-timer-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; color: var(--ivory); }
+
+    .qz-question { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.3; color: var(--ivory); margin-bottom: 22px; padding-right: 72px; letter-spacing: -0.015em; }
+    .qz-answers { display: grid; gap: 10px; }
+    .qz-answer { background: rgba(233,193,107,0.04); border: 1.5px solid var(--navy-line); color: var(--ivory); font-family: 'Outfit', sans-serif; font-size: 15px; padding: 14px 18px; border-radius: 12px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .qz-answer:hover:not(.disabled) { border-color: rgba(233,193,107,0.4); background: rgba(233,193,107,0.08); }
+    .qz-answer.disabled { cursor: not-allowed; opacity: 0.45; }
+    .qz-answer.correct { background: rgba(34,197,94,0.2); border-color: #22C55E; color: #dcfce7; opacity: 1; }
+    .qz-answer.wrong { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #fee2e2; opacity: 1; }
+    .qz-answer .qz-icon { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .qz-answer.correct .qz-icon { background: #22C55E; color: #0D1B2E; }
+    .qz-answer.wrong .qz-icon { background: #ef4444; color: white; }
+
+    .qz-feedback { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); letter-spacing: 0.04em; min-height: 18px; text-align: center; }
+    .qz-feedback .qz-fb-main { color: var(--gold-400); display: block; margin-bottom: 4px; font-weight: 500; }
+
+    .qz-punchbox { margin-top: 16px; min-height: 0; }
+    .qz-punch { display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px; border-radius: 12px; font-family: 'Outfit', sans-serif; font-style: italic; font-size: 14px; line-height: 1.45; opacity: 0; transform: translateY(12px); animation: qz-punch-in 0.5s cubic-bezier(.2,.7,.2,1) forwards; }
+    .qz-punch.good { background: linear-gradient(90deg, rgba(233,193,107,0.14), rgba(233,193,107,0.04)); border: 1px solid rgba(233,193,107,0.28); color: #E9C16B; }
+    .qz-punch.bad { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.62); }
+    .qz-punch-icon { font-size: 18px; font-style: normal; line-height: 1.2; flex-shrink: 0; animation: qz-punch-pop 0.7s cubic-bezier(.3,1.5,.5,1) 0.15s both; }
+    @keyframes qz-punch-in { to { opacity: 1; transform: translateY(0); } }
+    @keyframes qz-punch-pop { 0% { transform: scale(0.2) rotate(-15deg); } 100% { transform: scale(1) rotate(0); } }
+
+    .qz-actions { text-align: center; }
+    .qz-next-btn { background: linear-gradient(135deg, var(--gold-400), var(--gold-500)); color: var(--navy-800); border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+    .qz-next-btn:hover { transform: translateY(-1px); }
+
+    .qz-coin-burst { position: absolute; pointer-events: none; }
+    .qz-coin-burst .qz-coin { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #F2D690, #C9902A); box-shadow: 0 2px 8px rgba(201,144,42,0.5); animation: qz-fly 0.7s forwards; }
+    @keyframes qz-fly { 0% { transform: translate(0,0); opacity: 1; } 100% { transform: translate(var(--dx), -180px); opacity: 0; } }
+
+    /* Leaderboard */
+    .qz-lb-header { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-400); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .qz-lb-list { display: flex; flex-direction: column; gap: 8px; position: relative; }
+    .qz-lb-row { display: grid; grid-template-columns: 18px 30px 1fr auto 14px; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(233,193,107,0.03); border: 1px solid rgba(233,193,107,0.08); border-radius: 10px; font-size: 13px; transition: transform 0.4s cubic-bezier(.4,0,.2,1), background 0.3s, border-color 0.3s; }
+    .qz-lb-row.me { background: rgba(201,144,42,0.08); border-left: 3px solid var(--gold-500); border-color: rgba(201,144,42,0.25); padding-left: 9px; }
+    .qz-lb-rank { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; color: var(--ivory); }
+    .qz-lb-rank.top { color: var(--gold-400); }
+    .qz-lb-avatar { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 10px; color: white; }
+    .qz-lb-name { font-family: 'Outfit', sans-serif; font-weight: 500; color: var(--ivory); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qz-lb-coins { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; color: var(--gold-400); }
+    .qz-lb-arrow { font-size: 11px; opacity: 0; transition: opacity 0.3s; }
+    .qz-lb-arrow.up { color: #22C55E; opacity: 1; }
+    .qz-lb-arrow.down { color: #ef4444; opacity: 1; }
+
+    /* Toasts */
+    .qz-toasts { position: absolute; top: 48px; right: 16px; z-index: 20; display: flex; flex-direction: column; gap: 8px; pointer-events: none; max-width: 300px; }
+    .qz-toast { background: #142745; border: 1px solid #C9902A; border-radius: 10px; padding: 10px 16px; color: #E9C16B; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; animation: qz-toast-in 0.3s forwards, qz-toast-out 0.3s 2.7s forwards; box-shadow: 0 8px 24px -8px rgba(0,0,0,0.6); }
+    @keyframes qz-toast-in { from { transform: translateY(-60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes qz-toast-out { to { transform: translateY(-20px); opacity: 0; } }
+
+    /* Final */
+    .qz-final { text-align: center; padding: 28px 0 8px; }
+    .qz-ring-wrap { position: relative; width: 140px; height: 140px; margin: 0 auto 18px; }
+    .qz-ring-score { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .qz-ring-score .big { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 38px; color: var(--gold-400); letter-spacing: -0.03em; }
+    .qz-ring-score .lbl { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; }
+    .qz-final-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; color: var(--ivory); margin-bottom: 6px; }
+    .qz-final-pos { font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text-light); margin-bottom: 24px; }
+    .qz-podium { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .qz-podium-item { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; }
+    .qz-podium-av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; border: 2px solid transparent; }
+    .qz-podium-item.p1 .qz-podium-av { border-color: #F2D690; box-shadow: 0 0 0 3px rgba(233,193,107,0.2); }
+    .qz-podium-rank { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--gold-400); }
+    .qz-podium-name { color: var(--ivory); }
+    .qz-cta-card { background: #142745; border: 1px solid rgba(233,193,107,0.3); border-radius: 16px; padding: 24px; text-align: left; max-width: 480px; margin: 0 auto 16px; }
+    .qz-cta-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; color: var(--ivory); margin-bottom: 8px; }
+    .qz-cta-card p { font-size: 14px; color: var(--text-light); line-height: 1.5; margin-bottom: 16px; }
+    .qz-cta-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .qz-btn-primary { background: #C9902A; color: #0D1B2E; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 22px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .qz-btn-ghost { background: transparent; color: var(--ivory); border: 1px solid rgba(233,193,107,0.4); font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 14px; padding: 11px 22px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .qz-badge-slots { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold-400); letter-spacing: 0.14em; text-align: center; margin-bottom: 18px; }
+    .qz-replay { background: none; border: none; color: var(--text-muted); font-size: 12px; font-family: 'Outfit', sans-serif; cursor: pointer; text-decoration: underline; }
+
+    @media (max-width: 760px) {
+      .qz-layout { flex-direction: column; }
+      .qz-leaderboard { width: auto; border-left: none; border-top: 1px solid var(--navy-line); }
+      .qz-main { padding: 20px 18px 24px; }
+      .qz-question { font-size: 18px; padding-right: 64px; }
+      .qz-toasts { right: 10px; left: 10px; max-width: none; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const QUESTIONS = [
+        { q: "Qui a réalisé 'Le Parrain' ?", a: ["Brian De Palma", "Francis Ford Coppola", "Martin Scorsese", "Sergio Leone"], correct: 1,
+          punch: { fast: "Même Vito Corleone aurait commandé une tournée.", slow: "Vous avez hésité. Don Corleone n'hésitait jamais.", wrong: "Scarface ? Sérieusement ? Posez ce verre.", timeout: "15 secondes pour répondre. Le Parrain, lui, n'attend pas." } },
+        { q: "En quelle année est sorti le film 'Apollo 13' ?", a: ["1993", "1995", "1997", "1999"], correct: 1,
+          punch: { fast: "Houston confirme : vous êtes le meilleur de la soirée.", slow: "Vous y êtes arrivé. Comme Apollo 13 — de justesse.", wrong: "Interstellar ? On était en 1995, pas dans l'espace.", timeout: "Houston, on a un problème. C'est vous." } },
+        { q: "Qui prononce 'I'll be back' pour la première fois ?", a: ["Sylvester Stallone", "Bruce Willis", "Arnold Schwarzenegger", "Jean-Claude Van Damme"], correct: 2,
+          punch: { fast: "I'll be back. Et vos clients aussi, grâce à BarCoins.", slow: "Correct. Mais Schwarzenegger aurait répondu en 3s.", wrong: "Robocop ? Il protège Detroit, pas les classements.", timeout: "Hasta la vista, BarCoins. Vous avez laissé filer les points." } },
+        { q: "Qui a réalisé 'Titanic' ?", a: ["Steven Spielberg", "Ridley Scott", "James Cameron", "Michael Bay"], correct: 2,
+          punch: { fast: "Roi du monde ce soir. Votre bar aussi avec BarCoins.", slow: "Exact. Le Titanic a coulé, pas votre score.", wrong: "Braveheart ? William Wallace ne montait pas sur des bateaux.", timeout: "Le Titanic a coulé en 2h40. Vous en 15 secondes." } },
+        { q: "Qui joue le rôle principal dans 'Taxi Driver' ?", a: ["Al Pacino", "Robert De Niro", "Dustin Hoffman", "Jack Nicholson"], correct: 1,
+          punch: { fast: "Tu parles à moi ? Oui. Et BarCoins aussi parle à vos clients.", slow: "Bonne réponse. De Niro est fier. Un peu.", wrong: "Serpico ? Même Al Pacino a fait mieux ce soir.", timeout: "Tu parles à moi ? Non. Tu regardes le timer sans répondre." } }
+      ];
+      const PLAYERS = [
+        { id: 'sl', name: 'Sophie L.', initials: 'SL', color: '#7c3aed', coins: 340 },
+        { id: 'ma', name: 'Marc A.', initials: 'MA', color: '#2563eb', coins: 290 },
+        { id: 'tr', name: 'Thomas R.', initials: 'TR', color: '#16a34a', coins: 240 },
+        { id: 'cm', name: 'Claire M.', initials: 'CM', color: '#ea580c', coins: 180 },
+        { id: 'me', name: 'VOUS', initials: 'V', color: '#C9902A', coins: 0, me: true }
+      ];
+
+      let qIdx = 0, timer = 15, timerInt, nextTimeout, advanceInt, answered = false, myCoins = 0, myRank = 5, lbBotInt, liveInt;
+
+      const root = document.getElementById('qz-root');
+      const toastsEl = document.getElementById('qz-toasts');
+
+      function toast(msg) {
+        const el = document.createElement('div');
+        el.className = 'qz-toast';
+        el.textContent = msg;
+        toastsEl.innerHTML = '';
+        toastsEl.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }
+
+      function renderLB() {
+        const sorted = [...PLAYERS].sort((a, b) => b.coins - a.coins);
+        const newMyRank = sorted.findIndex(p => p.me) + 1;
+        const list = document.getElementById('qz-lb-list');
+        list.innerHTML = sorted.map((p, i) => {
+          const prevRank = p._prev || (i + 1);
+          const arrow = p._delta > 0 ? '↑' : (p._delta < 0 ? '↓' : '');
+          const arrowCls = p._delta > 0 ? 'up' : (p._delta < 0 ? 'down' : '');
+          return '<div class="qz-lb-row' + (p.me ? ' me' : '') + '">' +
+            '<div class="qz-lb-rank' + (i < 3 ? ' top' : '') + '">' + (i + 1) + '</div>' +
+            '<div class="qz-lb-avatar" style="background:' + p.color + '">' + p.initials + '</div>' +
+            '<div class="qz-lb-name">' + p.name + '</div>' +
+            '<div class="qz-lb-coins">' + p.coins + '</div>' +
+            '<div class="qz-lb-arrow ' + arrowCls + '">' + arrow + '</div>' +
+            '</div>';
+        }).join('');
+        if (myRank && newMyRank < myRank) {
+          if (newMyRank === 1) toast('👑 Vous êtes en tête ! Tenez bon.');
+          else toast('📈 Vous passez N°' + newMyRank + ' !');
+        }
+        myRank = newMyRank;
+      }
+
+      function startLBBot() {
+        lbBotInt = setInterval(() => {
+          PLAYERS.forEach(p => {
+            if (!p.me) {
+              const prev = [...PLAYERS].sort((a,b)=>b.coins-a.coins).findIndex(x=>x.id===p.id);
+              p.coins += Math.floor(Math.random() * 28) + 8;
+              const now = [...PLAYERS].sort((a,b)=>b.coins-a.coins).findIndex(x=>x.id===p.id);
+              p._delta = prev - now;
+            }
+          });
+          renderLB();
+        }, 5000);
+      }
+
+      function startLive() {
+        liveInt = setInterval(() => {
+          const el = document.getElementById('qz-live-count');
+          let n = parseInt(el.textContent);
+          n += Math.floor(Math.random() * 5) - 2;
+          el.textContent = Math.max(40, Math.min(55, n));
+        }, 6000);
+      }
+
+      function loadQuestion() {
+        clearTimeout(nextTimeout); clearInterval(advanceInt);
+        answered = false; timer = 15;
+        const Q = QUESTIONS[qIdx];
+        document.getElementById('qz-q-cur').textContent = qIdx + 1;
+        document.getElementById('qz-progress-fill').style.width = ((qIdx) / QUESTIONS.length * 100) + '%';
+        document.getElementById('qz-question').textContent = Q.q;
+        document.getElementById('qz-feedback').innerHTML = '';
+        document.getElementById('qz-punchbox').innerHTML = '';
+        document.getElementById('qz-next-btn').style.display = 'none';
+        document.getElementById('qz-card').classList.remove('danger');
+
+        const ansEl = document.getElementById('qz-answers');
+        ansEl.innerHTML = Q.a.map((a, i) => '<button class="qz-answer" data-i="' + i + '"><span>' + a + '</span><span class="qz-icon"></span></button>').join('');
+        ansEl.querySelectorAll('.qz-answer').forEach(btn => {
+          btn.addEventListener('click', () => selectAnswer(parseInt(btn.dataset.i)));
+        });
+
+        runTimer();
+      }
+
+      function runTimer() {
+        updateTimerUI();
+        clearInterval(timerInt);
+        timerInt = setInterval(() => {
+          timer--;
+          updateTimerUI();
+          if (timer <= 0) { clearInterval(timerInt); if (!answered) timeoutQ(); }
+        }, 1000);
+      }
+
+      function updateTimerUI() {
+        const ring = document.getElementById('qz-timer-ring');
+        const circ = 2 * Math.PI * 24;
+        ring.style.strokeDasharray = circ;
+        ring.style.strokeDashoffset = circ * (1 - timer / 15);
+        document.getElementById('qz-timer-num').textContent = timer;
+        const card = document.getElementById('qz-card');
+        if (timer <= 3) { ring.setAttribute('stroke', '#ef4444'); card.classList.add('danger'); }
+        else if (timer <= 7) { ring.setAttribute('stroke', '#f59e0b'); card.classList.remove('danger'); }
+        else { ring.setAttribute('stroke', '#C9902A'); card.classList.remove('danger'); }
+      }
+
+      function selectAnswer(idx) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInt);
+        const Q = QUESTIONS[qIdx];
+        const correct = idx === Q.correct;
+        const btns = document.querySelectorAll('#qz-answers .qz-answer');
+        btns.forEach((b, i) => {
+          b.classList.add('disabled');
+          if (i === Q.correct) { b.classList.add('correct'); b.querySelector('.qz-icon').textContent = '✓'; }
+          else if (i === idx) { b.classList.add('wrong'); b.querySelector('.qz-icon').textContent = '✗'; }
+        });
+
+        if (correct) {
+          const coinsGain = timer >= 10 ? 50 : (timer >= 5 ? 35 : 20);
+          myCoins += coinsGain;
+          PLAYERS.find(p => p.me).coins = myCoins;
+          const badge = document.getElementById('qz-coins-badge');
+          document.getElementById('qz-coins').textContent = myCoins;
+          badge.classList.add('pulse');
+          setTimeout(() => badge.classList.remove('pulse'), 600);
+          launchCoins(btns[idx]);
+          if (timer >= 10) toast('⚡ Réponse éclair ! Vous gagnez le max de BarCoins');
+          renderLB();
+          showPunch(Q.punch, timer >= 10 ? 'fast' : 'slow');
+        } else {
+          toast('💀 Raté ! Sophie L. prend de l\'avance…');
+          showPunch(Q.punch, 'wrong');
+        }
+        scheduleNext();
+      }
+
+      function timeoutQ() {
+        answered = true;
+        const Q = QUESTIONS[qIdx];
+        const btns = document.querySelectorAll('#qz-answers .qz-answer');
+        btns.forEach((b, i) => {
+          b.classList.add('disabled');
+          if (i === Q.correct) { b.classList.add('correct'); b.querySelector('.qz-icon').textContent = '✓'; }
+        });
+        toast('⏱ Trop lent ! Marc A. vient de passer N°2');
+        showPunch(Q.punch, 'timeout');
+        scheduleNext();
+      }
+
+      function showPunch(punch, type) {
+        if (!punch || !punch[type]) return;
+        const good = (type === 'fast' || type === 'slow');
+        const icon = good ? '🎬' : '🍺';
+        const box = document.getElementById('qz-punchbox');
+        box.innerHTML = '<div class="qz-punch ' + (good ? 'good' : 'bad') + '">' +
+          '<span class="qz-punch-icon">' + icon + '</span>' +
+          '<span>' + punch[type] + '</span>' +
+        '</div>';
+      }
+
+      function scheduleNext() {
+        document.getElementById('qz-next-btn').style.display = 'inline-flex';
+        const fb = document.getElementById('qz-feedback');
+        let sec = 3;
+        fb.innerHTML = '<span class="qz-fb-main">Feedback</span>Question suivante dans ' + sec + '…';
+        advanceInt = setInterval(() => {
+          sec--;
+          if (sec > 0) fb.innerHTML = '<span class="qz-fb-main">Feedback</span>Question suivante dans ' + sec + '…';
+        }, 1000);
+        nextTimeout = setTimeout(() => { clearInterval(advanceInt); nextQuestion(); }, 3000);
+      }
+
+      function nextQuestion() {
+        qIdx++;
+        if (qIdx >= QUESTIONS.length) return showFinal();
+        loadQuestion();
+      }
+
+      function launchCoins(fromEl) {
+        const burst = document.getElementById('qz-coin-burst');
+        const r = fromEl.getBoundingClientRect();
+        const parent = burst.parentElement.getBoundingClientRect();
+        burst.style.left = (r.left - parent.left + r.width/2) + 'px';
+        burst.style.top = (r.top - parent.top + r.height/2) + 'px';
+        burst.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+          const c = document.createElement('div');
+          c.className = 'qz-coin';
+          c.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px');
+          c.style.animationDelay = (i * 80) + 'ms';
+          burst.appendChild(c);
+        }
+        setTimeout(() => { burst.innerHTML = ''; }, 1500);
+      }
+
+      function showFinal() {
+        clearInterval(lbBotInt); clearInterval(liveInt);
+        const score = Math.round(myCoins / 50);
+        const scorePct = (score / QUESTIONS.length) * 100;
+        let label = '😅 Première soirée ?';
+        if (score === 5) label = '👑 Expert ciné absolu !';
+        else if (score === 4) label = '🎬 Excellent joueur';
+        else if (score === 3) label = '🍺 Pas mal du tout';
+
+        const sorted = [...PLAYERS].sort((a,b)=>b.coins-a.coins);
+        const finalRank = sorted.findIndex(p=>p.me) + 1;
+        let posMsg = 'Sophie L. vous attend au prochain quiz.';
+        if (finalRank === 1) posMsg = 'Vous dominez la soirée.';
+        else if (finalRank <= 3) posMsg = 'Podium ! Revenez demain pour la N°1.';
+
+        const podium = sorted.slice(0, 3).map((p, i) =>
+          '<div class="qz-podium-item' + (i === 0 ? ' p1' : '') + '">' +
+            '<div class="qz-podium-rank">N°' + (i+1) + '</div>' +
+            '<div class="qz-podium-av" style="background:' + p.color + '">' + p.initials + '</div>' +
+            '<div class="qz-podium-name">' + p.name + '</div>' +
+          '</div>').join('');
+
+        const main = document.querySelector('.qz-main');
+        const circ = 2 * Math.PI * 54;
+        main.innerHTML = '<div class="qz-final">' +
+          '<div class="qz-ring-wrap">' +
+            '<svg width="140" height="140" viewBox="0 0 140 140">' +
+              '<defs><linearGradient id="qz-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9902A"/><stop offset="1" stop-color="#E9C16B"/></linearGradient></defs>' +
+              '<circle cx="70" cy="70" r="54" fill="none" stroke="rgba(233,193,107,0.12)" stroke-width="8"/>' +
+              '<circle cx="70" cy="70" r="54" fill="none" stroke="url(#qz-grad)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 70 70)" style="stroke-dasharray:' + circ + ';stroke-dashoffset:' + circ + ';transition:stroke-dashoffset 1.2s ease-out" id="qz-score-ring"/>' +
+            '</svg>' +
+            '<div class="qz-ring-score"><div class="big">' + score + '/5</div><div class="lbl">Score final</div></div>' +
+          '</div>' +
+          '<div class="qz-final-label">' + label + '</div>' +
+          '<div class="qz-final-pos">N°' + finalRank + ' · ' + posMsg + '</div>' +
+          '<div class="qz-podium">' + podium + '</div>' +
+          '<div class="qz-cta-card">' +
+            '<h4>Vos clients adorent jouer.</h4>' +
+            '<p>Ce quiz tourne chaque soir dans votre bar. Classement en temps réel. BarCoins misables. Ils reviennent pour défendre leur rang.</p>' +
+            '<div class="qz-cta-btns"><a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="qz-btn-primary">Rejoindre la beta →</a><a href="#" class="qz-btn-ghost">Voir la démo →</a></div>' +
+          '</div>' +
+          '<div class="qz-badge-slots">// 2 PLACES RESTANTES · PERPIGNAN · JUILLET 2026</div>' +
+          '<button class="qz-replay" id="qz-replay">Rejouer</button>' +
+          '</div>';
+
+        setTimeout(() => {
+          document.getElementById('qz-score-ring').style.strokeDashoffset = circ * (1 - scorePct / 100);
+        }, 100);
+        document.getElementById('qz-replay').addEventListener('click', () => location.reload());
+      }
+
+      document.getElementById('qz-next-btn').addEventListener('click', () => {
+        clearTimeout(nextTimeout); clearInterval(advanceInt); nextQuestion();
+      });
+
+      renderLB();
+      startLive();
+
+      // Lazy start when scrolled into view
+      const io = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          io.disconnect();
+          toast('🎮 La soirée commence — 47 joueurs connectés');
+          startLBBot();
+          loadQuestion();
+        }
+      }, { threshold: 0.3 });
+      io.observe(root);
+    })();
+  </script>
+</section>
+
+<!-- ============ SECTION 3 — SOLUTION (4 PILIERS) ============ -->
+<section class="s" id="solution">
+  <div class="container">
+    <div class="section-eyebrow">03 · La solution</div>
+    <h2 class="section-title">BarCoins, <span class="gold">quatre leviers</span> en une plateforme.</h2>
+    <p class="section-lead">Un système de points, des défis, un classement, et une connaissance client. Tout est connecté, tout est automatique, tout tourne depuis le téléphone de vos clients.</p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M8 9.5c0-1.5 1.5-2.5 4-2.5s4 1 4 2.5-1.5 2.5-4 2.5-4 1-4 2.5 1.5 2.5 4 2.5 4-1 4-2.5"/></svg>
+        </div>
+        <h3 class="pillar-title">Points & monnaie</h3>
+        <p class="pillar-desc">Chaque consommation rapporte des BarCoins. Cumulés, échangés contre des récompenses que vous définissez.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6a6 6 0 0 0 12 0V2"/><path d="M4 2h16"/><path d="M12 14v4"/><path d="M8 22h8"/></svg>
+        </div>
+        <h3 class="pillar-title">Défis hebdo</h3>
+        <p class="pillar-desc">"3 visites cette semaine = cocktail offert." Des missions qui orientent la fréquentation vers vos soirs creux.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V10"/><path d="M12 21V4"/><path d="M20 21v-8"/><path d="M2 21h20"/></svg>
+        </div>
+        <h3 class="pillar-title">Classement live</h3>
+        <p class="pillar-desc">Un leaderboard mensuel qui crée l'appartenance. Vos habitués s'identifient, se défient, s'approprient votre bar.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>
+        </div>
+        <h3 class="pillar-title">CRM intégré</h3>
+        <p class="pillar-desc">Chaque joueur = un profil. Fréquence, panier, préférences. Déclenchez une push au bon moment, au bon client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4 — POURQUOI ÇA MARCHE ============ -->
+<section class="s" id="why">
+  <div class="container">
+    <div class="section-eyebrow">04 · Pourquoi ça marche</div>
+    <h2 class="section-title">Parce qu'on joue <span class="gold">avec la psychologie</span>, pas contre elle.</h2>
+    <p class="section-lead">La gamification n'est pas un gadget. C'est une science qui active trois mécanismes cognitifs puissants — et mesurables sur votre CA.</p>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-visual">
+          <div class="viz-avatars">
+            <div class="avatar-ring">
+              <div class="avatar-dot a1">SL</div>
+              <div class="avatar-dot v a2">MA</div>
+              <div class="avatar-dot w a3">JD</div>
+              <div class="avatar-dot a4">CM</div>
+              <div class="avatar-dot v a5">TR</div>
+              <div class="center">+47</div>
+            </div>
+          </div>
+        </div>
+        <div class="why-body">
+          <div class="why-icon-chip">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="why-title">Appartenance</h3>
+          <p class="why-desc">Votre bar devient une tribu. Avec un classement public et des niveaux visibles, les clients s'identifient à votre enseigne — pas au concurrent d'en face.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-visual">
+          <div class="viz-bars">
+            <div class="viz-bar dim" style="height: 30%; animation-delay: 0s" data-label="L"></div>
+            <div class="viz-bar dim" style="height: 25%; animation-delay: 0.1s" data-label="M"></div>
+            <div class="viz-bar" style="height: 55%; animation-delay: 0.2s" data-label="M"></div>
+            <div class="viz-bar" style="height: 70%; animation-delay: 0.3s" data-label="J"></div>
+            <div class="viz-bar" style="height: 85%; animation-delay: 0.4s" data-label="V"></div>
+            <div class="viz-bar" style="height: 95%; animation-delay: 0.5s" data-label="S"></div>
+            <div class="viz-bar dim" style="height: 40%; animation-delay: 0.6s" data-label="D"></div>
+          </div>
+        </div>
+        <div class="why-body">
+          <div class="why-icon-chip">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <h3 class="why-title">Récurrence</h3>
+          <p class="why-desc">Un défi "3 visites cette semaine" transforme un client occasionnel en habitué. Les soirs creux se remplissent grâce à des missions ciblées.</p>
+        </div>
+      </div>
+
+      <div class="why-card">
+        <div class="why-visual">
+          <div class="viz-time">
+            <div class="time-orbit"></div>
+            <div class="time-card">
+              <div class="time-label">Temps passé</div>
+              <div class="time-value">+42<span style="font-size: 0.5em">min</span></div>
+              <div class="time-unit">par client, par soir</div>
+            </div>
+          </div>
+        </div>
+        <div class="why-body">
+          <div class="why-icon-chip">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 class="why-title">Temps passé</h3>
+          <p class="why-desc">Plus les clients jouent, plus ils restent. Plus ils restent, plus ils consomment. Le panier moyen grimpe sans effort commercial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5 — COMMENT ÇA MARCHE ============ -->
+<section class="s ivory" id="how">
+  <div class="container">
+    <div class="section-eyebrow">05 · En 10 minutes, top chrono</div>
+    <h2 class="section-title">Du carton au compte client, <span class="gold">trois étapes.</span></h2>
+    <p class="section-lead">Aucune technique, aucun matériel, aucun changement d'habitude pour vos équipes. Vous vous connectez, vous imprimez, vos clients jouent.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3 class="step-title">Vous vous inscrivez</h3>
+        <p class="step-desc">Créez votre compte en 2 minutes. Configurez votre bar, vos récompenses, votre barème de points. Template prêt à l'emploi inclus.</p>
+        <div class="step-meta">// Onboarding guidé · 2 min</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3 class="step-title">Vous imprimez vos QR</h3>
+        <p class="step-desc">Stickers QR pour les tables, l'ardoise, l'addition. Vos clients scannent, créent leur profil, et c'est parti. Zéro app à télécharger.</p>
+        <div class="step-meta">// PDF prêt à imprimer</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3 class="step-title">Vos clients jouent</h3>
+        <p class="step-desc">Ils scannent à chaque visite, cumulent, grimpent au classement. Vous voyez tout depuis votre dashboard. Les récompenses se déclenchent seules.</p>
+        <div class="step-meta">// 100% automatique</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5b — PARCOURS CLIENT ============ -->
+<section class="s" id="journey" style="background:#0D1B2E;">
+  <div class="container">
+    <div class="section-eyebrow">05b · Le parcours client</div>
+    <h2 class="section-title">De inconnu à habitué — <span class="gold">en 4 visites.</span></h2>
+    <p class="section-lead">Ce que vit votre client avec BarCoins.</p>
+
+    <div class="journey-wrap">
+      <div class="journey-line" aria-hidden="true"></div>
+      <ol class="journey-grid">
+        <li class="journey-card" data-j="0">
+          <div class="journey-badge">Visite 1</div>
+          <div class="journey-icon">
+            <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="#E9C16B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="7" width="12" height="12" rx="1.5"/>
+              <rect x="29" y="7" width="12" height="12" rx="1.5"/>
+              <rect x="7" y="29" width="12" height="12" rx="1.5"/>
+              <path d="M11 11h4v4h-4zM33 11h4v4h-4zM11 33h4v4h-4z" fill="#E9C16B" stroke="none"/>
+              <path d="M29 29h4v4M37 29v12M29 37h4M37 37v4M29 41h12"/>
+            </svg>
+          </div>
+          <h3 class="journey-title">Il scanne</h3>
+          <p class="journey-text">30 secondes. Pas d'app. Son profil est créé, ses premiers BarCoins tombent.</p>
+        </li>
+
+        <li class="journey-card" data-j="1">
+          <div class="journey-badge">Même soir</div>
+          <div class="journey-icon">
+            <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="#E9C16B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 8h20v8a10 10 0 0 1-20 0V8Z"/>
+              <path d="M14 12H8a4 4 0 0 0 0 8h2M34 12h6a4 4 0 0 1 0 8h-2"/>
+              <path d="M20 32h8v4h-8z"/>
+              <path d="M16 40h16"/>
+            </svg>
+          </div>
+          <h3 class="journey-title">Il joue</h3>
+          <p class="journey-text">Quiz, blind test, classement live. Il est N°6. Son pote est N°4. La compétition est lancée.</p>
+        </li>
+
+        <li class="journey-card" data-j="2">
+          <div class="journey-badge">Visite 2</div>
+          <div class="journey-icon">
+            <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="#E9C16B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="11" width="34" height="30" rx="2.5"/>
+              <path d="M7 19h34"/>
+              <path d="M16 7v8M32 7v8"/>
+              <circle cx="32" cy="30" r="4" fill="#E9C16B" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="journey-title">Il revient</h3>
+          <p class="journey-text">Pas pour boire — pour dépasser Marc. Il est revenu mercredi. Il est N°3.</p>
+        </li>
+
+        <li class="journey-card" data-j="3">
+          <div class="journey-badge">Visite 5+</div>
+          <div class="journey-icon">
+            <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="#E9C16B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 16l7 8 9-12 9 12 7-8v20H8z"/>
+              <path d="M8 36h32"/>
+              <circle cx="8" cy="14" r="2" fill="#E9C16B" stroke="none"/>
+              <circle cx="24" cy="9" r="2" fill="#E9C16B" stroke="none"/>
+              <circle cx="40" cy="14" r="2" fill="#E9C16B" stroke="none"/>
+            </svg>
+          </div>
+          <h3 class="journey-title">Il devient habitué</h3>
+          <p class="journey-text">Il est N°1. Il amène ses amis. Votre bar est son bar.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6 — ROI ============ -->
+<section class="s" id="roi">
+  <div class="container">
+    <div class="section-eyebrow">06 · L'impact mesurable</div>
+    <h2 class="section-title">Ce que BarCoins <span class="gold">rapporte</span>, en chiffres.</h2>
+    <p class="section-lead">Projection sur la base de 8 clients engagés par soirée. Benchmarks gamification CHR 2024 (Gartner, Braze). Simulation personnalisée disponible en démo.</p>
+
+    <div class="roi-grid">
+      <div class="roi-cell">
+        <div class="roi-label">CA mensuel additionnel</div>
+        <div class="roi-big"><span class="sign">+</span>180<span class="unit">€</span></div>
+        <p class="roi-desc">Par habitué actif, en moyenne, grâce à l'augmentation de la fréquence de visite et du panier moyen.</p>
+        <div class="roi-source">// Base : 50 habitués</div>
+      </div>
+      <div class="roi-cell">
+        <div class="roi-label">Coût par soir</div>
+        <div class="roi-big">2,97<span class="unit">€</span></div>
+        <p class="roi-desc">Ce que vous coûte BarCoins par soir d'ouverture. Moins qu'une tournée, pour un levier qui tourne 24 h/24.</p>
+        <div class="roi-source">// Base plan Standard · 6j/7</div>
+      </div>
+      <div class="roi-cell">
+        <div class="roi-label">Marge nette / habitué</div>
+        <div class="roi-big"><span class="sign">+</span>123<span class="unit">€</span></div>
+        <p class="roi-desc">Après déduction de l'abonnement et des récompenses offertes. Le ROI devient positif dès le 5ᵉ habitué.</p>
+        <div class="roi-source">// Marge brute 68 % · mensuel</div>
+      </div>
+    </div>
+    <p class="roi-disclaimer">// Méthodologie détaillée disponible sur demande — données beta Q2 2026</p>
+  </div>
+</section>
+
+<!-- ============ SIMULATEUR ROI ============ -->
+<section class="s" id="simulator" style="padding-top: 0;">
+  <div class="container">
+    <div class="section-eyebrow">06b · Simulateur</div>
+    <div class="roi-sim-wrap">
+      <div class="roi-sim-eyebrow">Calculateur ROI — BarCoins</div>
+      <h2 class="roi-sim-h2">Combien BarCoins <span class="g">rapporte à votre bar</span> ?</h2>
+      <p class="roi-sim-lead">Deux chiffres suffisent. La simulation tient compte des fonctionnalités réelles de chaque plan.</p>
+
+      <div class="roi-sim-sliders">
+        <div class="roi-sim-slider-card">
+          <div class="roi-sim-slider-label">Soirées par mois</div>
+          <div class="roi-sim-slider-val" id="rs-v-soirees">20 <span>soirées</span></div>
+          <input type="range" class="roi-sim-range" id="rs-sl-soirees" min="4" max="30" value="20">
+          <div class="roi-sim-slider-hints"><span>4 soirées</span><span>30 soirées</span></div>
+        </div>
+        <div class="roi-sim-slider-card">
+          <div class="roi-sim-slider-label">Clients habituels</div>
+          <div class="roi-sim-slider-val" id="rs-v-clients">60 <span>clients</span></div>
+          <input type="range" class="roi-sim-range" id="rs-sl-clients" min="10" max="300" value="60" step="5">
+          <div class="roi-sim-slider-hints"><span>10</span><span>300</span></div>
+        </div>
+      </div>
+
+      <div class="roi-sim-plan-row">
+        <button class="roi-sim-plan-btn active" data-plan="starter" type="button">
+          <span class="pn">Starter</span>
+          <span class="pp">89€/mois</span>
+          <span class="pl">≤ 50 joueurs</span>
+          <span class="ptx">Engagement 20%</span>
+        </button>
+        <button class="roi-sim-plan-btn" data-plan="standard" type="button">
+          <span class="pn">Standard</span>
+          <span class="pp">149€/mois</span>
+          <span class="pl">≤ 150 joueurs</span>
+          <span class="ptx">Push · CRM · TV — 30%</span>
+        </button>
+        <button class="roi-sim-plan-btn" data-plan="premium" type="button">
+          <span class="pn">Premium</span>
+          <span class="pp">249€/mois</span>
+          <span class="pl">Illimité · Multi-sites</span>
+          <span class="ptx">PvP · Blind test — 38%</span>
+        </button>
+      </div>
+
+      <div class="roi-sim-plan-explain" id="rs-plan-explain"></div>
+
+      <div class="roi-sim-results">
+        <div class="roi-sim-result-card">
+          <div class="rc-label">CA additionnel / mois</div>
+          <div class="rc-val" id="rs-r-ca">—</div>
+          <div class="rc-sub" id="rs-r-ca-sub">—</div>
+        </div>
+        <div class="roi-sim-result-card cost">
+          <div class="rc-label">Coût BarCoins / soir</div>
+          <div class="rc-val" id="rs-r-cout">—</div>
+          <div class="rc-sub">Abonnement ramené par soirée</div>
+        </div>
+        <div class="roi-sim-result-card highlight">
+          <div class="rc-label">Marge nette / mois</div>
+          <div class="rc-val" id="rs-r-marge">—</div>
+          <div class="rc-sub">Après abonnement et récompenses</div>
+        </div>
+      </div>
+
+      <div class="roi-sim-graph-wrap">
+        <div class="roi-sim-graph-title">Marge nette comparée — les 3 plans</div>
+        <div class="roi-sim-graph-sub">Pour votre configuration actuelle</div>
+        <div class="roi-sim-plans-compare" id="rs-plans-compare"></div>
+        <div class="roi-sim-disclaimer">
+          Projections basées sur les benchmarks gamification CHR 2024 (Gartner, Braze/OneSignal) et les hypothèses beta BarCoins.
+          Taux d'engagement conservateurs : 20% sans relance, 30% avec push+CRM, 38% avec PvP+blind test.
+          Simulation personnalisée disponible en démo.
+        </div>
+      </div>
+
+      <div class="roi-sim-breakeven">
+        <div class="be-icon">⚡</div>
+        <div class="be-text">
+          <strong>Seuil de rentabilité</strong>
+          <p>Rentable dès la <span id="rs-be-soir" class="rs-hl">1ère</span> soirée.<br>
+          ROI positif avec <span id="rs-be-clients" class="rs-hl">8 clients</span> actifs par soir.</p>
+        </div>
+        <div class="be-val" id="rs-be-val"><span id="rs-be-pct">0</span><span id="rs-be-suffix">% ROI</span></div>
+      </div>
+
+      <div class="roi-sim-cta">
+        <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary">
+          Rejoindre la beta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div class="roi-sim-cta-note">Sans engagement · Simulation personnalisée disponible en démo</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .roi-sim-wrap { max-width: 900px; margin: 0 auto; }
+    .roi-sim-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-400); margin-bottom: 12px; }
+    .roi-sim-h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(26px, 4vw, 42px); letter-spacing: -.03em; line-height: 1.05; margin-bottom: 10px; color: var(--ivory); }
+    .roi-sim-h2 .g { background: linear-gradient(135deg, var(--gold-300), var(--gold-500)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-style: italic; }
+    .roi-sim-lead { font-size: 15px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; max-width: 600px; }
+
+    .roi-sim-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .roi-sim-sliders { grid-template-columns: 1fr; } }
+    .roi-sim-slider-card { background: var(--navy-700); border: 1px solid var(--navy-line); border-radius: 14px; padding: 20px; }
+    .roi-sim-slider-label { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; letter-spacing: .06em; text-transform: uppercase; }
+    .roi-sim-slider-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 30px; color: var(--gold-400); margin-bottom: 14px; letter-spacing: -.02em; }
+    .roi-sim-slider-val span { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-left: 4px; }
+    .roi-sim-range { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: linear-gradient(to right, var(--gold-500) 0%, var(--gold-500) var(--pct,50%), var(--navy-600) var(--pct,50%), var(--navy-600) 100%); border-radius: 4px; outline: none; cursor: pointer; }
+    .roi-sim-range::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-300), var(--gold-500)); border: 2px solid var(--navy-800); box-shadow: 0 0 0 3px rgba(201,144,42,.25); cursor: pointer; }
+    .roi-sim-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-300), var(--gold-500)); border: 2px solid var(--navy-800); box-shadow: 0 0 0 3px rgba(201,144,42,.25); cursor: pointer; }
+    .roi-sim-slider-hints { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+    .roi-sim-plan-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+    @media (max-width: 600px) { .roi-sim-plan-row { grid-template-columns: 1fr; } }
+    .roi-sim-plan-btn { padding: 14px 8px; border-radius: 12px; border: 1.5px solid var(--navy-line); background: transparent; font-family: 'Outfit', sans-serif; cursor: pointer; transition: all .2s; text-align: center; width: 100%; color: inherit; }
+    .roi-sim-plan-btn .pn { display: block; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--ivory); margin-bottom: 2px; }
+    .roi-sim-plan-btn .pp { color: var(--text-muted); font-size: 12px; display: block; }
+    .roi-sim-plan-btn .pl { font-size: 10px; color: var(--text-muted); display: block; margin-top: 3px; opacity: .7; }
+    .roi-sim-plan-btn .ptx { font-size: 10px; color: rgba(34,197,94,.7); display: block; margin-top: 4px; font-style: italic; }
+    .roi-sim-plan-btn:hover { border-color: rgba(233,193,107,.4); background: rgba(233,193,107,.05); }
+    .roi-sim-plan-btn.active { border-color: var(--gold-500); background: rgba(201,144,42,.1); }
+    .roi-sim-plan-btn.active .pn { color: var(--gold-400); }
+    .roi-sim-plan-btn.active .pp { color: var(--gold-500); }
+    .roi-sim-plan-btn.active .pl, .roi-sim-plan-btn.active .ptx { color: var(--gold-400); opacity: .85; }
+
+    .roi-sim-plan-explain { background: rgba(233,193,107,.06); border: 1px solid rgba(233,193,107,.18); border-radius: 12px; padding: 13px 16px; margin-bottom: 24px; font-size: 13px; color: var(--text-light); line-height: 1.6; }
+    .roi-sim-plan-explain strong { color: var(--gold-400); }
+
+    .roi-sim-results { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+    @media (max-width: 600px) { .roi-sim-results { grid-template-columns: 1fr; } }
+    .roi-sim-result-card { background: var(--navy-700); border: 1px solid var(--navy-line); border-radius: 14px; padding: 20px 18px; }
+    .roi-sim-result-card.highlight { background: linear-gradient(160deg, rgba(34,197,94,.1), rgba(34,197,94,.03)); border-color: rgba(34,197,94,.35); }
+    .roi-sim-result-card.cost { background: linear-gradient(160deg, rgba(201,144,42,.08), rgba(201,144,42,.02)); border-color: rgba(201,144,42,.25); }
+    .roi-sim-result-card .rc-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .roi-sim-result-card .rc-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(24px,3.5vw,38px); letter-spacing: -.03em; line-height: 1; margin-bottom: 6px; color: var(--gold-400); }
+    .roi-sim-result-card.highlight .rc-val { color: #22C55E; }
+    .roi-sim-result-card.cost .rc-val { color: var(--gold-300); }
+    .roi-sim-result-card .rc-sub { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+    .roi-sim-graph-wrap { background: var(--navy-700); border: 1px solid var(--navy-line); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+    .roi-sim-graph-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--ivory); }
+    .roi-sim-graph-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+    .roi-sim-plans-compare { display: flex; flex-direction: column; gap: 14px; }
+    .pc-row { display: grid; grid-template-columns: 90px 1fr 80px; align-items: center; gap: 12px; }
+    .pc-label { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); }
+    .pc-label.active-plan { color: var(--gold-400); }
+    .pc-bar-track { background: var(--navy-600); border-radius: 6px; height: 30px; overflow: hidden; }
+    .pc-bar { height: 100%; border-radius: 6px; transition: width .7s cubic-bezier(.4,0,.2,1); display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 700; color: var(--navy-800); white-space: nowrap; min-width: 4px; }
+    .pc-bar.s { background: linear-gradient(90deg, rgba(233,193,107,.55), rgba(201,144,42,.45)); }
+    .pc-bar.std { background: linear-gradient(90deg, var(--gold-400), var(--gold-500)); }
+    .pc-bar.p { background: linear-gradient(90deg, var(--gold-300), #e0a020); }
+    .pc-marge { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; text-align: right; }
+    .badge-best { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: rgba(34,197,94,.2); color: #22C55E; border-radius: 4px; padding: 2px 6px; margin-left: 6px; vertical-align: middle; }
+    .roi-sim-disclaimer { font-size: 11px; color: var(--text-muted); margin-top: 14px; line-height: 1.5; border-top: 1px solid var(--navy-line); padding-top: 14px; font-style: italic; }
+
+    .roi-sim-breakeven { background: linear-gradient(135deg, rgba(201,144,42,.14), rgba(233,193,107,.04)); border: 1px solid rgba(233,193,107,.28); border-radius: 14px; padding: 22px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .roi-sim-breakeven .be-icon { font-size: 28px; flex-shrink: 0; }
+    .roi-sim-breakeven .be-text strong { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--gold-400); display: block; margin-bottom: 3px; }
+    .roi-sim-breakeven .be-text p { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+    .roi-sim-breakeven .rs-hl { color: var(--gold-400); font-weight: 700; }
+    .roi-sim-breakeven .be-val { margin-left: auto; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -.03em; white-space: nowrap; color: #22C55E; }
+
+    .roi-sim-cta { text-align: center; margin-top: 28px; }
+    .roi-sim-cta-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+  </style>
+
+  <script>
+    (function() {
+      const PLANS = {
+        starter: { cost: 89, maxJoueurs: 50, engagementRate: 0.20, sites: 1, label: 'Starter', barClass: 's', explain: 'Plan Starter — <strong>50 joueurs max</strong>, taux d\'engagement <strong>20%</strong>. Sans push ni CRM, l\'activation repose sur la présence physique et le QR code. Idéal pour tester BarCoins ou pour un petit bar avec clientèle fidèle restreinte.' },
+        standard: { cost: 149, maxJoueurs: 150, engagementRate: 0.30, sites: 1, label: 'Standard', barClass: 'std', explain: 'Plan Standard — <strong>150 joueurs max</strong>, taux d\'engagement <strong>30%</strong>. Les push notifications (taux d\'ouverture ~50%) + CRM complet + mode TV leaderboard activent 50% de joueurs supplémentaires vs Starter. Le plan optimal pour la majorité des bars.' },
+        premium: { cost: 249, maxJoueurs: 9999, engagementRate: 0.38, sites: 3, label: 'Premium', barClass: 'p', explain: 'Plan Premium — <strong>joueurs illimités + 3 sites</strong>, taux d\'engagement <strong>38%</strong>. Le blind test PvP misable crée une rétention compétitive documentée. Multi-sites = émulation inter-établissements. Rentable dès 150+ joueurs actifs réguliers.' }
+      };
+      let currentPlan = 'starter';
+
+      function updSlider(sl) {
+        const pct = ((sl.value - sl.min) / (sl.max - sl.min)) * 100;
+        sl.style.setProperty('--pct', pct + '%');
+      }
+
+      function calc(k, soirees, clients) {
+        const p = PLANS[k];
+        const joueursCouverts = Math.min(clients, p.maxJoueurs);
+        const joueursActifs = Math.round(joueursCouverts * p.engagementRate);
+        const sitesBonus = k === 'premium' ? Math.min(p.sites, 1 + Math.floor(clients / 120)) : 1;
+        const caAdd = Math.round(joueursActifs * 6 * soirees * sitesBonus);
+        const coutSoir = Math.round((p.cost / soirees) * 100) / 100;
+        const recompenses = Math.round(caAdd * 0.08);
+        const marge = Math.round(caAdd * 0.70 - p.cost - recompenses);
+        const roi = p.cost > 0 ? Math.round((marge / p.cost) * 100) : 0;
+        const nonCouverts = Math.max(0, clients - p.maxJoueurs);
+        return { caAdd, coutSoir, marge, roi, joueursActifs, nonCouverts, sitesBonus };
+      }
+
+      function render() {
+        const sS = document.getElementById('rs-sl-soirees');
+        const sC = document.getElementById('rs-sl-clients');
+        const soirees = parseInt(sS.value);
+        const clients = parseInt(sC.value);
+        updSlider(sS); updSlider(sC);
+        document.getElementById('rs-v-soirees').innerHTML = soirees + ' <span>soirées</span>';
+        document.getElementById('rs-v-clients').innerHTML = clients + ' <span>clients</span>';
+
+        const res = calc(currentPlan, soirees, clients);
+        const p = PLANS[currentPlan];
+        document.getElementById('rs-r-ca').textContent = '+' + res.caAdd.toLocaleString('fr-FR') + '€';
+        document.getElementById('rs-r-cout').textContent = res.coutSoir.toFixed(2).replace('.', ',') + '€';
+        const mEl = document.getElementById('rs-r-marge');
+        mEl.textContent = (res.marge >= 0 ? '+' : '') + res.marge.toLocaleString('fr-FR') + '€';
+        mEl.style.color = res.marge >= 0 ? '#22C55E' : '#f87171';
+
+        let sub = res.joueursActifs + ' joueurs actifs / soirée';
+        if (res.nonCouverts > 0) {
+          const nextPlan = currentPlan === 'starter' ? 'Standard' : 'Premium';
+          sub += ' <span style="color:var(--gold-400);font-size:10px;display:block;margin-top:4px">→ Passez au ' + nextPlan + ' pour couvrir tous vos clients</span>';
+        }
+        if (res.sitesBonus > 1) sub += ' <span style="color:#22C55E;font-size:10px">× ' + res.sitesBonus + ' sites</span>';
+        document.getElementById('rs-r-ca-sub').innerHTML = sub;
+        document.getElementById('rs-plan-explain').innerHTML = p.explain;
+
+        const allRes = {};
+        let maxMarge = 1, bestPlan = 'starter';
+        ['starter','standard','premium'].forEach(k => {
+          allRes[k] = calc(k, soirees, clients);
+          if (allRes[k].marge > maxMarge) { maxMarge = allRes[k].marge; bestPlan = k; }
+        });
+
+        document.getElementById('rs-plans-compare').innerHTML = ['starter','standard','premium'].map(k => {
+          const r = allRes[k];
+          const pct = Math.max(3, Math.round((Math.max(0, r.marge) / maxMarge) * 100));
+          const isActive = k === currentPlan;
+          const isBest = k === bestPlan;
+          const mC = r.marge >= 0 ? (isBest ? '#22C55E' : 'var(--gold-400)') : '#f87171';
+          const lbl = PLANS[k].label + (isBest ? '<span class="badge-best">Optimal</span>' : '');
+          const bTxt = r.marge > 300 ? (r.marge >= 0 ? '+' : '') + r.marge.toLocaleString('fr-FR') + '€' : '';
+          return '<div class="pc-row"><div class="pc-label ' + (isActive ? 'active-plan' : '') + '">' + lbl + '</div><div class="pc-bar-track"><div class="pc-bar ' + PLANS[k].barClass + '" style="width:' + pct + '%">' + bTxt + '</div></div><div class="pc-marge" style="color:' + mC + '">' + (r.marge >= 0 ? '+' : '') + r.marge.toLocaleString('fr-FR') + '€</div></div>';
+        }).join('');
+
+        const soirsR = Math.max(1, Math.ceil(p.cost / Math.max(1, res.caAdd / soirees * 0.62)));
+        document.getElementById('rs-be-soir').textContent = soirsR <= 1 ? '1ère' : soirsR + 'ème';
+        const cMin = Math.ceil(p.cost / Math.max(1, soirees * 6 * p.engagementRate * 0.62));
+        document.getElementById('rs-be-clients').textContent = cMin + ' clients';
+        const roiDisplay = Math.max(0, res.roi);
+        const pctEl = document.getElementById('rs-be-pct');
+        const sufEl = document.getElementById('rs-be-suffix');
+        if (roiDisplay > 500) { pctEl.textContent = '+500'; sufEl.textContent = '%+ ROI'; }
+        else { pctEl.textContent = '+' + roiDisplay; sufEl.textContent = '% ROI'; }
+        document.getElementById('rs-be-val').style.color = res.roi > 0 ? '#22C55E' : '#f87171';
+      }
+
+      document.querySelectorAll('.roi-sim-plan-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentPlan = this.getAttribute('data-plan');
+          document.querySelectorAll('.roi-sim-plan-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          render();
+        });
+      });
+      document.getElementById('rs-sl-soirees').addEventListener('input', render);
+      document.getElementById('rs-sl-clients').addEventListener('input', render);
+      render();
+    })();
+  </script>
+</section>
+
+<!-- ============ SECTION 7 — FONCTIONNALITÉS ============ -->
+<section class="s" id="features">
+  <div class="container">
+    <div class="section-eyebrow">07 · Tout est inclus</div>
+    <h2 class="section-title">Une plateforme <span class="gold">pensée bar</span>, pas une techno générique.</h2>
+    <p class="section-lead">Pas d'options cachées, pas de modules premium. Tout ce dont vous avez besoin pour lancer, mesurer, et scaler.</p>
+
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3 class="feature-title">Dashboard temps réel</h3>
+        <p class="feature-desc">Suivez la fréquentation, les habitués, les top players et les ventes au fil des heures.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>
+        </div>
+        <h3 class="feature-title">QR codes personnalisés</h3>
+        <p class="feature-desc">Stickers table, menus, sous-verres. Un kit d'impression prêt à l'emploi, à votre charte.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3 class="feature-title">Notifications push</h3>
+        <p class="feature-desc">Relancez vos clients au bon moment : anniversaire, défi du jour, soir creux ciblé.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        </div>
+        <h3 class="feature-title">Récompenses sur-mesure</h3>
+        <p class="feature-desc">Cocktail offert, table réservée, happy hour premium. Vous définissez tout, nous gérons le reste.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3 class="feature-title">Fiches clients CRM</h3>
+        <p class="feature-desc">Historique de visites, panier moyen, préférences. La mémoire que vous n'avez plus à tenir.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3 class="feature-title">Mode TV leaderboard</h3>
+        <p class="feature-desc">Affichez le classement en direct sur un écran du bar. L'effet tribu, grandeur nature.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 8 — TARIFS ============ -->
+<section class="s ivory" id="pricing">
+  <div class="container">
+    <div class="section-eyebrow">08 · Tarifs</div>
+    <h2 class="section-title">Transparent, <span class="gold">sans engagement.</span></h2>
+    <p class="section-lead">Un abonnement mensuel, résiliable à tout moment. Pas de setup fee, pas de commission sur vos ventes.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Essentiel</div>
+        <div class="price-name">Starter</div>
+        <div class="price-amount"><span class="currency">€</span>89<span class="period">/mois</span></div>
+        <p class="price-desc">Pour les bars de quartier qui veulent tester la gamification sans risque.</p>
+        <ul class="price-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Jusqu'à 50 joueurs actifs</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Points, défis, classement</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Kit QR imprimable</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Dashboard temps réel</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Support email sous 24 h</li>
+        </ul>
+        <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-ghost price-cta" style="color: var(--ink); border-color: rgba(13,27,46,0.2);">Rejoindre la beta</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-tier">Recommandé</div>
+        <div class="price-name">Standard</div>
+        <div class="price-amount"><span class="currency">€</span>149<span class="period">/mois</span></div>
+        <p class="price-desc">Pour les bars actifs qui veulent activer le CRM et pousser les soirs creux.</p>
+        <ul class="price-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Jusqu'à 150 joueurs actifs</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Tout Starter +</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Notifications push illimitées</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Fiches clients CRM complètes</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Mode TV leaderboard</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
+        </ul>
+        <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary price-cta">Rejoindre la beta</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Multi-sites</div>
+        <div class="price-name">Premium</div>
+        <div class="price-amount"><span class="currency">€</span>249<span class="period">/mois</span></div>
+        <p class="price-desc">Pour les groupes, franchises et enseignes qui pilotent plusieurs établissements.</p>
+        <ul class="price-features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Joueurs illimités</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Tout Standard +</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-établissements (3 inclus)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Personnalisation complète</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>API & intégrations POS</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Customer Success dédié</li>
+        </ul>
+        <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-ghost price-cta" style="color: var(--ink); border-color: rgba(13,27,46,0.2);">Rejoindre la beta</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 9 — FOUNDING PARTNERS (3 PHASES) ============ -->
+<section class="s fp-section" id="beta">
+  <div class="container fp-container">
+    <div class="fp-head">
+      <div class="fp-badge">
+        <span class="dot"></span>
+        Beta fermée · Juillet 2026 · Perpignan
+      </div>
+      <h2 class="section-title">5 bars. <span class="gold">Une place à prendre.</span></h2>
+      <p class="section-lead">Les Partenaires Fondateurs co-construisent BarCoins et bénéficient de conditions permanentes que les bars suivants n'auront jamais.</p>
+    </div>
+
+    <div class="fp-phases">
+      <div class="fp-card navy">
+        <div class="fp-num">01</div>
+        <span class="fp-phase-badge">Juillet 2026</span>
+        <h3>Beta complète</h3>
+        <ul>
+          <li>Accès full stack à 89 €/mois</li>
+          <li>15 jours gratuits au démarrage</li>
+          <li>Support fondateur direct (réponse sous 4 h)</li>
+          <li>Entretiens terrain mensuels</li>
+        </ul>
+      </div>
+
+      <div class="fp-card navy">
+        <div class="fp-num">02</div>
+        <span class="fp-phase-badge">Septembre 2026</span>
+        <h3>Votre plan, votre tarif</h3>
+        <ul>
+          <li>Migration vers Starter, Standard ou Premium</li>
+          <li>‑30 % sur votre premier abonnement annuel</li>
+          <li>Exemple : Standard = 1 249 €/an au lieu de 1 788 €</li>
+        </ul>
+      </div>
+
+      <div class="fp-card gold">
+        <div class="fp-num">03</div>
+        <span class="fp-phase-badge">À vie</span>
+        <h3>Tarifs gelés à vie</h3>
+        <ul>
+          <li>Vos tarifs ne bougent plus jamais</li>
+          <li>Même quand les prix augmentent en octobre 2026</li>
+          <li>Starter 89 € · Standard 149 € · Premium 249 €</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fp-bottom">
+      <p class="fp-note">// 5 places uniquement — Perpignan juillet 2026</p>
+      <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary">
+        Je veux être Partenaire Fondateur
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 10 — TÉMOIGNAGES + FAQ + CTA ============ -->
+<section class="s" id="final">
+  <div class="container">
+    <div class="section-eyebrow">09 · On en parle</div>
+    <h2 class="section-title">Les premiers <span class="gold">retours terrain.</span></h2>
+
+    <div class="s10-wrap">
+      <div class="testimonials">
+        <div class="testimonial">
+          <p class="testimonial-quote">En deux semaines, on a retrouvé le plein les mercredis soir. Les clients se prennent au jeu, ils viennent pour monter au classement. C'est bluffant.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SR</div>
+            <div>
+              <div class="testimonial-name">Sébastien R.</div>
+              <div class="testimonial-role">Gérant · Le Comptoir, Perpignan</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial-quote">Ce que je voulais, c'était savoir qui sont mes habitués. BarCoins m'a donné bien plus : un outil de relance, un levier de CA, et un truc dont les clients parlent à leurs potes.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AM</div>
+            <div>
+              <div class="testimonial-name">Aurélie M.</div>
+              <div class="testimonial-role">Fondatrice · Maison Marceau</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <p class="testimonial-quote">Le setup a pris 15 min, l'équipe a pigé en 5. Les premiers QR scannés sont arrivés le soir même. Aucune friction, aucun bug. On aurait aimé avoir ça avant.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">TL</div>
+            <div>
+              <div class="testimonial-name">Thomas L.</div>
+              <div class="testimonial-role">Barman chef · Hemingway &amp; Co</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-eyebrow" style="margin-bottom: 28px;">10 · FAQ</div>
+        <div class="faq-list" id="faq">
+          <details class="faq-item" open>
+            <summary>Est-ce que mes clients doivent télécharger une appli ?</summary>
+            <div class="faq-answer">Non. Ils scannent un QR code et créent un compte en 10 secondes depuis leur navigateur. Zéro app à installer. L'interface est une web-app optimisée, fluide, sans friction.</div>
+          </details>
+          <details class="faq-item">
+            <summary>J'ai besoin de matériel spécifique ?</summary>
+            <div class="faq-answer">Aucun. BarCoins fonctionne depuis n'importe quel smartphone, tablette ou ordinateur. Optionnel : une TV pour afficher le leaderboard en mode grand écran, mais ce n'est pas obligatoire.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Est-ce que je peux changer d'avis ?</summary>
+            <div class="faq-answer">Oui. Sans engagement, résiliable à tout moment depuis votre dashboard. Vos données clients vous restent et peuvent être exportées.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Comment BarCoins gère le RGPD ?</summary>
+            <div class="faq-answer">Serveurs hébergés en France, conformité RGPD complète, DPO dédié. Vos clients donnent un consentement explicite, contrôlent leurs données, peuvent se désinscrire à tout moment.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Ça s'intègre avec ma caisse ?</summary>
+            <div class="faq-answer">Sur le plan Pro, oui : API ouverte et intégrations directes avec Lightspeed, Tiller, Zelty et Cashpad. Sur les autres plans, la saisie se fait via le dashboard ou en scan direct par le client.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Quand puis-je démarrer ?</summary>
+            <div class="faq-answer">La beta démarre en juillet 2026 à Perpignan. Dès septembre 2026, ouverture à toute l'Occitanie. Rejoignez la liste d'attente pour être prévenu en priorité.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final CTA band -->
+    <div class="cta-band">
+      <h2>Votre prochain habitué <em>n'attend qu'une raison</em> de revenir.</h2>
+      <p>Donnez-la-lui. Rejoignez la beta BarCoins à Perpignan et façonnez la plateforme avec nous.</p>
+      <div class="cta-band-actions">
+        <a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener" class="btn btn-primary">
+          Rejoindre la beta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#demo-video" class="btn btn-ghost">
+          Voir la démo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="cta-band-note">// 2 places restantes · Réponse sous 24 h</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="gap: 12px;">
+        <img src="/marketing/barcoins-logo-horizontal.png" alt="BarCoins" style="height: 40px; width: auto; display: block; filter: drop-shadow(0 4px 12px rgba(201, 144, 42, 0.35));" />
+      </a>
+      <p>La plateforme de gamification qui transforme vos clients de passage en habitués fidèles.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produit</h4>
+      <ul>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#features">Fonctionnalités</a></li>
+        <li><a href="#pricing">Tarifs</a></li>
+        <li><a href="https://tally.so/r/WOeA1J" target="_blank" rel="noopener">Beta</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Ressources</h4>
+      <ul>
+        <li><a href="#faq">FAQ</a></li>
+        
+        
+        
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@barcoins.fr">hello@barcoins.fr</a></li>
+        <li>Perpignan, France</li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 BarCoins SAS — Tous droits réservés</span>
+    <span>Mentions légales · CGV · Politique de confidentialité</span>
+  </div>
+</footer>
+
+<script>
+  // Nav burger / drawer
+  (function(){
+    const burger = document.getElementById('nav-burger');
+    const drawer = document.getElementById('nav-drawer');
+    const scrim  = document.getElementById('nav-scrim');
+    if (!burger || !drawer || !scrim) return;
+    function close() {
+      burger.classList.remove('open'); drawer.classList.remove('open'); scrim.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('nav-locked');
+    }
+    function open() {
+      burger.classList.add('open'); drawer.classList.add('open'); scrim.classList.add('open');
+      burger.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('nav-locked');
+    }
+    burger.addEventListener('click', () => drawer.classList.contains('open') ? close() : open());
+    scrim.addEventListener('click', close);
+    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 960) close(); });
+  })();
+
+  // Journey cards — reveal on scroll
+  (function(){
+    const cards = document.querySelectorAll('.journey-card');
+    if (!cards.length) return;
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach(c => c.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.25, rootMargin: '0px 0px -60px 0px' });
+    cards.forEach(c => io.observe(c));
+  })();
+</script>
+
+</body>
+</html>

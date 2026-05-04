@@ -32,6 +32,7 @@ const ROUTE_PROTECTION = {
 const PUBLIC_ROUTES = [
   '/',
   '/login',
+  '/marketing',
   '/api/auth',
   '/api/health',
   '/manifest.json',
